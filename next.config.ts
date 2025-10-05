@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import path from "path";
 
 const nextConfig: NextConfig = {
   webpack(config) {
@@ -13,6 +14,14 @@ const nextConfig: NextConfig = {
         },
       ],
     });
+
+    // Thêm alias cho đường dẫn
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      "@styles": path.resolve("./src/styles"),
+      "@": path.resolve("./src"),
+    };
+
     return config;
   },
 };
