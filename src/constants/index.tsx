@@ -1,0 +1,45 @@
+import { ISLUGMAP } from "@/types";
+
+export const SLUG_MAP: ISLUGMAP = {
+  "trang-diem": {
+    slug: { title: "Trang điểm", id: 1 },
+    categories: {
+      title: "Danh mục trang điểm",
+      children: [
+        { name: "Trang điểm", link: "trang-diem" },
+        { name: "Trang điểm mặt", link: "trang-diem/trang-diem-mat", id: 11 },
+        { name: "Trang điểm mắt", link: "trang-diem/trang-diem-mat", id: 12 },
+      ],
+    },
+  },
+  "son-moi": {
+    slug: { title: "Son môi", id: 2 },
+    categories: {
+      title: "Danh mục son môi",
+      children: [
+        { name: "Son môi", link: "son-moi" },
+        { name: "Son môi lì", link: "son-moi/son-moi-li", id: 20 },
+        {
+          name: "Son môi bóng",
+          link: "son-moi/son-moi-bong",
+          id: 21,
+        },
+      ],
+    },
+  },
+  "cham-soc-da": {
+    slug: { title: "Chăm sóc da", id: 3 },
+    categories: {
+      title: "Danh mục chăm sóc da",
+      children: [
+        { name: "Chăm sóc da", link: "cham-soc-da" },
+        {
+          name: "Sữa rửa mặt",
+          link: "cham-soc-da/sua-rua-mat",
+          id: 30,
+        },
+        { name: "Toner", link: "cham-soc-da/toner", id: 31 },
+      ],
+    },
+  },
+};

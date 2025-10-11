@@ -15,7 +15,6 @@ const nextConfig: NextConfig = {
       ],
     });
 
-    // Thêm alias cho đường dẫn
     config.resolve.alias = {
       ...config.resolve.alias,
       "@styles": path.resolve("./src/styles"),
@@ -24,6 +23,18 @@ const nextConfig: NextConfig = {
 
     return config;
   },
+  compiler: {
+    styledComponents: false,
+  },
+  transpilePackages: [
+    "antd",
+    "@ant-design",
+    "rc-util",
+    "rc-pagination",
+    "rc-picker",
+    "rc-notification",
+    "rc-tooltip",
+  ],
 };
 
 export default nextConfig;

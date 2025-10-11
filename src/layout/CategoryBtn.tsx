@@ -9,11 +9,11 @@ export default function CategoryBtn() {
     {
       id: "cham-soc-toc",
       title: "Chăm Sóc Tóc",
-      link: "/categories/cham-soc-toc",
+      link: "/danh-muc/cham-soc-toc",
       subcategories: [
         {
           title: "Chăm Sóc Tóc",
-          link: "/categories/cham-soc-toc",
+          link: "/danh-muc/cham-soc-toc",
           items: [
             { name: "Dầu Gội - Xả", link: "/products/cham-soc-toc/dau-goi-xa" },
             { name: "Hấp/Ủ Tóc", link: "/products/cham-soc-toc/hap-u-toc" },
@@ -40,11 +40,11 @@ export default function CategoryBtn() {
     {
       id: "hoa-chat-toc",
       title: "Hoá Chất Tóc",
-      link: "/categories/hoa-chat-toc",
+      link: "/danh-muc/hoa-chat-toc",
       subcategories: [
         {
           title: "Hoá Chất Tóc",
-          link: "/categories/hoa-chat-toc",
+          link: "/danh-muc/hoa-chat-toc",
           items: [
             { name: "Uốn/Duỗi/Ép", link: "/products/hoa-chat-toc/uon-duoi-ep" },
             {
@@ -73,11 +73,11 @@ export default function CategoryBtn() {
     {
       id: "cham-soc-da",
       title: "Chăm Sóc Da",
-      link: "/categories/cham-soc-da",
+      link: "/danh-muc/cham-soc-da",
       subcategories: [
         {
           title: "Làm Sạch",
-          link: "/categories/cham-soc-da/lam-sach",
+          link: "/danh-muc/cham-soc-da/lam-sach",
           items: [
             { name: "Sữa Rửa Mặt", link: "/products/cham-soc-da/sua-rua-mat" },
             { name: "Tẩy Trang", link: "/products/cham-soc-da/tay-trang" },
@@ -90,7 +90,7 @@ export default function CategoryBtn() {
         },
         {
           title: "Dưỡng Da",
-          link: "/categories/cham-soc-da/duong-da",
+          link: "/danh-muc/cham-soc-da/duong-da",
           items: [
             { name: "Serum", link: "/products/cham-soc-da/serum" },
             { name: "Kem Dưỡng", link: "/products/cham-soc-da/kem-duong" },
@@ -103,11 +103,11 @@ export default function CategoryBtn() {
     {
       id: "tao-kieu-toc",
       title: "Tạo Kiểu Tóc Nam/Nữ",
-      link: "/categories/tao-kieu-toc",
+      link: "/danh-muc/tao-kieu-toc",
       subcategories: [
         {
           title: "Tạo Kiểu Tóc",
-          link: "/categories/tao-kieu-toc",
+          link: "/danh-muc/tao-kieu-toc",
           items: [
             { name: "Gôm Xịt Tóc", link: "/products/tao-kieu-toc/gom-xit-toc" },
             {
@@ -129,11 +129,11 @@ export default function CategoryBtn() {
     {
       id: "thiet-bi-salon-toc",
       title: "Thiết Bị Salon Tóc",
-      link: "/categories/thiet-bi-salon-toc",
+      link: "/danh-muc/thiet-bi-salon-toc",
       subcategories: [
         {
           title: "Thiết Bị Salon Tóc",
-          link: "/categories/thiet-bi-salon-toc",
+          link: "/danh-muc/thiet-bi-salon-toc",
           items: [
             { name: "Máy Sấy", link: "/products/thiet-bi-salon-toc/may-say" },
             { name: "Máy Uốn", link: "/products/thiet-bi-salon-toc/may-uon" },
@@ -165,11 +165,11 @@ export default function CategoryBtn() {
     {
       id: "thiet-bi-spa",
       title: "Thiết Bị Spa",
-      link: "/categories/thiet-bi-spa",
+      link: "/danh-muc/thiet-bi-spa",
       subcategories: [
         {
           title: "Thiết Bị Spa",
-          link: "/categories/thiet-bi-spa",
+          link: "/danh-muc/thiet-bi-spa",
           items: [
             {
               name: "Máy Triệt Lông",
@@ -192,11 +192,11 @@ export default function CategoryBtn() {
     {
       id: "phu-kien-toc-salon",
       title: "Phụ Kiện Tóc Salon",
-      link: "/categories/phu-kien-toc-salon",
+      link: "/danh-muc/phu-kien-toc-salon",
       subcategories: [
         {
           title: "Phụ Kiện Tóc Salon",
-          link: "/categories/phu-kien-toc-salon",
+          link: "/danh-muc/phu-kien-toc-salon",
           items: [
             { name: "Lược", link: "/products/phu-kien-toc-salon/luoc" },
             { name: "Kéo", link: "/products/phu-kien-toc-salon/keo" },
@@ -224,11 +224,11 @@ export default function CategoryBtn() {
     {
       id: "phu-kien-spa",
       title: "Phụ Kiện Spa",
-      link: "/categories/phu-kien-spa",
+      link: "/danh-muc/phu-kien-spa",
       subcategories: [
         {
           title: "Phụ Kiện Spa",
-          link: "/categories/phu-kien-spa",
+          link: "/danh-muc/phu-kien-spa",
           items: [
             { name: "Đồ Tiêu Hao", link: "/products/phu-kien-spa/do-tieu-hao" },
             {
@@ -242,11 +242,11 @@ export default function CategoryBtn() {
     {
       id: "noi-that-salon-spa",
       title: "Nội Thất Salon/Spa",
-      link: "/categories/noi-that-salon-spa",
+      link: "/danh-muc/noi-that-salon-spa",
       subcategories: [
         {
           title: "Nội Thất Salon/Spa",
-          link: "/categories/noi-that-salon-spa",
+          link: "/danh-muc/noi-that-salon-spa",
           items: [
             { name: "Gương", link: "/products/noi-that-salon-spa/guong" },
             {

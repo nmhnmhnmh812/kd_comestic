@@ -23,7 +23,7 @@ export default function PromoteSession({
   return (
     <div
       className={clsx(
-        "bg-white flex rounded-md overflow-hidden",
+        "bg-white flex rounded-lg overflow-hidden",
         reverse && "flex-row-reverse"
       )}
     >
