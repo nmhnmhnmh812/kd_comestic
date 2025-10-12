@@ -30,8 +30,8 @@ export default function RootLayout({
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <AntdRegistry>
           <Header />
-          <main className="min-h-screen bg-slate-100 mt-[165px]">
-            {children}
+          <main className="min-h-screen bg-slate-100">
+            <div className="max-w-7xl mx-auto">{children}</div>
           </main>
           <Footer />
         </AntdRegistry>

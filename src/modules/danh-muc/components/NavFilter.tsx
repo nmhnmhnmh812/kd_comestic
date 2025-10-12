@@ -11,7 +11,6 @@ export default function NavFilter({
   path: string[];
 }) {
   const currentPath = `/danh-muc/${path.join("/")}`;
-  console.log("currentPath:", currentPath);
 
   return (
     <div className="bg-white p-5 flex flex-col gap-4 w-1/4 border-r">

@@ -14,3 +14,14 @@ export interface ISLUGMAP {
     categories: ICategory;
   };
 }
+
+export interface IProduct {
+  id: number;
+  name: string;
+  brand: string;
+  image: string;
+  price: number;
+  oldPrice: number;
+  description: string;
+  category: string;
+}
