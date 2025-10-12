@@ -95,7 +95,7 @@ export default function ProductDescription({ product }: { product: IProduct }) {
                 FDA Approved - Được cơ quan quản lý thực phẩm và dược phẩm Hoa
                 Kỳ chứng nhận
               </li>
-              <li>Giải thưởng "Best Skincare Product" 2023</li>
+              <li>Giải thưởng &ldquo;Best Skincare Product&rdquo; 2023</li>
               <li>Được đề xuất bởi các chuyên gia da liễu hàng đầu</li>
             </ul>
           </div>
@@ -120,12 +120,12 @@ export default function ProductDescription({ product }: { product: IProduct }) {
                 Hyaluronic Acid (HA) - 2%
               </h4>
               <p className="text-gray-600 text-sm mb-2">
-                Được mệnh danh là "nam châm giữ ẩm" của làng skincare,
-                Hyaluronic Acid có khả năng giữ nước gấp 1000 lần trọng lượng
-                của chính nó. Thành phần này thẩm thấu sâu vào các lớp da, cấp
-                ẩm từ bên trong, giúp da mềm mại, căng mọng và đầy đặn hơn. Đồng
-                thời giúp làm mờ các nếp nhăn li ti, khôi phục độ đàn hồi tự
-                nhiên cho da.
+                Được mệnh danh là &ldquo;nam châm giữ ẩm&rdquo; của làng
+                skincare, Hyaluronic Acid có khả năng giữ nước gấp 1000 lần
+                trọng lượng của chính nó. Thành phần này thẩm thấu sâu vào các
+                lớp da, cấp ẩm từ bên trong, giúp da mềm mại, căng mọng và đầy
+                đặn hơn. Đồng thời giúp làm mờ các nếp nhăn li ti, khôi phục độ
+                đàn hồi tự nhiên cho da.
               </p>
               <p className="text-gray-500 text-xs italic">
                 ✓ Cấp ẩm sâu suốt 72h | ✓ Tăng độ đàn hồi | ✓ Làm mờ nếp nhăn
@@ -171,12 +171,12 @@ export default function ProductDescription({ product }: { product: IProduct }) {
                 Ceramide Complex - 1%
               </h4>
               <p className="text-gray-600 text-sm mb-2">
-                Phức hợp 3 loại Ceramide (NP, AP, EOP) hoạt động như "xi măng"
-                liên kết các tế bào da, tái tạo và củng cố hàng rào bảo vệ da tự
-                nhiên. Giúp da khóa ẩm hiệu quả, ngăn ngừa mất nước qua biểu bì,
-                đồng thời bảo vệ da khỏi các tác nhân kích thích từ môi trường.
-                Đặc biệt quan trọng cho da khô, da bị tổn thương hàng rào bảo
-                vệ.
+                Phức hợp 3 loại Ceramide (NP, AP, EOP) hoạt động như &ldquo;xi
+                măng&rdquo; liên kết các tế bào da, tái tạo và củng cố hàng rào
+                bảo vệ da tự nhiên. Giúp da khóa ẩm hiệu quả, ngăn ngừa mất nước
+                qua biểu bì, đồng thời bảo vệ da khỏi các tác nhân kích thích từ
+                môi trường. Đặc biệt quan trọng cho da khô, da bị tổn thương
+                hàng rào bảo vệ.
               </p>
               <p className="text-gray-500 text-xs italic">
                 ✓ Phục hồi hàng rào da | ✓ Khóa ẩm tối ưu | ✓ Tăng cường bảo vệ
@@ -720,7 +720,7 @@ export default function ProductDescription({ product }: { product: IProduct }) {
                 </h5>
                 <p className="text-xs text-gray-600">
                   Ngủ đủ 7-8 tiếng mỗi đêm để da có thời gian tự phục hồi và tái
-                  tạo. Đây là "golden time" cho các hoạt chất skincare phát huy
+                  tạo. Đây là &quot;golden time&quot; cho các hoạt chất skincare phát huy
                   tác dụng.
                 </p>
               </div>
