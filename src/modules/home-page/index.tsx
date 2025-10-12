@@ -74,7 +74,7 @@ export default function HomePage() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto flex flex-col gap-5 py-5">
+    <div className="flex flex-col gap-5 py-5">
       <Banner />
       <ProductSession title="Flash sale" link="/flash-sale" />
       <ProductSession title="Sản phẩm hot" link="/hot-deals" />

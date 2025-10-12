@@ -1,4 +1,5 @@
 import { ISLUGMAP } from "@/types";
+import demoProduct from "@/assets/images/demo_product.png";
 
 export const SLUG_MAP: ISLUGMAP = {
   "trang-diem": {
@@ -43,3 +44,16 @@ export const SLUG_MAP: ISLUGMAP = {
     },
   },
 };
+
+export const PRODUCT_DEMO = {
+  name: "Son kem Peripera Over Blur Tint - 05 Vintage Acorn",
+  price: 250000,
+  oldPrice: 279000,
+  image: demoProduct,
+  id: "1",
+  brand: "Peripera",
+  category: { name: "Son môi", link: "son-moi", id: 2 },
+  subCategory: { name: "Son môi lì", link: "son-moi/son-moi-li", id: 20 },
+};
+
+export const PRODUCT_DEMO_LIST = Array(10).fill(PRODUCT_DEMO);
