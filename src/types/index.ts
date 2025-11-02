@@ -25,3 +25,82 @@ export interface IProduct {
   description: string;
   category: string;
 }
+
+export type ResponseApi = {
+  data: any;
+  message?: string;
+  status?: number;
+  error?: string;
+};
+
+export type Product = {
+  id: number;
+  category: {
+    id: number;
+    name: string;
+    createdDate: string;
+    updatedDate: string;
+    subCategories: {
+      id: number;
+      name: string;
+      categoryId: number;
+      categoryName: string;
+    }[];
+  };
+  subCategory: {
+    id: number;
+    name: string;
+    categoryId: number;
+    categoryName: string;
+  };
+  brand: {
+    id: number;
+    name: string;
+    image: {
+      id: number;
+      url: string;
+    } | null;
+    link: string;
+    description: string;
+    createdDate: string;
+    updatedDate: string;
+  };
+  name: string;
+  price: number;
+  description: string;
+  discount: number;
+  finalPrice: number;
+  isDeleted: boolean;
+  stockQuantity: number;
+  viewCount: number;
+  buyCount: number;
+  createdDate: string;
+  updatedDate: string;
+  blobs: {
+    id: number;
+    url: string;
+  }[];
+};
+
+export type Variant = {
+  id: number;
+  name: string;
+  description: string;
+  price: number;
+  discount: number;
+  createdDate: string;
+  updatedDate: string;
+  stockQuantity: number;
+  buyCount: number;
+  blobs: {
+    id: number;
+    url: string;
+  }[];
+};
+
+export type CartItem = {
+  id: string;
+  product: Product;
+  variant: Variant | null;
+  quantity: number;
+};

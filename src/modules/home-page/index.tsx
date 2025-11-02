@@ -1,59 +1,20 @@
+"use client";
+
 import { SLUG_MAP } from "@/constants";
 import Banner from "./components/Banner";
 import ProductSession from "./components/ProductSession";
 import PromoteSession from "./components/PromoteSession";
-import { ICategory } from "@/types";
-
-const SESSION1 = [
-  {
-    title: "Trang điểm mặt",
-    link: "/danh-muc/trang-diem/trang-diem-mat",
-  },
-  {
-    title: "Trang điểm mắt",
-    link: "/danh-muc/trang-diem/trang-diem-mat",
-  },
-];
-
-const SESSION2 = [
-  {
-    title: "Son thỏi",
-    link: "/products/son-moi/son-thoi",
-  },
-  {
-    title: "Son kem",
-    link: "/products/son-moi/son-kem",
-  },
-  {
-    title: "Son dưỡng",
-    link: "/products/son-moi/son-duong",
-  },
-  {
-    title: "Son bóng",
-    link: "/products/son-moi/son-tint",
-  },
-];
-
-const SESSION3 = [
-  {
-    title: "Làm sạch",
-    link: "/danh-muc/cham-soc-da/lam-sach",
-  },
-  {
-    title: "Dưỡng da",
-    link: "/danh-muc/cham-soc-da/duong-da",
-  },
-  {
-    title: "Mặt nạ",
-    link: "/products/cham-soc-da/mat-na",
-  },
-  {
-    title: "Kem chống nắng",
-    link: "/products/cham-soc-da/kem-chong-nang",
-  },
-];
+import { ICategory, ResponseApi } from "@/types";
+import { useQuery } from "@tanstack/react-query";
+import { ENDPOINTS, getProducts } from "@/api/product";
+import React from "react";
+import { message } from "antd";
 
 export default function HomePage() {
+  const [filters, setFilters] = React.useState({
+    page: 1,
+    limit: 10,
+  });
   const categories = Object.values(SLUG_MAP).splice(0, 3);
   const getCategories = (value: ICategory["children"]) => {
     return value
@@ -72,6 +33,19 @@ export default function HomePage() {
     const find = value.find((item) => !item.id);
     return find ? `/danh-muc/${find.link}` : "";
   };
+
+  const { data, refetch, isFetching } = useQuery({
+    queryKey: [ENDPOINTS.PRODUCT, filters],
+    queryFn: async () => {
+      const { error, data }: ResponseApi = await getProducts({
+        ...filters,
+      });
+      if (error) {
+        message.error(error || "Đã có lỗi xảy ra");
+      }
+      return data;
+    },
+  });
 
   return (
     <div className="flex flex-col gap-5 py-5">

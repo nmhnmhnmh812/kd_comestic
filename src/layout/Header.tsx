@@ -38,9 +38,11 @@ export default function Header() {
           suffix={<SearchOutlined />}
         />
         <div className="flex gap-10">
-          <span>
-            <ShoppingCartOutlined /> Giỏ hàng
-          </span>
+          <Link href="/cart">
+            <span>
+              <ShoppingCartOutlined /> Giỏ hàng
+            </span>
+          </Link>
           <span>
             <PhoneOutlined /> Hỗ trợ khách hàng
           </span>

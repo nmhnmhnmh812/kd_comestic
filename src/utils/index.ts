@@ -12,3 +12,10 @@ export const convertToUrl = (name: string, id?: number) => {
 export const convertToVnd = (price: number) => {
   return price.toLocaleString("vi-VN", { style: "currency", currency: "VND" });
 };
+
+export const convertToOriginalPrice = (
+  price: number,
+  discountPercent: number
+) => {
+  return Math.round(price / (1 - discountPercent / 100));
+};

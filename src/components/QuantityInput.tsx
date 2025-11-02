@@ -1,10 +1,28 @@
 "use client";
 
 import { MinusOutlined, PlusOutlined } from "@ant-design/icons";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
-export default function QuantityInput() {
-  const [quantity, setQuantity] = useState(1);
+export default function QuantityInput({
+  onChange,
+  value = 1,
+  size = "default",
+}: {
+  onChange?: (value: number) => void;
+  value?: number;
+  size?: "default" | "small";
+}) {
+  const [quantity, setQuantity] = useState(value);
+
+  useEffect(() => {
+    if (onChange) {
+      onChange(quantity);
+    }
+  }, [quantity]);
+
+  useEffect(() => {
+    setQuantity(value);
+  }, [value]);
 
   const handleDecrease = () => {
     if (quantity > 1) {
@@ -17,11 +35,11 @@ export default function QuantityInput() {
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
+    const v = e.target.value;
 
     // Chỉ chấp nhận số
-    if (value === "" || /^\d+$/.test(value)) {
-      const numValue = value === "" ? 1 : parseInt(value, 10);
+    if (v === "" || /^\d+$/.test(v)) {
+      const numValue = v === "" ? 1 : parseInt(v, 10);
       if (numValue > 0) {
         setQuantity(numValue);
       }
@@ -35,14 +53,28 @@ export default function QuantityInput() {
     }
   };
 
+  const isSmall = size === "small";
+
+  const btnBase =
+    "flex items-center justify-center border border-gray-300 rounded hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed";
+  const btnClass = isSmall
+    ? `w-6 h-6 ${btnBase} text-xs`
+    : `w-8 h-8 ${btnBase} text-sm`;
+
+  const inputClass = isSmall
+    ? "w-10 h-6 text-center border border-gray-300 rounded text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+    : "w-12 h-8 text-center border border-gray-300 rounded focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500";
+
+  const iconSize = isSmall ? 12 : 16;
+
   return (
     <div className="flex items-center gap-2">
       <button
         onClick={handleDecrease}
         disabled={quantity === 1}
-        className="w-8 h-8 flex items-center justify-center border border-gray-300 rounded hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        className={btnClass}
       >
-        <MinusOutlined size={16} />
+        <MinusOutlined style={{ fontSize: iconSize }} />
       </button>
 
       <input
@@ -50,14 +82,11 @@ export default function QuantityInput() {
         value={quantity}
         onChange={handleInputChange}
         onBlur={handleBlur}
-        className="w-12 h-8 text-center border border-gray-300 rounded focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+        className={inputClass}
       />
 
-      <button
-        onClick={handleIncrease}
-        className="w-8 h-8 flex items-center justify-center border border-gray-300 rounded hover:bg-gray-100 transition-colors"
-      >
-        <PlusOutlined size={16} />
+      <button onClick={handleIncrease} className={btnClass}>
+        <PlusOutlined style={{ fontSize: iconSize }} />
       </button>
     </div>
   );
