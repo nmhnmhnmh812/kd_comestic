@@ -2,6 +2,9 @@ import type { NextConfig } from "next";
 import path from "path";
 
 const nextConfig: NextConfig = {
+  images: {
+    domains: [process.env.NEXT_PUBLIC_IMAGE_URL],
+  },
   webpack(config) {
     config.module.rules.push({
       test: /\.svg$/,
@@ -22,9 +25,6 @@ const nextConfig: NextConfig = {
     };
 
     return config;
-  },
-  images: {
-    domains: ["images.unsplash.com"],
   },
   compiler: {
     styledComponents: false,
