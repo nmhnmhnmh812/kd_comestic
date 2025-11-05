@@ -33,6 +33,8 @@ export default function CategorySidebar({
       </p>
       {isFetching ? (
         <div className="text-gray-500">Đang tải...</div>
+      ) : categories.length === 0 ? (
+        <div className="text-gray-500">Không có danh mục</div>
       ) : (
         <ul className="flex flex-col gap-2">
           {categories.map((category: ApiCategory) => {
