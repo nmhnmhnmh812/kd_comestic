@@ -6,6 +6,7 @@ import { AppstoreOutlined } from "@ant-design/icons";
 import clsx from "clsx";
 import slugify from "slugify";
 import useCategories from "@/hooks/useCategories";
+import { ApiCategory } from "@/types";
 
 interface CategorySidebarProps {
   currentCategoryId?: number;
@@ -34,7 +35,7 @@ export default function CategorySidebar({
         <div className="text-gray-500">Đang tải...</div>
       ) : (
         <ul className="flex flex-col gap-2">
-          {categories.map((category: any) => {
+          {categories.map((category: ApiCategory) => {
             const categorySlug = slugify(category.name, {
               lower: true,
               locale: "vi",

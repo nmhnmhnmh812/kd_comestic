@@ -1,5 +1,6 @@
 import { ENDPOINTS, getCategories } from "@/api/category";
 import { useQuery } from "@tanstack/react-query";
+import { ApiCategory } from "@/types";
 
 export default function useCategories() {
   const { data, isFetching, error } = useQuery({
@@ -12,7 +13,7 @@ export default function useCategories() {
   });
 
   return {
-    categories: data?.result || [],
+    categories: (data?.result || []) as ApiCategory[],
     isFetching,
     error,
   };

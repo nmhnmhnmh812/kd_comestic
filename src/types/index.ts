@@ -104,3 +104,16 @@ export type CartItem = {
   variant: Variant | null;
   quantity: number;
 };
+
+export type ApiCategory = {
+  id: number;
+  name: string;
+  createdDate: string;
+  updatedDate: string;
+  subCategories?: {
+    id: number;
+    name: string;
+    categoryId: number;
+    categoryName: string;
+  }[];
+};
