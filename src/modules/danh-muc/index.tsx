@@ -35,7 +35,10 @@ export default async function CategoryScreen({
     <div className="py-5 flex flex-col gap-5">
       <Breadcrumb items={breadcrumbItems} separator=">" />
       <div className="flex gap-5">
-        <CategorySidebar currentCategoryId={slug.id} />
+        <CategorySidebar
+          currentCategoryId={slug.id}
+          currentCategorySlug={categorySlug}
+        />
         <div className="flex gap-5 bg-white rounded-lg overflow-hidden flex-1">
           <NavFilter filter={rest} path={resolvedParams.slug} />
           <ProductContainer slug={slug} />

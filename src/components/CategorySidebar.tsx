@@ -1,30 +1,22 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Link from "next/link";
 import { AppstoreOutlined } from "@ant-design/icons";
 import clsx from "clsx";
-import slugify from "slugify";
 import useCategories from "@/hooks/useCategories";
 import { ApiCategory } from "@/types";
+import { convertToUrl } from "@/utils";
 
 interface CategorySidebarProps {
   currentCategoryId?: number;
+  currentCategorySlug?: string;
 }
 
 export default function CategorySidebar({
   currentCategoryId,
+  currentCategorySlug,
 }: CategorySidebarProps) {
   const { categories, isFetching } = useCategories();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!mounted) {
-    return null;
-  }
 
   return (
     <div className="bg-white p-5 flex flex-col gap-4 w-1/4 border-r min-h-[400px]">
@@ -38,13 +30,12 @@ export default function CategorySidebar({
       ) : (
         <ul className="flex flex-col gap-2">
           {categories.map((category: ApiCategory) => {
-            const categorySlug = slugify(category.name, {
-              lower: true,
-              locale: "vi",
-              strict: true,
-            });
+            const categorySlug = convertToUrl(category.name);
             const link = `/danh-muc/${categorySlug}`;
-            const isActive = category.id === currentCategoryId;
+            // Match by ID or by slug for more robust highlighting
+            const isActive =
+              category.id === currentCategoryId ||
+              categorySlug === currentCategorySlug;
 
             return (
               <li
