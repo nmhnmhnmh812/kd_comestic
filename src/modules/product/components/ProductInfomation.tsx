@@ -1,49 +1,74 @@
 import QuantityInput from "@/components/QuantityInput";
-import { IProduct } from "@/types";
-import { convertToVnd } from "@/utils";
+import { Product, Variant } from "@/types";
+import { convertToOriginalPrice, convertToVnd } from "@/utils";
 import { ShoppingCartOutlined, ShoppingOutlined } from "@ant-design/icons";
-import { Button } from "antd";
+import { Button, message } from "antd";
+import ProductVarients from "./ProductVarients";
+import useProductDetail from "../store";
+import React from "react";
+import { useMutation } from "@tanstack/react-query";
+import { addItemToCart } from "@/api/cart";
 
-export default function ProductInformation({ product }: { product: IProduct }) {
+export default function ProductInformation({
+  product,
+  variants,
+}: {
+  product: Product;
+  variants: Variant[];
+}) {
+  const [quantity, setQuantity] = React.useState(1);
+  const currentVariant = useProductDetail((state) => state.currentVariant);
+  const currentProduct = currentVariant || product;
+  const originalPrice = convertToOriginalPrice(
+    currentProduct.price,
+    currentProduct.discount
+  );
+  const { mutate, isPending } = useMutation({
+    mutationFn: addItemToCart,
+    onSuccess: () => {
+      message.success("Đã thêm vào giỏ hàng");
+    },
+    onError: () => {
+      message.error("Thêm vào giỏ hàng thất bại. Vui lòng thử lại.");
+    },
+  });
+  const addToCart = () => {
+    const cartId = localStorage.getItem("cart_id");
+    const productId = product.id;
+    const variantId = currentVariant?.id;
+    const params = {
+      cartId,
+      productId,
+      variantId,
+      quantity,
+    };
+    mutate(params);
+  };
   return (
-    <div className="flex-1 flex flex-col justify-between">
+    <div className="flex-1 flex flex-col justify-between gap-2">
       <h2 className="text-lg font-semibold text-red-600 uppercase">
-        {product.brand}
+        {product.brand.name}
       </h2>
-      <h1 className="text-xl font-bold text-gray-800">{product.name}</h1>
-      <p className="text-sm">Mã sản phẩm: {product.id}</p>
+      <h1 className="text-xl font-bold text-gray-800">{currentProduct.name}</h1>
+      <p className="text-sm">Mã sản phẩm: {currentProduct.id}</p>
       <p>
         <span className="text-red-600 font-bold text-lg">
-          Giá: {convertToVnd(product.price)}
+          Giá: {convertToVnd(currentProduct.price)}
         </span>{" "}
         <span className="text-sm">(Đã bao gồm VAT)</span>
       </p>
       <p>
-        Giá gốc: {convertToVnd(product.oldPrice)} - Tiết kiệm:{" "}
-        {convertToVnd(product.oldPrice - product.price)}{" "}
-        <span className="text-red-600">
-          (
-          {Math.round(
-            ((product.oldPrice - product.price) / product.oldPrice) * 100
-          )}
-          % )
-        </span>
+        Giá gốc: {convertToVnd(originalPrice)} - Tiết kiệm:{" "}
+        {convertToVnd(originalPrice - currentProduct.price)}{" "}
+        <span className="text-red-600">{`(${currentProduct.discount}%)`}</span>
       </p>
       <div className="flex flex-col gap-3">
         <p>Phân loại:</p>
-        <div className="grid grid-cols-3 gap-3">
-          {Array(3)
-            .fill(0)
-            .map((_, index) => (
-              <Button key={index} className="text-sm">
-                Phân loại {index + 1}
-              </Button>
-            ))}
-        </div>
+        <ProductVarients variants={variants} />
       </div>
       <div className="flex gap-3">
         <span>Số lượng: </span>
-        <QuantityInput />
+        <QuantityInput onChange={setQuantity} />
       </div>
       <div className="flex gap-3">
         <Button
@@ -52,6 +77,8 @@ export default function ProductInformation({ product }: { product: IProduct }) {
           variant="solid"
           className="w-full"
           icon={<ShoppingCartOutlined />}
+          loading={isPending}
+          onClick={addToCart}
         >
           Thêm vào giỏ hàng
         </Button>

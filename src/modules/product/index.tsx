@@ -1,18 +1,30 @@
-import { PRODUCT_DEMO_LIST } from "@/constants";
+"use client";
+
 import { convertToUrl } from "@/utils";
 import { Breadcrumb } from "antd";
 import Link from "next/link";
 import ProductDetail from "./components/ProductDetail";
 import ProductDescription from "./components/ProductDescription";
 import SideSession from "./components/SideSession";
+import { Product, Variant } from "@/types";
+import { createCart } from "@/api/cart";
+import { useEffect } from "react";
 
-export default function ProductScreen({ slug }: { slug: string[] }) {
-  const [url, id] = slug[0].split(".");
-  const product = PRODUCT_DEMO_LIST.find((item) => item.id === id);
-
-  if (!product) {
-    return <div>Product not found</div>;
-  }
+export default function ProductScreen({
+  product,
+  variants,
+}: {
+  product: Product;
+  variants: Variant[];
+}) {
+  useEffect(() => {
+    const cartId = localStorage.getItem("cart_id");
+    if (!cartId) {
+      createCart().then(({ data }) => {
+        localStorage.setItem("cart_id", data.result.id);
+      });
+    }
+  }, []);
 
   const categoryUrl = convertToUrl(product.category.name);
   const subCategoryUrl = convertToUrl(
@@ -44,8 +56,8 @@ export default function ProductScreen({ slug }: { slug: string[] }) {
     <div className="flex flex-col gap-5 py-5">
       <Breadcrumb items={breadcrumbItems} separator=">" />
       <div className="flex gap-5">
-        <div className="flex flex-col gap-5">
-          <ProductDetail product={product} />
+        <div className="flex flex-col gap-5 flex-1">
+          <ProductDetail product={product} variants={variants} />
           <ProductDescription product={product} />
         </div>
         <div className="flex flex-col gap-5">

@@ -4,6 +4,8 @@ import "./globals.scss";
 import Header from "@/layout/Header";
 import Footer from "@/layout/Footer";
 import AntdRegistry from "@/lib/AntdRegistry";
+import ReactQueryProvider from "@/providers/ReactQueryProvider";
+import "@ant-design/v5-patch-for-react-19";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -22,19 +24,21 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="vi">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        <AntdRegistry>
-          <Header />
-          <main className="min-h-screen bg-slate-100">
-            <div className="max-w-7xl mx-auto">{children}</div>
-          </main>
-          <Footer />
-        </AntdRegistry>
+        <ReactQueryProvider>
+          <AntdRegistry>
+            <Header />
+            <main className="bg-slate-100 min-h-[50vh]">
+              <div className="max-w-7xl mx-auto">{children}</div>
+            </main>
+            <Footer />
+          </AntdRegistry>
+        </ReactQueryProvider>
       </body>
     </html>
   );
