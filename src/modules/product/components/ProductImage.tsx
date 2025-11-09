@@ -9,7 +9,7 @@ export default function ProductImage({ product }: { product: IProduct }) {
       : (product.image as StaticImageData).src;
 
   return (
-    <div className="w-[44%] bg-white rounded-lg">
+    <div className="w-full md:w-[44%] bg-white rounded-lg">
       <div className="flex gap-2">
         <div className="flex-1 rounded-lg flex items-center justify-center overflow-hidden">
           <Image
@@ -23,14 +23,14 @@ export default function ProductImage({ product }: { product: IProduct }) {
           />
         </div>
 
-        <div className="flex flex-col gap-2 justify-between">
+        <div className="hidden sm:flex flex-col gap-2 justify-between">
           {Array(4)
             .fill(0)
             .map((_, index) => (
               <div
                 key={index}
                 className={
-                  "cursor-pointer w-20 aspect-square rounded-lg transition-all overflow-hidden"
+                  "cursor-pointer w-16 md:w-20 aspect-square rounded-lg transition-all overflow-hidden"
                 }
               >
                 <Image

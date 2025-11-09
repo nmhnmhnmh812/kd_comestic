@@ -1,5 +1,24 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## KMP Cosmetics - Responsive E-commerce Website
+
+A fully responsive cosmetics e-commerce website built with Next.js, TypeScript, Tailwind CSS, and Ant Design.
+
+### Responsive Design
+
+The website is optimized for all device sizes:
+
+- **Mobile (Phone)**: < 640px - Optimized for touch interaction with stacked layouts
+- **Tablet**: 640px - 1024px - Adaptive grid layouts for comfortable viewing
+- **Desktop**: > 1024px - Full-featured layouts with multi-column displays
+
+Key responsive features:
+- Mobile-friendly navigation header with icon-based controls
+- Responsive product carousels (2 slides on mobile, 4 on tablet, 6 on desktop)
+- Adaptive product grids across all pages
+- Flexible banner layouts optimized per device
+- Touch-friendly buttons and controls on mobile devices
+
 ## Getting Started
 
 First, run the development server:

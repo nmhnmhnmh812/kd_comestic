@@ -9,10 +9,10 @@ export default function SideSession({
   link: string;
 }) {
   return (
-    <div className="bg-white rounded-lg w-[220px] overflow-hidden">
+    <div className="bg-white rounded-lg w-full lg:w-[220px] overflow-hidden">
       <h2 className="font-semibold text-sm text-center py-2">{title}</h2>
       <Divider className="my-0" />
-      <div className="flex flex-col gap-2 px-2">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-1 gap-2 px-2">
         {Array(2)
           .fill(0)
           .map((_, index) => (

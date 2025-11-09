@@ -41,14 +41,14 @@ export default function ProductScreen({ slug }: { slug: string[] }) {
     },
   ];
   return (
-    <div className="flex flex-col gap-5 py-5">
+    <div className="flex flex-col gap-3 sm:gap-5 py-3 sm:py-5">
       <Breadcrumb items={breadcrumbItems} separator=">" />
-      <div className="flex gap-5">
-        <div className="flex flex-col gap-5">
+      <div className="flex flex-col lg:flex-row gap-3 sm:gap-5">
+        <div className="flex flex-col gap-3 sm:gap-5 flex-1">
           <ProductDetail product={product} />
           <ProductDescription product={product} />
         </div>
-        <div className="flex flex-col gap-5">
+        <div className="flex flex-col gap-3 sm:gap-5 lg:w-80">
           <SideSession title="Sản phẩm cùng thương hiệu" link="" />
           <SideSession title="Sản phẩm liên quan" link="" />
         </div>
