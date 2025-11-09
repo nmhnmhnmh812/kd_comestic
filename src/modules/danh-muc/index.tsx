@@ -31,9 +31,9 @@ export default async function CategoryScreen({
   ];
 
   return (
-    <div className="py-5 flex flex-col gap-5">
+    <div className="py-3 sm:py-5 flex flex-col gap-3 sm:gap-5">
       <Breadcrumb items={breadcrumbItems} separator=">" />
-      <div className="flex gap-5 bg-white rounded-lg overflow-hidden">
+      <div className="flex flex-col md:flex-row gap-3 sm:gap-5 bg-white rounded-lg overflow-hidden">
         <NavFilter filter={rest} path={resolvedParams.slug} />
         <ProductContainer slug={slug} />
       </div>

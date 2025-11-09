@@ -13,14 +13,14 @@ export default function NavFilter({
   const currentPath = `/danh-muc/${path.join("/")}`;
 
   return (
-    <div className="bg-white p-5 flex flex-col gap-4 w-1/4 border-r">
-      <p className="text-xl font-semibold uppercase">
+    <div className="bg-white p-3 sm:p-5 flex flex-col gap-4 w-full md:w-1/4 border-r">
+      <p className="text-lg sm:text-xl font-semibold uppercase">
         <FilterFilled /> Bộ lọc tìm kiếm
       </p>
       {Object.entries(filter).map(([key, category]) => (
         <div key={key} className="flex flex-col gap-2">
-          <p className="font-semibold uppercase">{category.title}</p>
-          <ul className="flex flex-col gap-2 pl-3">
+          <p className="font-semibold uppercase text-sm sm:text-base">{category.title}</p>
+          <ul className="flex flex-col gap-2 pl-3 text-sm">
             {category.children.map((child) => {
               const link = `/danh-muc/${child.link}${
                 child.id ? `.${child.id}` : ""
