@@ -12,7 +12,7 @@ import { useState } from "react";
 export default function ProductContainer({ slug }: { slug?: ISlug }) {
   const category = useProductList((state) => state.category);
   const filter = useProductList((state) => state.filter);
-  const [pagination, setPagination] = useState({ page: 0, size: 10 });
+  const [pagination, setPagination] = useState({ page: 0, size: 20 });
   const [total, setTotal] = useState(0);
 
   const { data: products, isFetching } = useQuery<any[]>({
