@@ -8,17 +8,17 @@ export default function Product() {
   return (
     <Link
       href={`/${url}`}
-      className="w-full my-1 p-2 relative flex flex-col gap-2 cursor-pointer hover:shadow-md rounded-lg"
+      className="w-full my-1 p-1 sm:p-2 relative flex flex-col gap-1 sm:gap-2 cursor-pointer hover:shadow-md rounded-lg transition-shadow"
     >
-      <div className="flex flex-col gap-2 text-black">
+      <div className="flex flex-col gap-1 sm:gap-2 text-black">
         <div className="relative w-full aspect-square">
-          <Image alt="" src={PRODUCT_DEMO.image} fill />
+          <Image alt={PRODUCT_DEMO.name} src={PRODUCT_DEMO.image} fill className="object-cover rounded" />
         </div>
-        <div className="font-semibold text-sm flex gap-2">
+        <div className="font-semibold text-xs sm:text-sm flex gap-1 sm:gap-2">
           <span className="text-red-400">
             {convertToVnd(PRODUCT_DEMO.price)}
           </span>
-          <span className="line-through text-gray-400">
+          <span className="line-through text-gray-400 text-xs">
             {convertToVnd(PRODUCT_DEMO.oldPrice)}
           </span>
         </div>

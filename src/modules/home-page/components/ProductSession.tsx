@@ -14,25 +14,57 @@ export default function ProductSession({
   return (
     <div className="bg-white rounded-lg shadow-sm">
       <div className="text-red-600 uppercase flex justify-between items-center font-bold px-4 py-2">
-        <span>{title}</span>
-        <Link href={link} className="cursor-pointer text-sm">
+        <span className="text-sm sm:text-base">{title}</span>
+        <Link href={link} className="cursor-pointer text-xs sm:text-sm hover:underline">
           Xem tất cả
         </Link>
       </div>
       <Divider className="mt-0 mb-1" />
-      <Carousel
-        dots={false}
-        slidesToShow={6}
-        slidesToScroll={2}
-        infinite
-        arrows
-        adaptiveHeight
-        className="px-1"
-      >
-        {Array.from({ length: 10 }).map((_, index) => (
-          <Product key={index} />
-        ))}
-      </Carousel>
+      <div className="hidden lg:block">
+        <Carousel
+          dots={false}
+          slidesToShow={6}
+          slidesToScroll={2}
+          infinite
+          arrows
+          adaptiveHeight
+          className="px-1"
+        >
+          {Array.from({ length: 10 }).map((_, index) => (
+            <Product key={index} />
+          ))}
+        </Carousel>
+      </div>
+      <div className="hidden md:block lg:hidden">
+        <Carousel
+          dots={false}
+          slidesToShow={4}
+          slidesToScroll={2}
+          infinite
+          arrows
+          adaptiveHeight
+          className="px-1"
+        >
+          {Array.from({ length: 10 }).map((_, index) => (
+            <Product key={index} />
+          ))}
+        </Carousel>
+      </div>
+      <div className="block md:hidden">
+        <Carousel
+          dots={false}
+          slidesToShow={2}
+          slidesToScroll={1}
+          infinite
+          arrows
+          adaptiveHeight
+          className="px-1"
+        >
+          {Array.from({ length: 10 }).map((_, index) => (
+            <Product key={index} />
+          ))}
+        </Carousel>
+      </div>
     </div>
   );
 }
