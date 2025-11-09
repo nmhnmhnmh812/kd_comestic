@@ -12,13 +12,7 @@ export default function SideSession({
     <div className="bg-white rounded-lg w-[220px] overflow-hidden">
       <h2 className="font-semibold text-sm text-center py-2">{title}</h2>
       <Divider className="my-0" />
-      <div className="flex flex-col gap-2 px-2">
-        {Array(2)
-          .fill(0)
-          .map((_, index) => (
-            <Product key={index} />
-          ))}
-      </div>
+      <div className="flex flex-col gap-2 px-2"></div>
       <Button color="default" variant="filled" className="w-full rounded-none">
         Xem tất cả
       </Button>

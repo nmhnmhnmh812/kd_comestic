@@ -28,11 +28,7 @@ export default function ProductSession({
         arrows
         adaptiveHeight
         className="px-1"
-      >
-        {Array.from({ length: 10 }).map((_, index) => (
-          <Product key={index} />
-        ))}
-      </Carousel>
+      ></Carousel>
     </div>
   );
 }
