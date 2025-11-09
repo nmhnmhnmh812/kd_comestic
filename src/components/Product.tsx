@@ -1,25 +1,14 @@
+import { Product as ProductType } from "@/types";
 import { convertToUrl, convertToVnd } from "@/utils";
 import Image from "next/image";
 import Link from "next/link";
 
-type ProductProps = {
-  imageUrl: string;
-  id?: number;
-  name: string;
-  brandName: string;
-  price: number;
-  discountPercent?: number;
-};
-
-export default function Product({
-  imageUrl,
-  id,
-  name,
-  brandName,
-  price,
-  discountPercent,
-}: ProductProps) {
+export default function Product({ ...rest }: ProductType) {
+  const { name, id, price, finalPrice, brand, blobs } = rest;
   const url = convertToUrl(name, id);
+  const imageUrl = blobs?.[0]?.url;
+  const brandName = brand?.name;
+
   return (
     <Link
       href={`/${url}`}
@@ -27,15 +16,15 @@ export default function Product({
     >
       <div className="flex flex-col gap-2 text-black">
         <div className="relative w-full aspect-square">
-          <Image alt="" src={imageUrl} fill />
+          <Image alt={name} src={imageUrl} fill />
         </div>
         <div className="font-semibold text-sm flex gap-2">
-          <span className="text-red-400">{convertToVnd(price)}</span>
-          {discountPercent && (
+          <span className="text-red-400">{convertToVnd(finalPrice)}</span>
+          {price !== finalPrice ? (
             <span className="line-through text-gray-400">
-              {convertToVnd(price + (price * discountPercent) / 100)}
+              {convertToVnd(price)}
             </span>
-          )}
+          ) : null}
         </div>
         <div className="text-xs">
           <h3 className="font-bold">{brandName}</h3>

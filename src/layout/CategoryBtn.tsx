@@ -1,33 +1,23 @@
 "use client";
 
 import { ENDPOINTS, getCategories } from "@/api/category";
+import { Category } from "@/types";
+import { convertToUrl } from "@/utils";
 import { RightOutlined } from "@ant-design/icons";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { useState } from "react";
 
-type Categories = {
-  id: string;
-  name: string;
-  link: string;
-  subCategories?: {
-    id: string;
-    name: string;
-    link: string;
-    items?: { name: string; link: string }[];
-  }[];
-};
-
 export default function CategoryBtn() {
-  const { data: categories = [] } = useQuery<any, Error, Categories[]>({
+  const { data: categories = [] } = useQuery<any, Error, Category[]>({
     queryKey: [ENDPOINTS.CATEGORIES],
     queryFn: getCategories,
-    select: (res) => (res.data.result as Categories[]) || [],
+    select: (res) => (res.data.result as Category[]) || [],
     staleTime: Infinity,
   });
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [activeMenu, setActiveMenu] = useState<string | null>(null);
+  const [activeMenu, setActiveMenu] = useState<number | null>(null);
 
   return (
     <div
@@ -50,7 +40,9 @@ export default function CategoryBtn() {
               }}
               onMouseLeave={() => setActiveMenu(null)}
             >
-              <Link href={`/danh-muc?category=${category.id}`}>
+              <Link
+                href={`/danh-muc/${convertToUrl(category.name, category.id)}`}
+              >
                 <div className="px-6 py-3 flex items-center justify-between border-b border-gray-100 cursor-pointer hover:bg-gray-50 transition-colors group">
                   <span className="text-gray-800 font-medium">
                     {category.name}
@@ -76,26 +68,18 @@ export default function CategoryBtn() {
                       {category.subCategories.map((subcategory, idx) => (
                         <div key={idx}>
                           <Link
-                            href={`/danh-muc?category=${category.id}&subCategory=${subcategory.id}`}
+                            href={`/danh-muc/${convertToUrl(
+                              category.name,
+                              category.id
+                            )}/${convertToUrl(
+                              subcategory.name,
+                              subcategory.id
+                            )}`}
                           >
                             <h3 className="font-bold text-gray-900 mb-3 pb-2 border-b-2 border-red-600 hover:text-red-600 cursor-pointer transition-colors">
                               {subcategory.name}
                             </h3>
                           </Link>
-                          {subcategory.items && (
-                            <ul className="space-y-2">
-                              {subcategory.items.map((item, itemIdx) => (
-                                <li key={itemIdx}>
-                                  <Link
-                                    href={`/danh-muc?category=${category.id}&subCategory=${subcategory.id}&item=${item.name}`}
-                                    className="text-gray-600 hover:text-red-600 transition-colors inline-block text-sm"
-                                  >
-                                    {item.name}
-                                  </Link>
-                                </li>
-                              ))}
-                            </ul>
-                          )}
                         </div>
                       ))}
                     </div>

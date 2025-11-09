@@ -56,7 +56,7 @@ export default function ProductScreen({
     <div className="flex flex-col gap-5 py-5">
       <Breadcrumb items={breadcrumbItems} separator=">" />
       <div className="flex gap-5">
-        <div className="flex flex-col gap-5">
+        <div className="flex flex-col gap-5 flex-1">
           <ProductDetail product={product} variants={variants} />
           <ProductDescription product={product} />
         </div>

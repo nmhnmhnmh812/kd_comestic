@@ -12,7 +12,7 @@ import Link from "next/link";
 
 export default function Header() {
   return (
-    <header className="bg-white shadow-md sticky top-0 left-0 right-0 z-50 w-full">
+    <header className="bg-white shadow-md w-full">
       <div className=" bg-black py-2">
         <div className="flex justify-between max-w-7xl mx-auto">
           <div className="flex justify-between items-center text-white gap-4">

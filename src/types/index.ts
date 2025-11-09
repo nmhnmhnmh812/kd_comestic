@@ -104,3 +104,28 @@ export type CartItem = {
   variant: Variant | null;
   quantity: number;
 };
+
+export type Category = {
+  id: number;
+  name: string;
+  link: string;
+  subCategories?: {
+    id: number;
+    name: string;
+    link: string;
+    items?: { name: string; link: string }[];
+  }[];
+};
+
+export type Brand = {
+  id: number;
+  name: string;
+  image: {
+    id: number;
+    url: string;
+  } | null;
+  link: string;
+  description: string;
+  createdDate: string;
+  updatedDate: string;
+};
