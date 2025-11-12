@@ -44,7 +44,9 @@ export default function ProductContainer({ slug }: { slug?: ISlug }) {
 
   return (
     <div className="w-full">
-      <h1 className="text-xl font-bold uppercase p-5">{category.title}</h1>
+      <h1 className="text-xl font-bold uppercase p-5">
+        {category.title} ({total} kết quả)
+      </h1>
       <ProductFilter />
       {!isFetching ? (
         <div className="grid grid-cols-5 gap-2 px-2">{renderPropducts}</div>

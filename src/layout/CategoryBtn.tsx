@@ -29,7 +29,7 @@ export default function CategoryBtn() {
     >
       <Link href="/danh-muc">DANH MỤC SẢN PHẨM</Link>
       {isMenuOpen && (
-        <div className="absolute top-full left-0 w-64 bg-white shadow-2xl overflow-visible z-50 animate-fadeIn">
+        <div className="absolute top-full left-0 w-64 bg-white shadow-2xl overflow-visible z-[99] animate-fadeIn">
           {categories.map((category) => (
             <div
               key={category.id}

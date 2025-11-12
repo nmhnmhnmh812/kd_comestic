@@ -24,6 +24,7 @@ export default function CartTable({
   const [updateQueue, setUpdateQueue] = React.useState<
     { cartItemId: string; quantity: number }[]
   >([]);
+
   const { mutate: removeItem } = useMutation<
     any,
     unknown,
@@ -52,17 +53,14 @@ export default function CartTable({
       )
     );
     setUpdateQueue([]);
+    refetch();
   };
-
-  const totalAmount = cartItems?.reduce((total, item) => {
-    return total + item.product.price * item.quantity;
-  }, 0);
 
   const updateQuantity = (cartItemId: string, quantity: number) => {
     const existingIndex = updateQueue.findIndex(
       (item) => item.cartItemId === cartItemId
     );
-    const newQueue = [];
+    const newQueue = [...updateQueue];
     if (existingIndex !== -1) {
       newQueue[existingIndex].quantity = quantity;
     } else {
@@ -70,6 +68,19 @@ export default function CartTable({
     }
     setUpdateQueue(newQueue);
   };
+
+  // Helper function to get current quantity
+  const getCurrentQuantity = (cartItemId: string, originalQuantity: number) => {
+    const queueItem = updateQueue.find(
+      (item) => item.cartItemId === cartItemId
+    );
+    return queueItem ? queueItem.quantity : originalQuantity;
+  };
+
+  const totalAmount = cartItems?.reduce((total, item) => {
+    const currentQuantity = getCurrentQuantity(item.id!, item.quantity);
+    return total + item.product.finalPrice * currentQuantity;
+  }, 0);
 
   const columns = [
     {
@@ -89,16 +100,17 @@ export default function CartTable({
     },
     {
       title: "Giá",
-      dataIndex: ["product", "price"],
+      dataIndex: ["product", "finalPrice"],
       render: (price: number) => convertToVnd(price),
     },
     {
       title: "Số lượng",
       dataIndex: "quantity",
       render: (quantity: number, record: CartItem) => {
+        const currentQuantity = getCurrentQuantity(record.id!, quantity);
         return (
           <QuantityInput
-            value={quantity}
+            value={currentQuantity}
             size="small"
             onChange={(value) => updateQuantity(record.id!, value)}
           />
@@ -107,8 +119,10 @@ export default function CartTable({
     },
     {
       title: "Thành tiền",
-      render: (_: any, record: CartItem) =>
-        convertToVnd(record.product.price * record.quantity),
+      render: (_: any, record: CartItem) => {
+        const currentQuantity = getCurrentQuantity(record.id!, record.quantity);
+        return convertToVnd(record.product.finalPrice * currentQuantity);
+      },
     },
     {
       title: "Thao tác",
@@ -125,6 +139,7 @@ export default function CartTable({
       ),
     },
   ];
+
   return (
     <>
       <Table
