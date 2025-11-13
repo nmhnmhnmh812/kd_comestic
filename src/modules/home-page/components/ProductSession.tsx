@@ -13,9 +13,9 @@ export default function ProductSession({
 }: ProductSessionProps) {
   return (
     <div className="bg-white rounded-lg shadow-sm">
-      <div className="text-red-600 uppercase flex justify-between items-center font-bold px-4 py-2">
+      <div className="text-red-600 uppercase flex justify-between items-center font-bold px-4 py-2 text-sm">
         <span>{title}</span>
-        <Link href={link} className="cursor-pointer text-sm">
+        <Link href={link} className="cursor-pointer text-xs">
           Xem tất cả
         </Link>
       </div>

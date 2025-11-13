@@ -34,7 +34,7 @@ export default function RootLayout({
           <AntdRegistry>
             <Header />
             <main className="bg-slate-100 min-h-[50vh]">
-              <div className="max-w-7xl mx-auto">{children}</div>
+              <div className="max-w-7xl mx-auto px-0 md:px-4 lg:px-0">{children}</div>
             </main>
             <Footer />
           </AntdRegistry>

@@ -12,21 +12,27 @@ export default function Product({ ...rest }: ProductType) {
   return (
     <Link
       href={`/${url}`}
-      className="w-full h-fit my-1 p-2 relative flex flex-col gap-2 cursor-pointer hover:shadow-md rounded-lg"
+      className="w-full h-full my-1 p-2 relative flex flex-col gap-1.5 cursor-pointer hover:shadow-md rounded-lg"
     >
-      <div className="flex flex-col gap-2 text-black">
-        <div className="relative w-full aspect-square">
-          <Image alt={name} src={imageUrl} fill />
+      <div className="flex flex-col gap-1.5 text-black h-full">
+        <div className="relative w-full aspect-square overflow-hidden rounded-md">
+          <Image 
+            alt={name} 
+            src={imageUrl} 
+            fill 
+            className="object-cover"
+            sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 20vw"
+          />
         </div>
-        <div className="font-semibold text-sm flex gap-2">
+        <div className="font-semibold text-xs flex gap-1.5 flex-wrap">
           <span className="text-red-400">{convertToVnd(finalPrice)}</span>
           {price !== finalPrice ? (
-            <span className="line-through text-gray-400">
+            <span className="line-through text-gray-400 text-[11px]">
               {convertToVnd(price)}
             </span>
           ) : null}
         </div>
-        <div className="text-xs">
+        <div className="text-[11px] flex-1 flex flex-col">
           <h3 className="font-bold">{brandName}</h3>
           <p className="line-clamp-2">{name}</p>
         </div>
