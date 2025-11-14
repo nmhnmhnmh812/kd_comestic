@@ -61,8 +61,8 @@ export default function ProductFilter() {
 
   return (
     <div className="w-full bg-gray-200">
-      <div className="flex justify-between items-center p-2">
-        <span className="font-bold">Lọc theo:</span>
+      <div className="flex items-center gap-2 p-2">
+        <span className="font-bold">Lọc theo</span>
         <div className="flex gap-3">
           <Select
             placeholder="Giá thành"
@@ -76,8 +76,8 @@ export default function ProductFilter() {
         </div>
       </div>
       <Divider className="m-0" />
-      <div className="flex justify-between items-center p-2">
-        <span className="font-bold">Sắp xếp theo:</span>
+      <div className="flex items-center gap-2 p-2">
+        <span className="font-bold">Sắp xếp theo</span>
         <div className="flex gap-3">
           {SORT_BY.map((item) => (
             <SelectCard

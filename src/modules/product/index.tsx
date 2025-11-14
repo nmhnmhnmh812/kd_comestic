@@ -52,6 +52,11 @@ export default function ProductScreen({
       title: product.name,
     },
   ];
+
+  const brandId = product.brand?.id;
+  const categoryId = product.category?.id;
+  const subCategoryId = product.subCategory?.id;
+
   return (
     <div className="flex flex-col gap-5 py-5">
       <Breadcrumb items={breadcrumbItems} separator=">" />
@@ -61,8 +66,17 @@ export default function ProductScreen({
           <ProductDescription product={product} />
         </div>
         <div className="flex flex-col gap-5">
-          <SideSession title="Sản phẩm cùng thương hiệu" link="" />
-          <SideSession title="Sản phẩm liên quan" link="" />
+          <SideSession
+            title="Sản phẩm cùng thương hiệu"
+            link=""
+            brandId={brandId}
+          />
+          <SideSession
+            title="Sản phẩm liên quan"
+            link=""
+            categoryId={categoryId}
+            subCategoryId={subCategoryId}
+          />
         </div>
       </div>
     </div>

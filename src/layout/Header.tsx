@@ -195,7 +195,7 @@ export default function Header() {
         </div>
       </div>
       <div className="bg-black">
-        <div className="max-w-7xl mx-auto flex gap-10 justify-between text-white font-semibold">
+        <div className="max-w-7xl mx-auto flex gap-10 text-white font-semibold">
           <CategoryBtn />
           <p className="uppercase py-2 cursor-pointer hover:opacity-80 hover:text-gray-300 transition-colors">
             Flash Sale

@@ -19,7 +19,7 @@ export default function ProductContainer({ slug }: { slug?: ISlug }) {
     queryKey: [ENDPOINTS.SEARCH, category.id, pagination, filter],
     queryFn: async () => {
       const { error, data }: ResponseApi = await getProducts({
-        categoryId: category.id,
+        categoryId: category.id || undefined,
         subCategoryId: category.subCategoryId || undefined,
         ...pagination,
         ...filter,
@@ -45,11 +45,11 @@ export default function ProductContainer({ slug }: { slug?: ISlug }) {
   return (
     <div className="w-full">
       <h1 className="text-xl font-bold uppercase p-5">
-        {category.title} ({total} kết quả)
+        {category.title || "Danh mục"} ({total} kết quả)
       </h1>
       <ProductFilter />
       {!isFetching ? (
-        <div className="grid grid-cols-5 gap-2 px-2">{renderPropducts}</div>
+        <div className="grid grid-cols-5 gap-2 p-2">{renderPropducts}</div>
       ) : (
         <div className="flex justify-center items-center h-60">
           <Spin />
