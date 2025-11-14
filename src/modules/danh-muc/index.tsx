@@ -13,7 +13,7 @@ export default async function CategoryScreen({
 }) {
   const resolvedParams = await params;
 
-  const categorySlug = resolvedParams.slug[0];
+  const categorySlug = resolvedParams?.slug?.[0];
   const { slug, ...rest } = SLUG_MAP[categorySlug] || {
     slug: { title: "", id: 0 },
     categories: [],

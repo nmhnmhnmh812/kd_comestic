@@ -37,5 +37,10 @@ export default async function ProductDetailScreen({
   if (!product) {
     return <div>Product not found</div>;
   }
-  return <ProductScreen product={product} variants={variants} />;
+  return (
+    <ProductScreen
+      product={product}
+      variants={variants?.length ? variants : [product]}
+    />
+  );
 }

@@ -17,8 +17,9 @@ export default function NavFilter({ path }: { path: string[] }) {
     staleTime: Infinity,
     select: (res) => res.data.result as Category[],
   });
-  const currentPath = `/danh-muc/${path.join("/")}`;
+  const currentPath = `/danh-muc/${path?.join("/") || ""}`;
   useEffect(() => {
+    if (!path || path.length === 0) return;
     const [category, subCategory] = path;
     const result = {
       title: "",
@@ -46,7 +47,7 @@ export default function NavFilter({ path }: { path: string[] }) {
 
   return (
     <div className="w-1/4 shrink-0 bg-white border-r p-5 flex flex-col gap-4 sticky top-0 z-50 h-screen rounded-s-lg">
-      <p className="text-xl font-semibold uppercase">
+      <p className="font-semibold uppercase">
         <FilterFilled /> Bộ lọc tìm kiếm
       </p>
       <div className="space-y-3 overflow-y-auto">
@@ -61,7 +62,7 @@ export default function NavFilter({ path }: { path: string[] }) {
                 <Link
                   href={link}
                   className={clsx(
-                    "font-semibold uppercase block hover:text-red-600 transition",
+                    "text-sm font-semibold uppercase block hover:text-red-600 transition",
                     {
                       "text-red-600": currentPath === link,
                     }
@@ -80,7 +81,7 @@ export default function NavFilter({ path }: { path: string[] }) {
                         <Link
                           href={subLink}
                           className={clsx(
-                            "block py-1 hover:text-red-600 transition",
+                            "text-sm block py-1 hover:text-red-600 transition",
                             {
                               "text-red-600 font-bold": currentPath === subLink,
                             }

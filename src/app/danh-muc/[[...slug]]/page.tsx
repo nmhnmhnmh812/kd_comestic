@@ -8,7 +8,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string[] }>;
 }): Promise<Metadata> {
   const resolvedParams = await params;
-  const categorySlug = resolvedParams.slug[0];
+  const categorySlug = resolvedParams?.slug?.[0] || "";
 
   const { slug } = SLUG_MAP[categorySlug] || {
     slug: { title: "Danh mục", id: 0 },
