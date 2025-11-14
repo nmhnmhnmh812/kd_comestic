@@ -28,8 +28,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="vi">
-      <body className={`${geistSans.variable} ${geistMono.variable}`}>
+    <html lang="vi" className="text-[14px]">
+      <body className={`${geistSans.variable} ${geistMono.variable} text-sm leading-relaxed`}>
         <ReactQueryProvider>
           <AntdRegistry>
             <Header />
