@@ -3,7 +3,7 @@
 import { ENDPOINTS, getCategories } from "@/api/category";
 import { Category } from "@/types";
 import { convertToUrl } from "@/utils";
-import { RightOutlined } from "@ant-design/icons";
+import { RightOutlined, DownOutlined } from "@ant-design/icons";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { useState } from "react";
@@ -27,7 +27,10 @@ export default function CategoryBtn() {
         setIsMenuOpen(false);
       }}
     >
-      <Link href="/danh-muc">DANH MỤC SẢN PHẨM</Link>
+      <Link href="/danh-muc" className="flex items-center gap-1">
+        DANH MỤC SẢN PHẨM
+        <DownOutlined className="text-xs" />
+      </Link>
       {isMenuOpen && (
         <div className="absolute top-full left-0 w-64 bg-white shadow-2xl overflow-visible z-[99] animate-fadeIn">
           {categories.map((category) => (

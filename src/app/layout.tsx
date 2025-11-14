@@ -28,13 +28,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="vi">
-      <body className={`${geistSans.variable} ${geistMono.variable}`}>
+    <html lang="vi" className="text-[14px]">
+      <body className={`${geistSans.variable} ${geistMono.variable} text-sm leading-relaxed`}>
         <ReactQueryProvider>
           <AntdRegistry>
             <Header />
             <main className="bg-slate-100 min-h-[50vh]">
-              <div className="max-w-7xl mx-auto">{children}</div>
+              <div className="max-w-7xl mx-auto px-0 md:px-4 lg:px-0">{children}</div>
             </main>
             <Footer />
           </AntdRegistry>

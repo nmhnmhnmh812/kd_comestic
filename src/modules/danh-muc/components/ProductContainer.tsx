@@ -44,12 +44,14 @@ export default function ProductContainer({ slug }: { slug?: ISlug }) {
 
   return (
     <div className="w-full">
-      <h1 className="text-xl font-bold uppercase p-5">
+      <h1 className="text-sm md:text-xl font-bold uppercase p-3 md:p-5">
         {category.title} ({total} kết quả)
       </h1>
       <ProductFilter />
       {!isFetching ? (
-        <div className="grid grid-cols-5 gap-2 px-2">{renderPropducts}</div>
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 px-2">
+          {renderPropducts}
+        </div>
       ) : (
         <div className="flex justify-center items-center h-60">
           <Spin />
@@ -61,6 +63,7 @@ export default function ProductContainer({ slug }: { slug?: ISlug }) {
           current={pagination.page + 1}
           total={total}
           pageSize={pagination.size}
+          size="small"
           onChange={(page, pageSize) =>
             setPagination({ page: page - 1, size: pageSize })
           }

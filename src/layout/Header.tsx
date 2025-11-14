@@ -101,9 +101,9 @@ export default function Header() {
 
   return (
     <header className="bg-white shadow-md w-full relative">
-      <div className="bg-black py-2">
-        <div className="flex justify-between max-w-7xl mx-auto">
-          <div className="flex justify-between items-center text-white gap-4">
+      <div className="bg-black py-2 hidden md:block">
+        <div className="flex justify-between max-w-7xl mx-auto px-4">
+          <div className="flex justify-between items-center text-white gap-4 text-xs">
             <span>
               <PhoneOutlined /> 0988888825
             </span>
@@ -111,19 +111,20 @@ export default function Header() {
               <MailOutlined /> myphamkhanh@gmail.com
             </span>
           </div>
-          <div className="text-white cursor-pointer hover:opacity-80 hover:text-gray-300 transition-colors">
+          <div className="text-white cursor-pointer hover:opacity-80 hover:text-gray-300 transition-colors text-xs">
             <UserOutlined /> Đăng nhập/Đăng kí
           </div>
         </div>
       </div>
-      <div className="flex justify-between items-center max-w-7xl mx-auto py-4 gap-10">
-        <Link href="/">
-          <Logo />
+      <div className="flex flex-col md:flex-row justify-between items-center max-w-7xl mx-auto py-3 md:py-4 gap-3 md:gap-10 px-4">
+        <Link href="/" className="shrink-0">
+          <Logo className="w-12 h-12 md:w-auto md:h-auto" />
         </Link>
-        <div className="relative max-w-[600px] flex-1">
+        <div className="relative w-full md:max-w-[600px] flex-1">
           <Input
             ref={inputRef}
             placeholder="Tìm sản phẩm bạn mong muốn..."
+            size="small"
             suffix={
               <SearchOutlined
                 onClick={handleSearch}
@@ -183,27 +184,27 @@ export default function Header() {
             </div>
           )}
         </div>
-        <div className="flex gap-10">
+        <div className="flex gap-4 md:gap-10 text-xs">
           <Link href="/cart">
-            <span>
-              <ShoppingCartOutlined /> Giỏ hàng
+            <span className="whitespace-nowrap">
+              <ShoppingCartOutlined /> <span className="hidden md:inline">Giỏ hàng</span>
             </span>
           </Link>
-          <span>
+          <span className="hidden lg:inline whitespace-nowrap">
             <PhoneOutlined /> Hỗ trợ khách hàng
           </span>
         </div>
       </div>
-      <div className="bg-black">
-        <div className="max-w-7xl mx-auto flex gap-10 justify-between text-white font-semibold">
+      <div className="bg-black overflow-x-auto">
+        <div className="max-w-7xl mx-auto flex gap-4 md:gap-10 justify-start text-white font-semibold px-4 text-xs md:text-sm">
           <CategoryBtn />
-          <p className="uppercase py-2 cursor-pointer hover:opacity-80 hover:text-gray-300 transition-colors">
+          <p className="uppercase py-2 cursor-pointer hover:opacity-80 hover:text-gray-300 transition-colors whitespace-nowrap">
             Flash Sale
           </p>
-          <p className="uppercase py-2 cursor-pointer hover:opacity-80 hover:text-gray-300 transition-colors">
+          <p className="uppercase py-2 cursor-pointer hover:opacity-80 hover:text-gray-300 transition-colors whitespace-nowrap">
             Thương hiệu
           </p>
-          <p className="uppercase py-2 cursor-pointer hover:opacity-80 hover:text-gray-300 transition-colors">
+          <p className="uppercase py-2 cursor-pointer hover:opacity-80 hover:text-gray-300 transition-colors whitespace-nowrap">
             Sản phẩm hot
           </p>
         </div>
