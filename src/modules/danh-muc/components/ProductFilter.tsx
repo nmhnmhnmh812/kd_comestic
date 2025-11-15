@@ -49,7 +49,15 @@ export default function ProductFilter() {
   const [selectedSort, setSelectedSort] = useState<string | null>(null);
   const [selectedPrice, setSelectedPrice] = useState<string | undefined>();
   const updateFilter = useProductList((state) => state.updateFilter);
+  const updateTitle = useProductList((state) => state.updateTitle);
   const filter = useProductList((state) => state.filter);
+
+  useEffect(() => {
+    return () => {
+      updateFilter({});
+      updateTitle({ id: 0, title: "", subCategoryId: 0 });
+    };
+  }, [updateFilter, updateTitle]);
 
   // Parse URL params - CHỈ khi searchParams thay đổi
   useEffect(() => {
@@ -197,7 +205,7 @@ export default function ProductFilter() {
   return (
     <div className="w-full bg-gray-200">
       <div className="flex flex-col md:flex-row md:items-center gap-2 p-2">
-        <span className="font-bold text-sm">Lọc theo</span>
+        <span className="font-bold text-sm w-24">Lọc theo</span>
         <div className="flex flex-wrap gap-2 md:gap-3">
           <Select
             placeholder="Giá thành"
@@ -217,7 +225,7 @@ export default function ProductFilter() {
       </div>
       <Divider className="m-0" />
       <div className="flex flex-col md:flex-row md:items-center gap-2 p-2">
-        <span className="font-bold text-sm">Sắp xếp theo</span>
+        <span className="font-bold text-sm w-24">Sắp xếp theo</span>
         <div className="flex flex-wrap gap-2 md:gap-3">
           {SORT_BY.map((item) => (
             <SelectCard

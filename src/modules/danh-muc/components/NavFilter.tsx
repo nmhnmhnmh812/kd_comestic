@@ -8,8 +8,10 @@ import { ENDPOINTS, getCategories } from "@/api/category";
 import { convertToUrl } from "@/utils";
 import { useEffect } from "react";
 import useProductList from "../store";
+import { usePathname } from "next/navigation";
 
 export default function NavFilter({ path }: { path: string[] }) {
+  const pathname = usePathname();
   const updateTitle = useProductList((state) => state.updateTitle);
   const { data: categories } = useQuery({
     queryKey: [ENDPOINTS.CATEGORIES],
@@ -18,6 +20,7 @@ export default function NavFilter({ path }: { path: string[] }) {
     select: (res) => res.data.result as Category[],
   });
   const currentPath = `/danh-muc/${path?.join("/") || ""}`;
+
   useEffect(() => {
     if (!path || path.length === 0) return;
     const [category, subCategory] = path;
@@ -75,7 +78,7 @@ export default function NavFilter({ path }: { path: string[] }) {
                     const subLink = `/danh-muc/${convertToUrl(
                       category.name,
                       category.id
-                    )}/${convertToUrl(sub.name)}.${sub.id}`;
+                    )}/${convertToUrl(sub.name, sub.id)}`;
                     return (
                       <li key={sub.id}>
                         <Link
