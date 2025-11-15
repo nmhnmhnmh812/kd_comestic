@@ -222,7 +222,9 @@ export default function Header() {
           <p className="uppercase py-2 cursor-pointer hover:opacity-80 hover:text-gray-300 transition-colors text-sm">
             Flash Sale
           </p>
-          <BrandBtn isMobile={false} />
+         <Link href="/thuong-hieu" className="uppercase py-2 cursor-pointer hover:opacity-80 hover:text-gray-300 transition-colors text-sm">
+           Thương hiệu
+         </Link>
           <p className="uppercase py-2 cursor-pointer hover:opacity-80 hover:text-gray-300 transition-colors text-sm">
             Sản phẩm hot
           </p>
