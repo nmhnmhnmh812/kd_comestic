@@ -13,9 +13,10 @@ export default function ProductContainer({ slug }: { slug?: ISlug }) {
   const category = useProductList((state) => state.category);
   const filter = useProductList((state) => state.filter);
   const [pagination, setPagination] = useState({ page: 0, size: 20 });
-  const [total, setTotal] = useState(0);
 
-  const { data: products, isFetching } = useQuery<any[]>({
+  const { data, isFetching } = useQuery<
+    { content: any[]; totalElements: number } | undefined
+  >({
     queryKey: [ENDPOINTS.SEARCH, category.id, pagination, filter],
     queryFn: async () => {
       const { error, data }: ResponseApi = await getProducts({
@@ -27,12 +28,13 @@ export default function ProductContainer({ slug }: { slug?: ISlug }) {
       if (error) {
         message.error(error || "Đã có lỗi xảy ra");
       }
-      const products = data?.result?.content || [];
-      setTotal(data?.result?.totalElements || 0);
-      return products;
+      return data?.result;
     },
-    staleTime: 5 * 60 * 1000,
+    staleTime: 0,
   });
+
+  const products = data?.content || [];
+  const totalItems = data?.totalElements || 0;
 
   const renderPropducts = products?.length ? (
     products.map((product) => <Product key={product.id} {...product} />)
@@ -45,7 +47,7 @@ export default function ProductContainer({ slug }: { slug?: ISlug }) {
   return (
     <div className="w-full">
       <h1 className="text-xl font-bold uppercase p-5">
-        {category.title || "Danh mục"} ({total} kết quả)
+        {category.title || "Danh mục"} ({totalItems} kết quả)
       </h1>
       <ProductFilter />
       {!isFetching ? (
@@ -59,7 +61,7 @@ export default function ProductContainer({ slug }: { slug?: ISlug }) {
         <Pagination
           align="end"
           current={pagination.page + 1}
-          total={total}
+          total={totalItems}
           pageSize={pagination.size}
           onChange={(page, pageSize) =>
             setPagination({ page: page - 1, size: pageSize })

@@ -1,22 +1,51 @@
 import { ENDPOINTS, getProducts } from "@/api/product";
-import Product from "@/components/Product";
-import { type Product as ProductType, ResponseApi } from "@/types";
+import ProductCard from "@/components/Product";
+import {
+  Brand,
+  Category,
+  type Product as ProductType,
+  ResponseApi,
+} from "@/types";
+import { convertToUrl } from "@/utils";
 import { useQuery } from "@tanstack/react-query";
 import { Button, Divider, message, Spin } from "antd";
+import Link from "next/link";
 
 export default function SideSession({
   title,
-  link,
-  brandId,
-  categoryId,
-  subCategoryId,
+  brand,
+  category,
+  subCategory,
 }: {
   title: string;
-  link: string;
-  brandId?: number;
-  categoryId?: number;
-  subCategoryId?: number;
+  brand?: Brand;
+  category?: ProductType["category"];
+  subCategory?: ProductType["subCategory"];
 }) {
+  const brandId = brand?.id;
+  const categoryId = category?.id;
+  const subCategoryId = subCategory?.id;
+
+  const generateLink = () => {
+    if (brandId) {
+      const urlBrand = convertToUrl(brand?.name || "", brandId);
+      return `/danh-muc?brand=${urlBrand}`;
+    }
+    if (subCategoryId) {
+      const urlSubCategory = convertToUrl(
+        subCategory?.name || "",
+        subCategoryId
+      );
+      const urlCategory = convertToUrl(category?.name || "", categoryId || 0);
+      return `/danh-muc/${urlCategory}/${urlSubCategory}`;
+    }
+    if (categoryId) {
+      const urlCategory = convertToUrl(category?.name || "", categoryId);
+      return `/danh-muc/${urlCategory}`;
+    }
+    return "/danh-muc";
+  };
+
   const { data: products, isFetching } = useQuery<ProductType[]>({
     queryKey: [ENDPOINTS.SEARCH, categoryId, subCategoryId, brandId],
     queryFn: async () => {
@@ -36,21 +65,29 @@ export default function SideSession({
     staleTime: 5 * 60 * 1000,
   });
 
-  const renderPropducts = products?.length ? (
-    products.map((product) => <Product key={product.id} {...product} />)
+  const renderProducts = products?.length ? (
+    products.map((product) => <ProductCard key={product.id} {...product} />)
   ) : (
-    <p className="text-center py-10">Không có sản phẩm nào</p>
+    <p className="text-center py-10 text-gray-500 text-sm">
+      Không có sản phẩm nào
+    </p>
   );
 
   return (
-    <div className="bg-white rounded-lg w-[220px] overflow-hidden">
+    <div className="bg-white rounded-lg w-full md:w-[220px] overflow-hidden shadow-sm">
       <h2 className="font-semibold text-sm text-center py-2">{title}</h2>
       <Divider className="my-0" />
       <div className="flex flex-col gap-2 p-2">
-        {!isFetching ? renderPropducts : <Spin className="py-10" />}
+        {!isFetching ? (
+          renderProducts
+        ) : (
+          <div className="flex justify-center py-10">
+            <Spin />
+          </div>
+        )}
       </div>
       <Button color="default" variant="filled" className="w-full rounded-none">
-        Xem tất cả
+        <Link href={generateLink()}>Xem tất cả</Link>
       </Button>
     </div>
   );

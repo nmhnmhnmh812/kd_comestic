@@ -4,13 +4,35 @@ import { Brand } from "@/types";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { Select, Spin } from "antd";
 import { debounce } from "@/utils/lodash";
-import { useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState, useEffect } from "react";
 import useProductList from "../store";
+import { useSearchParams } from "next/navigation";
+import { convertToUrl } from "@/utils";
 
-export default function SelectBrand() {
+export default function SelectBrand({
+  onBrandChange,
+}: {
+  onBrandChange?: (brandSlug: string | undefined, brandId?: number) => void;
+}) {
   const [keyword, setKeyword] = useState("");
+  const [selectedBrand, setSelectedBrand] = useState<number | undefined>();
   const selectRef = useRef<any>(null);
   const updateFilter = useProductList((state) => state.updateFilter);
+  const searchParams = useSearchParams();
+
+  // Parse brand from URL on mount
+  useEffect(() => {
+    const brandSlug = searchParams.get("brand");
+    if (brandSlug) {
+      // Extract ID from slug: "thuong-hieu-abc.123" -> 123
+      const idMatch = brandSlug.match(/\.(\d+)$/);
+      if (idMatch) {
+        const id = parseInt(idMatch[1]);
+        setSelectedBrand(id);
+        updateFilter({ brandId: id });
+      }
+    }
+  }, []);
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
     useInfiniteQuery({
@@ -50,21 +72,38 @@ export default function SelectBrand() {
     }
   };
 
+  const handleChange = (value: number | undefined) => {
+    setSelectedBrand(value);
+    updateFilter({ brandId: value });
+
+    if (value) {
+      const brand = brands.find((b: Brand) => b.id === value);
+      if (brand) {
+        const brandSlug = convertToUrl(brand.name, brand.id);
+        onBrandChange?.(brandSlug, value);
+      }
+    } else {
+      onBrandChange?.(undefined, undefined);
+    }
+  };
+
   return (
     <Select
       ref={selectRef}
       showSearch
       placeholder="Thương hiệu"
-      onChange={(val) => {
-        updateFilter({ brandId: val });
-      }}
+      value={selectedBrand}
+      onChange={handleChange}
       onSearch={handleSearch}
       filterOption={false}
       loading={isLoading}
       onPopupScroll={handleScroll}
       notFoundContent={isLoading ? <Spin size="small" /> : "Không có dữ liệu"}
-      className="min-w-40"
+      className="w-full md:w-40"
       size="large"
+      allowClear
+      onClear={() => handleChange(undefined)}
+      dropdownStyle={{ maxHeight: 400, overflow: "auto" }}
     >
       {brands.map((brand: Brand) => (
         <Select.Option key={brand.id} value={brand.id}>
@@ -72,8 +111,10 @@ export default function SelectBrand() {
         </Select.Option>
       ))}
       {isFetchingNextPage && (
-        <Select.Option disabled value="loading">
-          <Spin size="small" /> Đang tải...
+        <Select.Option disabled value="loading" key="loading">
+          <div className="text-center py-2">
+            <Spin size="small" /> Đang tải...
+          </div>
         </Select.Option>
       )}
     </Select>

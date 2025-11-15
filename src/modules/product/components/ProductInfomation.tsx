@@ -1,6 +1,6 @@
 import QuantityInput from "@/components/QuantityInput";
 import { Product, Variant } from "@/types";
-import { convertToOriginalPrice, convertToVnd } from "@/utils";
+import { convertToOriginalPrice, convertToUrl, convertToVnd } from "@/utils";
 import { ShoppingCartOutlined, ShoppingOutlined } from "@ant-design/icons";
 import { Button, message } from "antd";
 import ProductVarients from "./ProductVarients";
@@ -8,6 +8,7 @@ import useProductDetail from "../store";
 import React from "react";
 import { useMutation } from "@tanstack/react-query";
 import { addItemToCart } from "@/api/cart";
+import Link from "next/link";
 
 export default function ProductInformation({
   product,
@@ -47,7 +48,14 @@ export default function ProductInformation({
   return (
     <div className="flex-1 flex flex-col justify-between gap-2">
       <h2 className="text-lg font-semibold text-red-600 uppercase">
-        {product.brand.name}
+        <Link
+          href={`/danh-muc?brand=${convertToUrl(
+            product.brand.name,
+            product.brand.id
+          )}`}
+        >
+          {product.brand.name}
+        </Link>
       </h2>
       <h1 className="text-xl font-bold text-gray-800">{currentProduct.name}</h1>
       <p className="text-sm">Mã sản phẩm: {currentProduct.id}</p>

@@ -15,8 +15,6 @@ export default function useCart() {
     queryKey: [ENDPOINTS.CART, cartId],
     queryFn: async () => {
       const response = await getCart(cartId!);
-      console.log(response);
-
       return response.data;
     },
     enabled: !!cartId,
