@@ -3,7 +3,9 @@ import path from "path";
 
 const nextConfig: NextConfig = {
   images: {
-    domains: [process.env.NEXT_PUBLIC_IMAGE_URL],
+    domains: process.env.NEXT_PUBLIC_IMAGE_URL
+      ? [process.env.NEXT_PUBLIC_IMAGE_URL]
+      : [],
   },
   webpack(config) {
     config.module.rules.push({
