@@ -7,6 +7,7 @@ import { ENDPOINTS, getBlogs } from "@/api/blog";
 import { BlogPageResponse, ResponseApi } from "@/types";
 import Image from "next/image";
 import Link from "next/link";
+import { convertToUrl } from "@/utils";
 
 export default function BlogScreen() {
   const [pagination, setPagination] = useState({ page: 0, size: 10 });
@@ -30,37 +31,40 @@ export default function BlogScreen() {
   const totalItems = data?.totalElements || 0;
 
   const renderBlogs = blogs?.length ? (
-    blogs.map((blog) => (
-      <Link
-        key={blog.id}
-        href={`/blog/${blog.slug}`}
-        className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300"
-      >
-        <div className="relative w-full aspect-video">
-          <Image
-            src={blog.thumbnail.url}
-            alt={blog.title}
-            fill
-            className="object-cover"
-          />
-        </div>
-        <div className="p-4">
-          <h2 className="text-xl font-bold mb-2 line-clamp-2">
-            {blog.title}
-          </h2>
-          <p className="text-gray-600 line-clamp-3 mb-2">
-            {blog.shortDescription}
-          </p>
-          <p className="text-sm text-gray-400">
-            {new Date(blog.createdDate).toLocaleDateString("vi-VN", {
-              year: "numeric",
-              month: "long",
-              day: "numeric",
-            })}
-          </p>
-        </div>
-      </Link>
-    ))
+    blogs.map((blog) => {
+      const blogUrl = convertToUrl(blog.title, blog.id);
+      return (
+        <Link
+          key={blog.id}
+          href={`/blog/${blogUrl}`}
+          className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300"
+        >
+          <div className="relative w-full aspect-video">
+            <Image
+              src={blog.thumbnail.url}
+              alt={blog.title}
+              fill
+              className="object-cover"
+            />
+          </div>
+          <div className="p-4">
+            <h2 className="text-xl font-bold mb-2 line-clamp-2">
+              {blog.title}
+            </h2>
+            <p className="text-gray-600 line-clamp-3 mb-2">
+              {blog.shortDescription}
+            </p>
+            <p className="text-sm text-gray-400">
+              {new Date(blog.createdDate).toLocaleDateString("vi-VN", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              })}
+            </p>
+          </div>
+        </Link>
+      );
+    })
   ) : (
     <div className="col-span-full py-10">
       <Empty description="Không có bài viết nào" />
