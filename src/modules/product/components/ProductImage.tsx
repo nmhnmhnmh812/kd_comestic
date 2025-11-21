@@ -7,7 +7,7 @@ export default function ProductImage({ product }: { product: Product }) {
   const imagesSrc = (currentVariant || product).blobs.map((blob) => blob.url);
 
   return (
-    <div className="w-[44%] aspect-square bg-white rounded-lg flex gap-4">
+    <div className="w-full md:w-[44%] aspect-square bg-white rounded-lg flex gap-2 md:gap-4">
       <div className="flex-1 rounded-lg flex items-center justify-center overflow-hidden">
         <Image
           src={imagesSrc[0]}
@@ -20,12 +20,12 @@ export default function ProductImage({ product }: { product: Product }) {
         />
       </div>
 
-      <div className="flex flex-col gap-2 justify-between">
+      <div className="flex flex-col gap-1 md:gap-2 justify-between">
         {imagesSrc.slice(1, 5).map((image) => (
           <div
             key={image}
             className={
-              "cursor-pointer w-20 aspect-square rounded-lg transition-all overflow-hidden"
+              "cursor-pointer w-16 md:w-20 aspect-square rounded-lg transition-all overflow-hidden"
             }
           >
             <Image

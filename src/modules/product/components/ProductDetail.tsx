@@ -10,7 +10,7 @@ export default function ProductDetail({
   variants: Variant[];
 }) {
   return (
-    <div className="bg-white p-5 rounded-lg flex gap-5">
+    <div className="bg-white p-3 md:p-5 rounded-lg flex flex-col md:flex-row gap-3 md:gap-5">
       <ProductImage product={product} />
       <ProductInformation product={product} variants={variants} />
     </div>
