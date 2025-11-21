@@ -81,7 +81,7 @@ export default function SideSession({
         {!isFetching ? (
           renderProducts
         ) : (
-          <div className="flex justify-center py-10 col-span-2">
+          <div className="flex justify-center py-10 col-span-full">
             <Spin />
           </div>
         )}

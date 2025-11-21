@@ -6,7 +6,7 @@ import banner3 from "@/assets/images/banner3.png";
 export default function Banner() {
   return (
     <div className="w-full flex justify-center items-center">
-      <div className="w-full max-w-7xl aspect-[2/1] md:aspect-[2.4/1] flex flex-col md:flex-row gap-2">
+      <div className="w-full max-w-7xl aspect-[2/1] flex flex-col md:flex-row gap-2">
         {/* Left banner - hide on mobile */}
         <div className="hidden md:block h-full w-1/5 relative">
           <Image alt="" src={banner1} fill className="object-cover rounded-lg" />

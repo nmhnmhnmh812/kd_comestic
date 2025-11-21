@@ -150,7 +150,7 @@ export default function CartTable({
         dataSource={cartItems}
         rowKey="id"
         pagination={false}
-        scroll={{ x: 'max-content' }}
+        scroll={{ x: 800 }}
       />
       <div className="flex flex-col sm:flex-row gap-3 md:gap-4 items-center justify-end mt-4">
         <h1 className="font-bold text-base md:text-lg">Tổng tiền: {convertToVnd(totalAmount)}</h1>
