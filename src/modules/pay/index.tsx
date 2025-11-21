@@ -1,16 +1,44 @@
+"use client";
+
 import { Form } from "antd";
 import PayInfo from "./components/PayInfo";
 import TransferInfo from "./components/TranferInfo";
 import CartInfo from "./components/CartInfo";
+import { checkOrderInfo } from "@/api/order";
+import useCart from "@/hooks/useCart";
+import usePayment from "./store";
 
 export default function PayScreen() {
+  const [form] = Form.useForm();
+   const { cartItems } = useCart();
+   const updateAmount = usePayment((state) => state.updateAmount);
+
+  const getShipFee = async (address: string) => {
+    const orderItems =
+      cartItems?.map((item) => ({
+        productId: item?.product?.id || undefined,
+        variantId: item?.variant?.id || undefined,
+        quantity: item?.quantity,
+      })) || [];
+    const response = await checkOrderInfo({
+      orderItems,
+      address,
+    });
+    const { shipAmount, totalAmountFinal, totalProductAmount } =
+      response.data.result;
+    updateAmount({ shipAmount, totalAmountFinal, totalProductAmount });
+  };
   return (
     <div className="flex gap-4 py-4">
-      <Form layout="vertical" className="flex flex-1 flex-col gap-4">
-        <PayInfo />
+      <Form
+        form={form}
+        layout="vertical"
+        className="flex flex-1 flex-col gap-4"
+      >
+        <PayInfo getShipFee={getShipFee} />
         <TransferInfo />
       </Form>
-      <CartInfo />
+      <CartInfo form={form} getShipFee={getShipFee} />
     </div>
   );
 }

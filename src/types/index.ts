@@ -129,3 +129,41 @@ export type Brand = {
   createdDate: string;
   updatedDate: string;
 };
+
+export interface Banner {
+  id: number;
+  title: string;
+  imageUrl: string;
+  link: string;
+  description: string;
+  status: boolean;
+  startDate: string;
+  endDate: string;
+  createdDate: string;
+  updatedDate: string;
+  displayOrder: number;
+}
+
+export interface OrderItem {
+  productId: number;
+  productName: string;
+  variantId?: number;
+  quantity: number;
+  price: number;
+}
+
+export interface Order {
+  id: string;
+  userName: string;
+  phoneNumber: string;
+  address: string;
+  paymentMethod: "COD" | "TRANSFER";
+  status: string;
+  totalProductAmount: number;
+  shipAmount: number;
+  totalAmountFinal: number;
+  orderItems: OrderItem[];
+  notes?: string;
+  createdDate: string;
+  updatedDate: string;
+}

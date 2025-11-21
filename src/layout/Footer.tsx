@@ -250,13 +250,17 @@ export default function Footer() {
                   </h4>
                   <div className="flex items-start gap-2 mb-2">
                     <EnvironmentFilled className="text-red-500 text-base mt-0.5 flex-shrink-0" />
-                    <p className="text-xs text-gray-400">{store.address}</p>
+                    <span className="text-xs text-gray-400">
+                      {store.address}
+                    </span>
                   </div>
                   <div className="flex items-center gap-2 mb-1">
                     <PhoneFilled className="text-red-500 text-sm" />
                     <span className="text-xs text-gray-400">{store.phone}</span>
                   </div>
-                  <p className="text-xs text-gray-500 ml-5">{store.hours}</p>
+                  <span className="text-xs text-gray-500 ml-5 block">
+                    {store.hours}
+                  </span>
                 </button>
               ))}
             </div>
