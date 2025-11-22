@@ -11,11 +11,11 @@ export default function PayInfo({
   debounce(getShipFee, 500);
   return (
     <div className="bg-white rounded">
-      <div className="px-4 py-3">
-        <h3 className="font-bold text-base">Thông tin nhận hàng</h3>
+      <div className="px-3 md:px-4 py-3">
+        <h3 className="font-bold text-sm md:text-base">Thông tin nhận hàng</h3>
       </div>
       <Divider className="m-0" />
-      <div className="px-4 py-3">
+      <div className="px-3 md:px-4 py-3">
         <Form.Item
           label="Họ và tên"
           name="userName"

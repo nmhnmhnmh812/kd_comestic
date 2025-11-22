@@ -42,19 +42,21 @@ export default function Banner() {
 
   return (
     <div className="w-full flex justify-center items-center">
-      <div className="w-full max-w-7xl aspect-[2.4/1] flex gap-2">
+      <div className="w-full max-w-7xl aspect-[2/1] flex flex-col md:flex-row gap-2">
         {/* Left Banner - Fixed */}
-        <div className="h-full w-1/5 relative overflow-hidden rounded-lg">
+        {/* Left banner - hide on mobile */}
+        <div className="hidden md:block h-full w-1/5 relative overflow-hidden rounded-lg">
           <Image
             alt="Banner Left"
             src={banner1}
             fill
-            className="object-cover hover:scale-105 transition-transform duration-300"
+            className="object-cover rounded-lg hover:scale-105 transition-transform duration-300"
             priority
           />
         </div>
 
         {/* Middle Banner - From API */}
+        {/* Main banner */}
         <div className="flex-1 h-full relative overflow-hidden rounded-lg group">
           {isLoading ? (
             <Skeleton.Image active className="w-full h-full" />
@@ -88,21 +90,22 @@ export default function Banner() {
               alt={mainBanner.title || "Main Banner"}
               src={mainBanner.imageUrl}
               fill
-              className="object-cover group-hover:scale-105 transition-transform duration-300"
+              className="object-cover rounded-lg group-hover:scale-105 transition-transform duration-300"
               priority
             />
           )}
         </div>
 
         {/* Right Banners - Fixed */}
-        <div className="h-full w-1/5 relative flex flex-col gap-2">
+        {/* Right banners - hide on mobile */}
+        <div className="hidden md:flex h-full w-1/5 relative flex-col gap-2">
           {/* Top Right */}
           <div className="flex-1 relative overflow-hidden rounded-lg">
             <Image
               alt="Banner Top Right"
               src={banner3}
               fill
-              className="object-cover hover:scale-105 transition-transform duration-300"
+              className="object-cover rounded-lg hover:scale-105 transition-transform duration-300"
             />
           </div>
 
@@ -115,7 +118,7 @@ export default function Banner() {
                 alt="Banner Bottom Right"
                 src={banner3}
                 fill
-                className="object-cover hover:scale-105 transition-transform duration-300"
+                className="object-cover rounded-lg hover:scale-105 transition-transform duration-300"
               />
             ) : bottomRightBanner.link ? (
               <Link

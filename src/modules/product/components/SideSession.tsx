@@ -74,19 +74,19 @@ export default function SideSession({
   );
 
   return (
-    <div className="bg-white rounded-lg w-full md:w-[220px] overflow-hidden shadow-sm">
-      <h2 className="font-semibold text-sm text-center py-2">{title}</h2>
+    <div className="bg-white rounded-lg w-full lg:w-[220px] overflow-hidden shadow-sm">
+      <h2 className="font-semibold text-sm md:text-base text-center py-2">{title}</h2>
       <Divider className="my-0" />
-      <div className="flex flex-col gap-2 p-2">
+      <div className="grid grid-cols-2 lg:flex lg:flex-col gap-2 p-2">
         {!isFetching ? (
           renderProducts
         ) : (
-          <div className="flex justify-center py-10">
+          <div className="flex justify-center py-10 col-span-full">
             <Spin />
           </div>
         )}
       </div>
-      <Button color="default" variant="filled" className="w-full rounded-none">
+      <Button color="default" variant="filled" className="w-full rounded-none text-xs md:text-sm">
         <Link href={generateLink()}>Xem tất cả</Link>
       </Button>
     </div>

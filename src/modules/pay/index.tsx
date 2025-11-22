@@ -32,11 +32,11 @@ export default function PayScreen() {
     }
   };
   return (
-    <div className="flex gap-4 py-4">
+    <div className="flex flex-col lg:flex-row gap-3 md:gap-4 py-3 md:py-4">
       <Form
         form={form}
         layout="vertical"
-        className="flex flex-1 flex-col gap-4"
+        className="flex flex-1 flex-col gap-3 md:gap-4"
       >
         <PayInfo getShipFee={getShipFee} />
         <TransferInfo />

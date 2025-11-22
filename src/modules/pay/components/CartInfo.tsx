@@ -75,27 +75,27 @@ export default function CartInfo({
   };
 
   return (
-    <div className="bg-white rounded w-96">
-      <div className="px-4 py-3">
-        <h3 className="font-bold">Danh sách sản phẩm</h3>
+    <div className="bg-white rounded w-full lg:w-96">
+      <div className="px-3 md:px-4 py-3">
+        <h3 className="font-bold text-sm md:text-base">Danh sách sản phẩm</h3>
       </div>
       <Divider className="m-0" />
       <PayItems cartItems={cartItems} loading={isFetching} />
       <Divider className="m-0" />
-      <div className="px-4 py-3 flex flex-col gap-2">
-        <div>
+      <div className="px-3 md:px-4 py-3 flex flex-col gap-2">
+        <div className="text-sm md:text-base">
           <span>Tạm tính:</span>
           <span className="float-right font-bold">
             {convertToVnd(totalAmount)}
           </span>
         </div>
-        <div>
+        <div className="text-sm md:text-base">
           <span>Phí vận chuyển:</span>
           <span className="float-right font-bold">
             {convertToVnd(amount.shipAmount)}
           </span>
         </div>
-        <div>
+        <div className="text-sm md:text-base">
           <span>Tổng cộng:</span>
           <span className="float-right font-bold text-red-600">
             {convertToVnd(totalAmount + amount.shipAmount)}
