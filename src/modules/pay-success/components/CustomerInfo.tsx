@@ -11,7 +11,7 @@ export default function CustomerInfo({ order }: CustomerInfoProps) {
       <div className="grid grid-cols-2 gap-4">
         <div>
           <p className="text-sm text-gray-600">Tên khách hàng</p>
-          <p className="font-semibold">{order.customerName}</p>
+          <p className="font-semibold">{order.userName}</p>
         </div>
         <div>
           <p className="text-sm text-gray-600">Số điện thoại</p>
