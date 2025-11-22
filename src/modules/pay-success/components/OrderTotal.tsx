@@ -10,7 +10,7 @@ export default function OrderTotal({ order }: OrderTotalProps) {
     <div className="space-y-3 mb-6">
       <div className="flex justify-between text-gray-700">
         <span>Tạm tính:</span>
-        <span>{convertToVnd(order.totalAmount - order.shipAmount)}</span>
+        <span>{convertToVnd(order.totalProductAmount)}</span>
       </div>
       <div className="flex justify-between text-gray-700">
         <span>Phí vận chuyển:</span>
@@ -18,7 +18,7 @@ export default function OrderTotal({ order }: OrderTotalProps) {
       </div>
       <div className="flex justify-between text-lg font-bold text-red-600 pt-3 border-t">
         <span>Tổng cộng:</span>
-        <span>{convertToVnd(order.totalAmount)}</span>
+        <span>{convertToVnd(order.totalAmountFinal)}</span>
       </div>
     </div>
   );
