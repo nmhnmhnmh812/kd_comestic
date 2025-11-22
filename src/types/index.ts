@@ -130,6 +130,48 @@ export type Brand = {
   updatedDate: string;
 };
 
+export type Blog = {
+  id: number;
+  title: string;
+  shortDescription: string;
+  thumbnail: {
+    id: number;
+    url: string;
+  };
+  slug: string;
+  displayOrder: number;
+  createdDate: string;
+};
+
+export type BlogPageResponse = {
+  totalPages: number;
+  totalElements: number;
+  pageable: {
+    paged: boolean;
+    pageNumber: number;
+    pageSize: number;
+    offset: number;
+    sort: {
+      sorted: boolean;
+      empty: boolean;
+      unsorted: boolean;
+    };
+    unpaged: boolean;
+  };
+  size: number;
+  content: Blog[];
+  number: number;
+  sort: {
+    sorted: boolean;
+    empty: boolean;
+    unsorted: boolean;
+  };
+  numberOfElements: number;
+  first: boolean;
+  last: boolean;
+  empty: boolean;
+};
+
 export interface Banner {
   id: number;
   title: string;
