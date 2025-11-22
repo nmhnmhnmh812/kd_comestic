@@ -7,6 +7,7 @@ import { convertToVnd } from "@/utils";
 import { useState } from "react";
 import usePayment from "../store";
 import { createOrder } from "@/api/order";
+import QRmodal from "./QRmodal";
 
 const ERROR_STATUS = [
   "PRICE_CHANGED",
@@ -23,6 +24,12 @@ export default function CartInfo({
 }) {
   const { cartItems, isFetching, totalAmount } = useCart();
   const [loading, setLoading] = useState(false);
+  const [modal, setModal] = useState({
+    visible: false,
+    qrUrl: "",
+    transferCode: "",
+    orderId: "",
+  });
   const amount = usePayment((state) => state.amount);
 
   const handlePay = async () => {
@@ -39,12 +46,12 @@ export default function CartInfo({
         ...amount,
       };
       const response = await createOrder(params);
-      const status = response?.data?.result?.status;
+      const result = response?.data?.result;
       if (values.paymentMethod === "COD") {
         window.location.href = `/pay-success/${response?.data?.result?.id}`;
         return;
       }
-      if (ERROR_STATUS.includes(status)) {
+      if (ERROR_STATUS.includes(result.status)) {
         message.error(
           "Có thay đổi về giá sản phẩm hoặc phí vận chuyển. Vui lòng kiểm tra lại giỏ hàng."
         );
@@ -52,6 +59,14 @@ export default function CartInfo({
         setLoading(false);
         return;
       }
+      const qrUrl = result?.qrCodeUrl;
+      const transferCode = result?.payment?.transferCode;
+      setModal({
+        visible: true,
+        qrUrl,
+        transferCode,
+        orderId: result?.id,
+      });
     } catch (error) {
       message.error("Có lỗi xảy ra khi kiểm tra thông tin đơn hàng.");
       setLoading(false);
@@ -96,6 +111,20 @@ export default function CartInfo({
           Thanh toán
         </Button>
       </div>
+      <QRmodal
+        onClose={() =>
+          setModal({
+            visible: false,
+            qrUrl: "",
+            transferCode: "",
+            orderId: "",
+          })
+        }
+        visible={modal.visible}
+        qrCodeUrl={modal.qrUrl}
+        transferCode={modal.transferCode}
+        orderId={modal.orderId}
+      />
     </div>
   );
 }
