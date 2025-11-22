@@ -43,7 +43,7 @@ export default function PayItems({
 
             <div className="flex flex-col gap-2">
               <span className="font-bold text-red-600">
-                {convertToVnd(item.product.price * item.quantity)}
+                {convertToVnd(item.product.finalPrice * item.quantity)}
               </span>
               <span className="font-bold">{originalPrice(item)}</span>
             </div>

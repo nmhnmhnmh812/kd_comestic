@@ -43,26 +43,26 @@ export default function PromoteSession({
   return (
     <div
       className={clsx(
-        "bg-white flex rounded-lg overflow-hidden",
-        reverse && "flex-row-reverse"
+        "bg-white flex flex-col lg:flex-row rounded-lg overflow-hidden",
+        reverse && "lg:flex-row-reverse"
       )}
     >
-      <div className="flex flex-col w-1/4 max-w-[222px]">
+      <div className="flex flex-col lg:w-1/4 lg:max-w-[222px] w-full">
         <div className="h-12 uppercase bg-black text-white font-bold flex justify-center items-center">
-          <span>{category?.name}</span>
+          <span className="text-sm md:text-base">{category?.name}</span>
         </div>
-        <div className="flex-1 relative">
-          <Image alt="" src={banner3} fill />
+        <div className="flex-1 relative min-h-[200px] lg:min-h-0">
+          <Image alt="" src={banner3} fill className="object-cover" />
         </div>
       </div>
       <div className="flex-1">
         <div
           className={clsx(
-            "flex justify-between items-center h-12 px-4 bg-gray-200",
-            reverse && "flex-row-reverse"
+            "flex flex-col sm:flex-row justify-between items-start sm:items-center h-auto sm:h-12 px-4 py-2 sm:py-0 gap-2 sm:gap-0 bg-gray-200",
+            reverse && "sm:flex-row-reverse"
           )}
         >
-          <div className="flex gap-4">
+          <div className="flex gap-2 md:gap-4 flex-wrap">
             {!isFetching ? (
               category?.subCategories?.map((sub, index) => (
                 <Link
@@ -71,7 +71,7 @@ export default function PromoteSession({
                     category?.name,
                     category?.id
                   )}/${convertToUrl(sub?.name, sub?.id)}`}
-                  className="uppercase text-gray-600 hover:text-black hover:font-bold transition-all text-sm"
+                  className="uppercase text-gray-600 hover:text-black hover:font-bold transition-all text-xs md:text-sm"
                 >
                   {sub.name}
                 </Link>
@@ -82,16 +82,16 @@ export default function PromoteSession({
           </div>
           <Link
             href={`/danh-muc/${convertToUrl(category?.name, category?.id)}`}
-            className="text-red-600 font-bold text-sm uppercase"
+            className="text-red-600 font-bold text-xs md:text-sm uppercase whitespace-nowrap"
           >
             Xem thêm
           </Link>
         </div>
 
         <div
-          className={clsx(" p-2 min-h-[616px] min-w-[80%]", {
+          className={clsx(" p-2 min-h-[400px] md:min-h-[616px] min-w-[80%]", {
             "flex flex-col justify-center items-center w-full": isFetching,
-            "grid grid-cols-5 gap-2": !isFetching,
+            "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2": !isFetching,
           })}
         >
           {!isFetching ? (

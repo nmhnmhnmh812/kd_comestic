@@ -46,8 +46,8 @@ export default function ProductInformation({
     mutate(params);
   };
   return (
-    <div className="flex-1 flex flex-col justify-between gap-2">
-      <h2 className="text-lg font-semibold text-red-600 uppercase">
+    <div className="flex-1 flex flex-col justify-between gap-2 md:gap-3">
+      <h2 className="text-base md:text-lg font-semibold text-red-600 uppercase">
         <Link
           href={`/danh-muc?brand=${convertToUrl(
             product.brand.name,
@@ -57,28 +57,28 @@ export default function ProductInformation({
           {product.brand.name}
         </Link>
       </h2>
-      <h1 className="text-xl font-bold text-gray-800">{currentProduct.name}</h1>
-      <p className="text-sm">Mã sản phẩm: {currentProduct.id}</p>
+      <h1 className="text-lg md:text-xl font-bold text-gray-800">{currentProduct.name}</h1>
+      <p className="text-xs md:text-sm">Mã sản phẩm: {currentProduct.id}</p>
       <p>
-        <span className="text-red-600 font-bold text-lg">
+        <span className="text-red-600 font-bold text-base md:text-lg">
           Giá: {convertToVnd(currentProduct.price)}
         </span>{" "}
-        <span className="text-sm">(Đã bao gồm VAT)</span>
+        <span className="text-xs md:text-sm">(Đã bao gồm VAT)</span>
       </p>
-      <p>
+      <p className="text-sm md:text-base">
         Giá gốc: {convertToVnd(originalPrice)} - Tiết kiệm:{" "}
         {convertToVnd(originalPrice - currentProduct.price)}{" "}
         <span className="text-red-600">{`(${currentProduct.discount}%)`}</span>
       </p>
-      <div className="flex flex-col gap-3">
-        <p>Phân loại:</p>
+      <div className="flex flex-col gap-2 md:gap-3">
+        <p className="text-sm md:text-base">Phân loại:</p>
         <ProductVarients variants={variants} />
       </div>
-      <div className="flex gap-3">
-        <span>Số lượng: </span>
+      <div className="flex gap-2 md:gap-3 items-center">
+        <span className="text-sm md:text-base">Số lượng: </span>
         <QuantityInput onChange={setQuantity} />
       </div>
-      <div className="flex gap-3">
+      <div className="flex flex-col sm:flex-row gap-2 md:gap-3">
         <Button
           color="default"
           size="large"
@@ -88,7 +88,7 @@ export default function ProductInformation({
           loading={isPending}
           onClick={addToCart}
         >
-          Thêm vào giỏ hàng
+          <span className="text-xs sm:text-sm md:text-base">Thêm vào giỏ hàng</span>
         </Button>
         <Button
           color="danger"
@@ -97,7 +97,7 @@ export default function ProductInformation({
           className="w-full"
           icon={<ShoppingOutlined />}
         >
-          Mua ngay
+          <span className="text-xs sm:text-sm md:text-base">Mua ngay</span>
         </Button>
       </div>
     </div>

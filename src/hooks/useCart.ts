@@ -25,7 +25,7 @@ export default function useCart() {
 
   const totalAmount =
     data?.reduce((acc, item) => {
-      return acc + item.product.price * item.quantity;
+      return acc + item.product.finalPrice * item.quantity;
     }, 0) || 0;
 
   return { cartItems: data, isFetching, refetch, cartId, totalAmount };

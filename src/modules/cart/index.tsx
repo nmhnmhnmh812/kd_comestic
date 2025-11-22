@@ -7,8 +7,8 @@ export default function CartScreen() {
   const { cartId, cartItems, isFetching, refetch } = useCart();
 
   return (
-    <div className="flex flex-col gap-4 py-4">
-      <h1 className="font-bold">
+    <div className="flex flex-col gap-3 md:gap-4 py-3 md:py-4">
+      <h1 className="font-bold text-base md:text-lg">
         Giỏ hàng ({cartItems?.length || 0} sản phẩm)
       </h1>
       <CartTable

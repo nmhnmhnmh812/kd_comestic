@@ -29,9 +29,9 @@ const BANNERS = [
 
 export default function HotDealsScreen() {
   return (
-    <div className="max-w-screen-xl mx-auto flex flex-col gap-5 py-5">
+    <div className="max-w-screen-xl mx-auto flex flex-col gap-3 md:gap-5 py-3 md:py-5">
       <Tabs />
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-x-2 gap-y-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-2 gap-y-3 md:gap-y-4">
         {BANNERS.map((banner) => (
           <Link
             key={banner.link}
@@ -46,7 +46,7 @@ export default function HotDealsScreen() {
                 className="object-cover"
               />
             </div>
-            <h1 className="font-bold text-xl uppercase">{banner.title}</h1>
+            <h1 className="font-bold text-base md:text-xl uppercase">{banner.title}</h1>
           </Link>
         ))}
       </div>

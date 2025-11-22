@@ -93,15 +93,17 @@ export default function CartTable({
             alt={product.name}
             width={40}
             height={40}
+            className="rounded"
           />
-          <p>{product.name}</p>
+          <p className="text-xs md:text-sm line-clamp-2">{product.name}</p>
         </Link>
       ),
     },
     {
       title: "Giá",
       dataIndex: ["product", "finalPrice"],
-      render: (price: number) => convertToVnd(price),
+      render: (price: number) => <span className="text-xs md:text-sm">{convertToVnd(price)}</span>,
+      responsive: ["sm" as const],
     },
     {
       title: "Số lượng",
@@ -121,7 +123,7 @@ export default function CartTable({
       title: "Thành tiền",
       render: (_: any, record: CartItem) => {
         const currentQuantity = getCurrentQuantity(record.id!, record.quantity);
-        return convertToVnd(record.product.finalPrice * currentQuantity);
+        return <span className="text-xs md:text-sm font-semibold">{convertToVnd(record.product.finalPrice * currentQuantity)}</span>;
       },
     },
     {
@@ -132,7 +134,7 @@ export default function CartTable({
           onClick={() =>
             removeItem({ cartId: cartId!, cartItemId: record.id! })
           }
-          className="text-red-600"
+          className="text-red-600 text-xs md:text-sm"
         >
           Xóa
         </a>
@@ -148,14 +150,15 @@ export default function CartTable({
         dataSource={cartItems}
         rowKey="id"
         pagination={false}
+        scroll={{ x: 800 }}
       />
-      <div className="flex gap-4 items-center justify-end">
-        <h1 className="font-bold">Tổng tiền: {convertToVnd(totalAmount)}</h1>
+      <div className="flex flex-col sm:flex-row gap-3 md:gap-4 items-center justify-end mt-4">
+        <h1 className="font-bold text-base md:text-lg">Tổng tiền: {convertToVnd(totalAmount)}</h1>
         <Link href="/pay">
           <Button
             type="primary"
             size="large"
-            className="bg-red-600"
+            className="bg-red-600 w-full sm:w-auto"
             onClick={handleUpdate}
           >
             Thanh toán
