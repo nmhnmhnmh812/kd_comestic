@@ -3,10 +3,10 @@ import path from "path";
 
 const nextConfig: NextConfig = {
   images: {
-    domains: process.env.NEXT_PUBLIC_IMAGE_URL ? [
+    domains: [
       process.env.NEXT_PUBLIC_IMAGE_URL,
       process.env.NEXT_PUBLIC_BASE_IMAGE_URL,
-    ] : [],
+    ].filter((domain): domain is string => typeof domain === 'string' && domain.length > 0),
     // TODO: Replace wildcard pattern with specific trusted domains for production
     // For now, using wildcard to support dynamic image sources from the backend API
     remotePatterns: [

@@ -143,6 +143,11 @@ export type Blog = {
   createdDate: string;
 };
 
+export type BlogDetail = Blog & {
+  content: string;
+  updatedDate: string;
+};
+
 export type BlogPageResponse = {
   totalPages: number;
   totalElements: number;
