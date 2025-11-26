@@ -1,11 +1,11 @@
 import QuantityInput from "@/components/QuantityInput";
 import { Product, Variant } from "@/types";
-import { convertToOriginalPrice, convertToUrl, convertToVnd } from "@/utils";
+import { calculateDiscountPercent, convertToOriginalPrice, convertToUrl, convertToVnd } from "@/utils";
 import { ShoppingCartOutlined, ShoppingOutlined } from "@ant-design/icons";
 import { Button, message } from "antd";
 import ProductVarients from "./ProductVarients";
 import useProductDetail from "../store";
-import React from "react";
+import React, { useEffect } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { addItemToCart } from "@/api/cart";
 import Link from "next/link";
@@ -19,11 +19,44 @@ export default function ProductInformation({
 }) {
   const [quantity, setQuantity] = React.useState(1);
   const currentVariant = useProductDetail((state) => state.currentVariant);
+  const updateVariant = useProductDetail((state) => state.updateVariant);
+  const resetVariant = useProductDetail((state) => state.resetVariant);
+  
+  // Check if product has real variants (not just the product itself)
+  const hasRealVariants = variants.length > 0 && variants[0].id !== product.id;
+  
+  // Reset variant state when product changes and auto-select first variant if has variants
+  useEffect(() => {
+    // Reset when product changes
+    resetVariant();
+    
+    // Auto-select first variant if product has real variants
+    if (hasRealVariants) {
+      updateVariant(variants[0]);
+    }
+    
+    // Cleanup on unmount
+    return () => {
+      resetVariant();
+    };
+  }, [product.id, hasRealVariants, variants, updateVariant, resetVariant]);
+  
   const currentProduct = currentVariant || product;
-  const originalPrice = convertToOriginalPrice(
-    currentProduct.price,
+  
+  // Check if currentProduct is a Product (has finalPrice) or Variant (no finalPrice)
+  const isProduct = 'finalPrice' in currentProduct;
+  
+  // For Product: price is original, finalPrice is final
+  // For Variant: price is final, need to calculate original
+  const displayPrice = isProduct ? (currentProduct as Product).finalPrice : currentProduct.price;
+  const originalPrice = isProduct ? (currentProduct as Product).price : convertToOriginalPrice(currentProduct.price, currentProduct.discount);
+  
+  // Calculate discount percentage from discount amount
+  const discountPercent = calculateDiscountPercent(
+    originalPrice,
     currentProduct.discount
   );
+  
   const { mutate, isPending } = useMutation({
     mutationFn: addItemToCart,
     onSuccess: () => {
@@ -33,7 +66,14 @@ export default function ProductInformation({
       message.error("Thêm vào giỏ hàng thất bại. Vui lòng thử lại.");
     },
   });
+  
   const addToCart = () => {
+    // Require variant selection if product has variants
+    if (hasRealVariants && !currentVariant) {
+      message.warning("Vui lòng chọn phân loại sản phẩm");
+      return;
+    }
+    
     const cartId = localStorage.getItem("cart_id");
     const productId = product.id;
     const variantId = currentVariant?.id;
@@ -61,14 +101,14 @@ export default function ProductInformation({
       <p className="text-xs md:text-sm">Mã sản phẩm: {currentProduct.id}</p>
       <p>
         <span className="text-red-600 font-bold text-base md:text-lg">
-          Giá: {convertToVnd(currentProduct.price)}
+          Giá: {convertToVnd(displayPrice)}
         </span>{" "}
         <span className="text-xs md:text-sm">(Đã bao gồm VAT)</span>
       </p>
       <p className="text-sm md:text-base">
         Giá gốc: {convertToVnd(originalPrice)} - Tiết kiệm:{" "}
-        {convertToVnd(originalPrice - currentProduct.price)}{" "}
-        <span className="text-red-600">{`(${currentProduct.discount}%)`}</span>
+        {convertToVnd(currentProduct.discount)}{" "}
+        <span className="text-red-600">{`(${discountPercent}%)`}</span>
       </p>
       <div className="flex flex-col gap-2 md:gap-3">
         <p className="text-sm md:text-base">Phân loại:</p>
