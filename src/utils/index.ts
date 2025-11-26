@@ -33,6 +33,6 @@ export const calculateDiscountPercent = (
   originalPrice: number,
   discountAmount: number
 ) => {
-  if (!originalPrice || !discountAmount) return 0;
+  if (originalPrice <= 0 || discountAmount <= 0) return 0;
   return Math.round((discountAmount / originalPrice) * 100);
 };

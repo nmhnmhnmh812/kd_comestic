@@ -10,6 +10,11 @@ import { useMutation } from "@tanstack/react-query";
 import { addItemToCart } from "@/api/cart";
 import Link from "next/link";
 
+// Type guard to check if the item is a Product (has finalPrice) or Variant
+const isProductType = (item: Product | Variant): item is Product => {
+  return 'finalPrice' in item;
+};
+
 export default function ProductInformation({
   product,
   variants,
@@ -23,7 +28,7 @@ export default function ProductInformation({
   const resetVariant = useProductDetail((state) => state.resetVariant);
   
   // Check if product has real variants (not just the product itself)
-  const hasRealVariants = variants.length > 0 && variants[0].id !== product.id;
+  const hasRealVariants = variants.length > 0 && variants[0]?.id !== product.id;
   
   // Reset variant state when product changes and auto-select first variant if has variants
   useEffect(() => {
@@ -43,13 +48,10 @@ export default function ProductInformation({
   
   const currentProduct = currentVariant || product;
   
-  // Check if currentProduct is a Product (has finalPrice) or Variant (no finalPrice)
-  const isProduct = 'finalPrice' in currentProduct;
-  
   // For Product: price is original, finalPrice is final
   // For Variant: price is final, need to calculate original
-  const displayPrice = isProduct ? (currentProduct as Product).finalPrice : currentProduct.price;
-  const originalPrice = isProduct ? (currentProduct as Product).price : convertToOriginalPrice(currentProduct.price, currentProduct.discount);
+  const displayPrice = isProductType(currentProduct) ? currentProduct.finalPrice : currentProduct.price;
+  const originalPrice = isProductType(currentProduct) ? currentProduct.price : convertToOriginalPrice(currentProduct.price, currentProduct.discount);
   
   // Calculate discount percentage from discount amount
   const discountPercent = calculateDiscountPercent(
