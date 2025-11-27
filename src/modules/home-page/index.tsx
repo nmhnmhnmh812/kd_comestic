@@ -1,5 +1,4 @@
 import Banner from "./components/Banner";
-import ProductSession from "./components/ProductSession";
 import PromoteSession from "./components/PromoteSession";
 
 export default function HomePage() {

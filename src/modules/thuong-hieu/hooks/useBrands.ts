@@ -29,7 +29,7 @@ export default function useBrands(keyword: string) {
       }),
     });
 
-  const brands = (data?.pages || []) as Brand[];
+  const brands = useMemo(() => data?.pages || [], [data]) as Brand[];
 
   // Infinite scroll with Intersection Observer
   useEffect(() => {

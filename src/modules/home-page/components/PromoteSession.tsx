@@ -21,7 +21,7 @@ export default function PromoteSession({
   categoryId,
   reverse = false,
 }: PromoteSessionProps) {
-  const [pagination, setPagination] = useState({ page: 0, size: 10 });
+  const [pagination] = useState({ page: 0, size: 10 });
 
   const { data: products, isFetching } = useQuery<any[]>({
     queryKey: [ENDPOINTS.SEARCH, categoryId, pagination],

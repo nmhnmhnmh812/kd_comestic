@@ -81,14 +81,11 @@ export default function BlogDetailScreen() {
                 {/* Main Content */}
                 <article className="flex-1 bg-white rounded-2xl shadow-sm p-6 md:p-10 border border-gray-100">
                     <header className="mb-10 text-center max-w-3xl mx-auto">
-                        <div className="text-blue-600 font-semibold tracking-wide uppercase text-sm mb-3">
-                            Tin tức & Sự kiện
-                        </div>
-                        <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-gray-900 leading-tight">
+                        <h1 className="text-xl md:text-2xl font-bold mb-6 text-gray-900 leading-tight">
                             {blog.title}
                         </h1>
 
-                        <div className="flex items-center justify-center gap-4 text-gray-500 text-sm">
+                        <div className="flex items-center justify-center gap-4 text-gray-500 text-sm flex-wrap">
                             <span className="flex items-center gap-2">
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
@@ -110,15 +107,21 @@ export default function BlogDetailScreen() {
                                     day: "numeric",
                                 })}
                             </span>
+                            {blog.categoryName && (
+                                <>
+                                    <span className="w-1 h-1 bg-gray-300 rounded-full"></span>
+                                    <span className="text-blue-600 font-medium">{blog.categoryName}</span>
+                                </>
+                            )}
                             <span className="w-1 h-1 bg-gray-300 rounded-full"></span>
                             <span>KMP Cosmetics</span>
                         </div>
                     </header>
 
-                    {blog.thumbnail?.url && (
+                    {blog.thumbnail && (
                         <div className="relative w-full aspect-video mb-10 rounded-xl overflow-hidden shadow-lg">
                             <Image
-                                src={blog.thumbnail.url}
+                                src={blog.thumbnail}
                                 alt={blog.title}
                                 fill
                                 className="object-cover"
@@ -158,7 +161,7 @@ export default function BlogDetailScreen() {
                 {/* Sidebar */}
                 <div className="flex flex-col gap-3 md:gap-5 lg:w-80">
                     <HotProducts />
-                    <RelatedBlogs currentBlogId={blog.id} />
+                    <RelatedBlogs currentBlogId={blog.id} categoryId={blog.category?.id} />
                 </div>
             </div>
         </div>

@@ -1,7 +1,6 @@
 "use client";
 
 import { Divider, Form, Radio } from "antd";
-import usePayment from "../store";
 
 export default function TransferInfo() {
   return (

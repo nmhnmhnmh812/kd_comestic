@@ -67,7 +67,7 @@ export default function CartInfo({
         transferCode,
         orderId: result?.id,
       });
-    } catch (error) {
+    } catch {
       message.error("Có lỗi xảy ra khi kiểm tra thông tin đơn hàng.");
       setLoading(false);
     }

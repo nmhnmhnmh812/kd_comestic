@@ -2,7 +2,6 @@ import { ENDPOINTS, getProducts } from "@/api/product";
 import ProductCard from "@/components/Product";
 import {
   Brand,
-  Category,
   type Product as ProductType,
   ResponseApi,
 } from "@/types";

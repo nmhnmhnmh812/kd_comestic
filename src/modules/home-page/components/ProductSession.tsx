@@ -1,5 +1,4 @@
 import { Carousel, Divider } from "antd";
-import Product from "../../../components/Product";
 import Link from "next/link";
 
 interface ProductSessionProps {

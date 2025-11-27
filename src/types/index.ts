@@ -134,17 +134,24 @@ export type Blog = {
   id: number;
   title: string;
   shortDescription: string;
-  thumbnail: {
-    id: number;
-    url: string;
-  };
+  thumbnail: string;
   slug: string;
   displayOrder: number;
   createdDate: string;
+  category?: BlogCategory;
+  categoryName?: string;
 };
 
 export type BlogDetail = Blog & {
   content: string;
+  updatedDate: string;
+};
+
+export type BlogCategory = {
+  id: number;
+  name: string;
+  slug: string;
+  createdDate: string;
   updatedDate: string;
 };
 

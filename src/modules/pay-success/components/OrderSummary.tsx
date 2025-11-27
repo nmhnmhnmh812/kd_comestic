@@ -1,7 +1,6 @@
 import { Divider } from "antd";
 import { Order } from "@/types";
 import { convertToVnd } from "@/utils";
-import { getStatusLabel } from "../utils";
 
 interface OrderSummaryProps {
   order: Order;

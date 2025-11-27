@@ -37,7 +37,6 @@ export default function Banner() {
   });
 
   const mainBanner = data?.[0]; // First banner (middle - main)
-  const topRightBanner = data?.[1]; // Second banner (top right)
   const bottomRightBanner = data?.[2]; // Third banner (bottom right)
 
   return (
