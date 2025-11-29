@@ -1,7 +1,7 @@
 "use client";
 
 import { MinusOutlined, PlusOutlined } from "@ant-design/icons";
-import React, { useEffect, useState } from "react";
+import React from "react";
 
 export default function QuantityInput({
   onChange,
@@ -12,26 +12,14 @@ export default function QuantityInput({
   value?: number;
   size?: "default" | "small";
 }) {
-  const [quantity, setQuantity] = useState(value);
-
-  useEffect(() => {
-    if (onChange) {
-      onChange(quantity);
-    }
-  }, [quantity]);
-
-  useEffect(() => {
-    setQuantity(value);
-  }, [value]);
-
   const handleDecrease = () => {
-    if (quantity > 1) {
-      setQuantity(quantity - 1);
+    if (value > 1) {
+      onChange?.(value - 1);
     }
   };
 
   const handleIncrease = () => {
-    setQuantity(quantity + 1);
+    onChange?.(value + 1);
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -41,15 +29,15 @@ export default function QuantityInput({
     if (v === "" || /^\d+$/.test(v)) {
       const numValue = v === "" ? 1 : parseInt(v, 10);
       if (numValue > 0) {
-        setQuantity(numValue);
+        onChange?.(numValue);
       }
     }
   };
 
   const handleBlur = () => {
     // Nếu input trống, set về 1
-    if (quantity === 0 || !quantity) {
-      setQuantity(1);
+    if (value === 0 || !value) {
+      onChange?.(1);
     }
   };
 
@@ -71,7 +59,7 @@ export default function QuantityInput({
     <div className="flex items-center gap-2">
       <button
         onClick={handleDecrease}
-        disabled={quantity === 1}
+        disabled={value === 1}
         className={btnClass}
       >
         <MinusOutlined style={{ fontSize: iconSize }} />
@@ -79,7 +67,7 @@ export default function QuantityInput({
 
       <input
         type="text"
-        value={quantity}
+        value={value}
         onChange={handleInputChange}
         onBlur={handleBlur}
         className={inputClass}

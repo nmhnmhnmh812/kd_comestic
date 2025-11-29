@@ -8,7 +8,7 @@ import { useMutation } from "@tanstack/react-query";
 import { Button, message, Table } from "antd";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 export default function CartTable({
   cartItems,
@@ -21,9 +21,15 @@ export default function CartTable({
   cartId?: string;
   refetch: () => void;
 }) {
-  const [updateQueue, setUpdateQueue] = React.useState<
-    { cartItemId: string; quantity: number }[]
-  >([]);
+  const [localCartItems, setLocalCartItems] = useState<CartItem[]>(
+    cartItems || []
+  );
+
+  useEffect(() => {
+    if (cartItems) {
+      setLocalCartItems(cartItems);
+    }
+  }, [cartItems]);
 
   const { mutate: removeItem } = useMutation<
     any,
@@ -37,49 +43,61 @@ export default function CartTable({
       cartId: string;
       cartItemId: string;
     }) => removeItemFromCart(cartId, cartItemId),
-    onSuccess: () => {
+    onSuccess: (_, { cartItemId }) => {
+      const find = localCartItems.find((item) => item.id === cartItemId);
+      if (find) {
+        const index = localCartItems.indexOf(find);
+        localCartItems.splice(index, 1);
+        setLocalCartItems([...localCartItems]);
+      }
       refetch();
     },
-    onError: () => {
-      message.error("Xóa sản phẩm thất bại. Vui lòng thử lại.");
+    onError: (error: { error: string }) => {
+      message.error(error.error || "Xóa sản phẩm thất bại. Vui lòng thử lại.");
     },
   });
 
-  const handleUpdate = async () => {
-    if (!updateQueue.length) return;
-    await Promise.all(
-      updateQueue.map((item) =>
-        updateCartItem(cartId, item.cartItemId, item.quantity)
-      )
-    );
-    setUpdateQueue([]);
-    refetch();
-  };
+  const { mutate: updateItem } = useMutation<
+    any,
+    unknown,
+    { cartId: string; cartItemId: string; quantity: number }
+  >({
+    mutationFn: ({
+      cartId,
+      cartItemId,
+      quantity,
+    }: {
+      cartId: string;
+      cartItemId: string;
+      quantity: number;
+    }) => updateCartItem(cartId, cartItemId, quantity),
+    onSuccess: (_, { cartItemId, quantity }) => {
+      const find = localCartItems.find((item) => item.id === cartItemId);
+      if (find) {
+        find.quantity = quantity;
+        setLocalCartItems([...localCartItems]);
+      }
+    },
+    onError: (error: { error: string; cartItemId: string }) => {
+      message.error(
+        error.error || "Cập nhật số lượng thất bại. Vui lòng thử lại."
+      );
+      const find = localCartItems.find((item) => item.id === error.cartItemId);
+      if (find) {
+        find.quantity = find.quantity - 1;
+        setLocalCartItems([...localCartItems]);
+      }
+    },
+  });
 
-  const updateQuantity = (cartItemId: string, quantity: number) => {
-    const existingIndex = updateQueue.findIndex(
-      (item) => item.cartItemId === cartItemId
-    );
-    const newQueue = [...updateQueue];
-    if (existingIndex !== -1) {
-      newQueue[existingIndex].quantity = quantity;
-    } else {
-      newQueue.push({ cartItemId, quantity });
-    }
-    setUpdateQueue(newQueue);
-  };
+  console.log(localCartItems);
 
-  // Helper function to get current quantity
-  const getCurrentQuantity = (cartItemId: string, originalQuantity: number) => {
-    const queueItem = updateQueue.find(
-      (item) => item.cartItemId === cartItemId
-    );
-    return queueItem ? queueItem.quantity : originalQuantity;
+  const handleUpdateQuantity = (cartItemId: string, quantity: number) => {
+    updateItem({ cartId: cartId!, cartItemId, quantity });
   };
 
   const totalAmount = cartItems?.reduce((total, item) => {
-    const currentQuantity = getCurrentQuantity(item.id!, item.quantity);
-    return total + item.product.finalPrice * currentQuantity;
+    return total + item.product.finalPrice * item.quantity;
   }, 0);
 
   const columns = [
@@ -102,19 +120,20 @@ export default function CartTable({
     {
       title: "Giá",
       dataIndex: ["product", "finalPrice"],
-      render: (price: number) => <span className="text-xs md:text-sm">{convertToVnd(price)}</span>,
+      render: (price: number) => (
+        <span className="text-xs md:text-sm">{convertToVnd(price)}</span>
+      ),
       responsive: ["sm" as const],
     },
     {
       title: "Số lượng",
       dataIndex: "quantity",
       render: (quantity: number, record: CartItem) => {
-        const currentQuantity = getCurrentQuantity(record.id!, quantity);
         return (
           <QuantityInput
-            value={currentQuantity}
+            value={quantity}
             size="small"
-            onChange={(value) => updateQuantity(record.id!, value)}
+            onChange={(value) => handleUpdateQuantity(record.id!, value)}
           />
         );
       },
@@ -122,8 +141,11 @@ export default function CartTable({
     {
       title: "Thành tiền",
       render: (_: any, record: CartItem) => {
-        const currentQuantity = getCurrentQuantity(record.id!, record.quantity);
-        return <span className="text-xs md:text-sm font-semibold">{convertToVnd(record.product.finalPrice * currentQuantity)}</span>;
+        return (
+          <span className="text-xs md:text-sm font-semibold">
+            {convertToVnd(record.product.finalPrice * record.quantity)}
+          </span>
+        );
       },
     },
     {
@@ -147,19 +169,20 @@ export default function CartTable({
       <Table
         columns={columns}
         loading={loading}
-        dataSource={cartItems}
+        dataSource={localCartItems}
         rowKey="id"
         pagination={false}
         scroll={{ x: 800 }}
       />
       <div className="flex flex-col sm:flex-row gap-3 md:gap-4 items-center justify-end mt-4">
-        <h1 className="font-bold text-base md:text-lg">Tổng tiền: {convertToVnd(totalAmount)}</h1>
+        <h1 className="font-bold text-base md:text-lg">
+          Tổng tiền: {convertToVnd(totalAmount)}
+        </h1>
         <Link href="/pay">
           <Button
             type="primary"
             size="large"
             className="bg-red-600 w-full sm:w-auto"
-            onClick={handleUpdate}
           >
             Thanh toán
           </Button>
