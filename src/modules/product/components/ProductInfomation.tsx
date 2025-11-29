@@ -47,6 +47,8 @@ export default function ProductInformation({
     currentProduct.discount
   );
 
+  const hasRealVariants = variants.length > 0 && variants[0]?.id !== product.id;
+
   const { mutate, isPending } = useMutation({
     mutationFn: addItemToCart,
     onSuccess: () => {
@@ -59,7 +61,7 @@ export default function ProductInformation({
 
   const addToCart = () => {
     // Require variant selection if product has variants
-    if (!currentVariant) {
+    if (hasRealVariants && !currentVariant) {
       message.warning("Vui lòng chọn phân loại sản phẩm");
       return;
     }
@@ -83,7 +85,7 @@ export default function ProductInformation({
       return;
     }
 
-    // Save buy-now item to localStorage
+    // Save buy-now item to localStorage for backup
     const buyNowItem = {
       product,
       variant: currentVariant,
@@ -91,8 +93,17 @@ export default function ProductInformation({
     };
     localStorage.setItem(BUY_NOW_KEY, JSON.stringify(buyNowItem));
     
-    // Navigate to payment page
-    router.push("/pay");
+    // Build URL with query parameters for persistence
+    const params = new URLSearchParams();
+    params.set("productId", product.id.toString());
+    if (currentVariant) {
+      params.set("variantId", currentVariant.id.toString());
+    }
+    params.set("quantity", quantity.toString());
+    params.set("buyNow", "true");
+    
+    // Navigate to payment page with query params
+    router.push(`/pay?${params.toString()}`);
   };
 
   return (
