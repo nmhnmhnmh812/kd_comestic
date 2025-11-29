@@ -14,6 +14,8 @@ import React from "react";
 import { useMutation } from "@tanstack/react-query";
 import { addItemToCart } from "@/api/cart";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { BUY_NOW_KEY } from "@/constants";
 
 // Type guard to check if the item is a Product (has finalPrice) or Variant
 const isProductType = (item: Product | Variant): item is Product => {
@@ -29,6 +31,7 @@ export default function ProductInformation({
 }) {
   const [quantity, setQuantity] = React.useState(1);
   const currentVariant = useProductDetail((state) => state.currentVariant);
+  const router = useRouter();
 
   const currentProduct = currentVariant || product;
 
@@ -72,6 +75,26 @@ export default function ProductInformation({
     };
     mutate(params);
   };
+
+  const buyNow = () => {
+    // Require variant selection if product has variants
+    if (hasRealVariants && !currentVariant) {
+      message.warning("Vui lòng chọn phân loại sản phẩm");
+      return;
+    }
+
+    // Save buy-now item to localStorage
+    const buyNowItem = {
+      product,
+      variant: currentVariant,
+      quantity,
+    };
+    localStorage.setItem(BUY_NOW_KEY, JSON.stringify(buyNowItem));
+    
+    // Navigate to payment page
+    router.push("/pay");
+  };
+
   return (
     <div className="flex-1 flex flex-col justify-between gap-2 md:gap-3">
       <h2 className="text-base md:text-lg font-semibold text-red-600 uppercase">
@@ -127,6 +150,7 @@ export default function ProductInformation({
           size="large"
           className="w-full"
           icon={<ShoppingOutlined />}
+          onClick={buyNow}
         >
           <span className="text-xs sm:text-sm md:text-base">Mua ngay</span>
         </Button>

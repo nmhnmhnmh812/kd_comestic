@@ -6,15 +6,22 @@ import TransferInfo from "./components/TranferInfo";
 import CartInfo from "./components/CartInfo";
 import { checkOrderInfo } from "@/api/order";
 import useCart from "@/hooks/useCart";
+import useBuyNow from "@/hooks/useBuyNow";
 import usePayment from "./store";
 
 export default function PayScreen() {
   const [form] = Form.useForm();
-  const { cartItems } = useCart();
+  const { cartItems, totalAmount: cartTotalAmount } = useCart();
+  const { buyNowAsCartItem, buyNowTotalAmount, isBuyNow, clearBuyNow } = useBuyNow();
   const updateAmount = usePayment((state) => state.updateAmount);
+
+  // Use buy-now item if exists, otherwise use cart items
+  const activeItems = isBuyNow ? buyNowAsCartItem : cartItems;
+  const activeTotalAmount = isBuyNow ? buyNowTotalAmount : cartTotalAmount;
+
   const getShipFee = async (address: string) => {
     const orderItems =
-      cartItems?.map((item) => ({
+      activeItems?.map((item) => ({
         productId: item?.product?.id || undefined,
         variantId: item?.variant?.id || undefined,
         quantity: item?.quantity,
@@ -41,7 +48,14 @@ export default function PayScreen() {
         <PayInfo getShipFee={getShipFee} />
         <TransferInfo />
       </Form>
-      <CartInfo form={form} getShipFee={getShipFee} />
+      <CartInfo 
+        form={form} 
+        getShipFee={getShipFee} 
+        cartItems={activeItems}
+        totalAmount={activeTotalAmount}
+        isBuyNow={isBuyNow}
+        clearBuyNow={clearBuyNow}
+      />
     </div>
   );
 }

@@ -105,6 +105,12 @@ export type CartItem = {
   quantity: number;
 };
 
+export type BuyNowItem = {
+  product: Product;
+  variant: Variant | null;
+  quantity: number;
+};
+
 export type Category = {
   id: number;
   name: string;

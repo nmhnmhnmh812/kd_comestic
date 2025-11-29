@@ -1,6 +1,8 @@
 import { ISLUGMAP } from "@/types";
 import demoProduct from "@/assets/images/demo_product.png";
 
+export const BUY_NOW_KEY = "buy_now_item";
+
 export const SLUG_MAP: ISLUGMAP = {
   "trang-diem": {
     slug: { title: "Trang điểm", id: 1 },
