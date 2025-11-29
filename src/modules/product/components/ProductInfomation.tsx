@@ -57,7 +57,9 @@ export default function ProductInformation({
           {product.brand.name}
         </Link>
       </h2>
-      <h1 className="text-lg md:text-xl font-bold text-gray-800">{currentProduct.name}</h1>
+      <h1 className="text-lg md:text-xl font-bold text-gray-800">
+        {currentProduct.name}
+      </h1>
       <p className="text-xs md:text-sm">Mã sản phẩm: {currentProduct.id}</p>
       <p>
         <span className="text-red-600 font-bold text-base md:text-lg">
@@ -76,7 +78,7 @@ export default function ProductInformation({
       </div>
       <div className="flex gap-2 md:gap-3 items-center">
         <span className="text-sm md:text-base">Số lượng: </span>
-        <QuantityInput onChange={setQuantity} />
+        <QuantityInput value={quantity} onChange={setQuantity} />
       </div>
       <div className="flex flex-col sm:flex-row gap-2 md:gap-3">
         <Button
@@ -88,7 +90,9 @@ export default function ProductInformation({
           loading={isPending}
           onClick={addToCart}
         >
-          <span className="text-xs sm:text-sm md:text-base">Thêm vào giỏ hàng</span>
+          <span className="text-xs sm:text-sm md:text-base">
+            Thêm vào giỏ hàng
+          </span>
         </Button>
         <Button
           color="danger"
