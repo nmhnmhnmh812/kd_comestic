@@ -10,7 +10,7 @@ import { ShoppingCartOutlined, ShoppingOutlined } from "@ant-design/icons";
 import { Button, message } from "antd";
 import ProductVarients from "./ProductVarients";
 import useProductDetail from "../store";
-import React, { useEffect } from "react";
+import React from "react";
 import { useMutation } from "@tanstack/react-query";
 import { addItemToCart } from "@/api/cart";
 import Link from "next/link";
@@ -29,8 +29,6 @@ export default function ProductInformation({
 }) {
   const [quantity, setQuantity] = React.useState(1);
   const currentVariant = useProductDetail((state) => state.currentVariant);
-
-  const hasRealVariants = variants.length > 0 && variants[0]?.id !== product.id;
 
   const currentProduct = currentVariant || product;
 
@@ -58,7 +56,7 @@ export default function ProductInformation({
 
   const addToCart = () => {
     // Require variant selection if product has variants
-    if (hasRealVariants && !currentVariant) {
+    if (!currentVariant) {
       message.warning("Vui lòng chọn phân loại sản phẩm");
       return;
     }
