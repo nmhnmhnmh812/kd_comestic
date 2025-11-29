@@ -67,7 +67,7 @@ export default function QRModal({
       const response = await getOrderDetail(orderId);
       if (response?.data?.result) {
         const order = response.data.result;
-        const paymentStatus = order.status;
+        const paymentStatus = order.payment.status;
 
         if (paymentStatus === "COMPLETED") {
           if (timerRef.current) clearInterval(timerRef.current);

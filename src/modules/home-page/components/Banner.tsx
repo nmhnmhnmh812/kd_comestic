@@ -36,13 +36,15 @@ export default function Banner() {
     },
   });
 
+  console.log(data);
+
   const mainBanner = data?.[0]; // First banner (middle - main)
   const topRightBanner = data?.[1]; // Second banner (top right)
   const bottomRightBanner = data?.[2]; // Third banner (bottom right)
 
   return (
     <div className="w-full flex justify-center items-center">
-      <div className="w-full max-w-7xl aspect-[2/1] flex flex-col md:flex-row gap-2">
+      <div className="w-full max-w-7xl aspect-[3/1] flex flex-col md:flex-row gap-2">
         {/* Left Banner - Fixed */}
         {/* Left banner - hide on mobile */}
         <div className="hidden md:block h-full w-1/5 relative overflow-hidden rounded-lg">
@@ -90,7 +92,7 @@ export default function Banner() {
               alt={mainBanner.title || "Main Banner"}
               src={mainBanner.imageUrl}
               fill
-              className="object-cover rounded-lg group-hover:scale-105 transition-transform duration-300"
+              className="object-fill rounded-lg group-hover:scale-105 transition-transform duration-300"
               priority
             />
           )}

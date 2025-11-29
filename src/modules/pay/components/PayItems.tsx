@@ -1,5 +1,5 @@
 import { CartItem } from "@/types";
-import { convertToOriginalPrice, convertToVnd } from "@/utils";
+import { convertToVnd } from "@/utils";
 import { Spin } from "antd";
 import Image from "next/image";
 
@@ -11,11 +11,8 @@ export default function PayItems({
   loading: boolean;
 }) {
   const originalPrice = (item: CartItem) => {
-    const oldPrice = convertToOriginalPrice(
-      item.product.price,
-      item.product.discount
-    );
-    return convertToVnd(oldPrice * item.quantity);
+    // product.price is already the original price
+    return convertToVnd(item.product.price * item.quantity);
   };
   return (
     <div className="px-4 py-3 flex flex-col gap-4">
@@ -31,7 +28,7 @@ export default function PayItems({
               width={80}
               height={80}
             />
-            <div className="flex flex-col gap-">
+            <div className="flex flex-col gap-2 flex-1">
               <span
                 className="font-medium line-clamp-2"
                 title={item.product.name}

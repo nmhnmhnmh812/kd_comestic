@@ -40,7 +40,7 @@ export default async function ProductDetailScreen({
   return (
     <ProductScreen
       product={product}
-      variants={variants?.length ? variants : [product]}
+      variants={variants?.length ? variants : [{ ...product, id: undefined }]}
     />
   );
 }
