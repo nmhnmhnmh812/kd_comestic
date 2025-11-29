@@ -2,13 +2,37 @@
 
 import { removeItemFromCart, updateCartItem } from "@/api/cart";
 import QuantityInput from "@/components/QuantityInput";
-import { CartItem, Product } from "@/types";
+import { CartItem } from "@/types";
 import { convertToVnd } from "@/utils";
 import { useMutation } from "@tanstack/react-query";
 import { Button, message, Table } from "antd";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
+
+// Helper function to get display name for cart item (variant name if exists, otherwise product name)
+const getDisplayName = (item: CartItem): string => {
+  if (item.variant) {
+    return `${item.product?.name} - ${item.variant.name}`;
+  }
+  return item.product?.name || "";
+};
+
+// Helper function to get display image for cart item (variant image if exists, otherwise product image)
+const getDisplayImage = (item: CartItem): string => {
+  if (item.variant && item.variant.blobs && item.variant.blobs.length > 0) {
+    return item.variant.blobs[0].url;
+  }
+  return item.product?.blobs?.[0]?.url || "";
+};
+
+// Helper function to get display price for cart item (variant price if exists, otherwise product finalPrice)
+const getDisplayPrice = (item: CartItem): number => {
+  if (item.variant) {
+    return item.variant.price;
+  }
+  return item.product?.finalPrice || 0;
+};
 
 export default function CartTable({
   cartItems,
@@ -97,31 +121,36 @@ export default function CartTable({
   };
 
   const totalAmount = cartItems?.reduce((total, item) => {
-    return total + (item?.product?.finalPrice || 0) * (item?.quantity || 0);
+    return total + getDisplayPrice(item) * (item?.quantity || 0);
   }, 0);
 
   const columns = [
     {
       title: "Sản phẩm",
-      dataIndex: "product",
-      render: (product: Product) => (
-        <Link href={`/abcd.${product?.id}`} className="flex items-center gap-2">
+      render: (_: unknown, record: CartItem) => (
+        <Link
+          href={`/abcd.${record.product?.id}`}
+          className="flex items-center gap-2"
+        >
           <Image
-            src={product?.blobs?.[0]?.url || ""}
-            alt={product?.name || ""}
+            src={getDisplayImage(record)}
+            alt={getDisplayName(record)}
             width={40}
             height={40}
             className="rounded"
           />
-          <p className="text-xs md:text-sm line-clamp-2">{product?.name}</p>
+          <p className="text-xs md:text-sm line-clamp-2">
+            {getDisplayName(record)}
+          </p>
         </Link>
       ),
     },
     {
       title: "Giá",
-      dataIndex: ["product", "finalPrice"],
-      render: (price: number) => (
-        <span className="text-xs md:text-sm">{convertToVnd(price)}</span>
+      render: (_: unknown, record: CartItem) => (
+        <span className="text-xs md:text-sm">
+          {convertToVnd(getDisplayPrice(record))}
+        </span>
       ),
       responsive: ["sm" as const],
     },
@@ -140,12 +169,10 @@ export default function CartTable({
     },
     {
       title: "Thành tiền",
-      render: (_: any, record: CartItem) => {
+      render: (_: unknown, record: CartItem) => {
         return (
           <span className="text-xs md:text-sm font-semibold">
-            {convertToVnd(
-              (record?.product?.finalPrice || 0) * (record?.quantity || 0)
-            )}
+            {convertToVnd(getDisplayPrice(record) * (record?.quantity || 0))}
           </span>
         );
       },
@@ -153,7 +180,7 @@ export default function CartTable({
     {
       title: "Thao tác",
       dataIndex: "action",
-      render: (_: any, record: CartItem) => (
+      render: (_: unknown, record: CartItem) => (
         <a
           onClick={() =>
             removeItem({ cartId: cartId!, cartItemId: record.id! })
