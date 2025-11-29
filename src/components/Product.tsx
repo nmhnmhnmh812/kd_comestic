@@ -16,7 +16,7 @@ export default function Product({ ...rest }: ProductType) {
     >
       <div className="flex flex-col gap-2 text-black">
         <div className="relative w-full aspect-square">
-          <Image alt={name} src={imageUrl} fill />
+          <Image alt={name} src={imageUrl} fill className="object-cover" />
         </div>
         <div className="flex flex-col gap-1 p-2">
           <div className="font-semibold text-sm flex gap-2">

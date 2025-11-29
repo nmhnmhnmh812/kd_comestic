@@ -12,7 +12,7 @@ export default function ProductImage({ product }: { product: Product }) {
         <Image
           src={imagesSrc[0]}
           alt={product.name}
-          className="w-full h-full object-fill"
+          className="w-full h-full object-cover"
           preview={{
             mask: "Xem ảnh",
           }}

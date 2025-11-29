@@ -53,18 +53,6 @@ export default function useBuyNow() {
         }
       }
       
-      // Priority 2: Check localStorage (fallback)
-      if (typeof window !== "undefined" && window.localStorage) {
-        const item = localStorage.getItem(BUY_NOW_KEY);
-        if (item) {
-          try {
-            setBuyNowItem(JSON.parse(item));
-          } catch {
-            setBuyNowItem(null);
-          }
-        }
-      }
-      
       setLoading(false);
     };
 

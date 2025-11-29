@@ -13,19 +13,15 @@ import { useEffect } from "react";
 export default function PayScreen() {
   const [form] = Form.useForm();
   const { cartItems, totalAmount: cartTotalAmount } = useCart();
-  const { buyNowAsCartItem, buyNowTotalAmount, isBuyNow, clearBuyNow, loading: buyNowLoading } =
-    useBuyNow();
+  const {
+    buyNowAsCartItem,
+    buyNowTotalAmount,
+    isBuyNow,
+    clearBuyNow,
+    loading: buyNowLoading,
+  } = useBuyNow();
   const updateAmount = usePayment((state) => state.updateAmount);
 
-  useEffect(() => {
-    return () => {
-      if (isBuyNow) {
-        clearBuyNow();
-      }
-    };
-  }, [isBuyNow, clearBuyNow]);
-
-  // Use buy-now item if exists, otherwise use cart items
   const activeItems = isBuyNow ? buyNowAsCartItem : cartItems;
   const activeTotalAmount = isBuyNow ? buyNowTotalAmount : cartTotalAmount;
 
