@@ -4,7 +4,8 @@ import useProductDetail from "../store";
 
 export default function ProductImage({ product }: { product: Product }) {
   const currentVariant = useProductDetail((state) => state.currentVariant);
-  const imagesSrc = (currentVariant || product).blobs.map((blob) => blob.url);
+  const imagesSrc =
+    (currentVariant || product)?.blobs?.map((blob) => blob?.url) || [];
 
   return (
     <div className="w-full md:w-[44%] aspect-square bg-white rounded-lg flex gap-2 md:gap-4">

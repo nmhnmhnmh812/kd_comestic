@@ -97,7 +97,7 @@ export default function CartTable({
   };
 
   const totalAmount = cartItems?.reduce((total, item) => {
-    return total + item.product.finalPrice * item.quantity;
+    return total + (item?.product?.finalPrice || 0) * (item?.quantity || 0);
   }, 0);
 
   const columns = [
@@ -105,15 +105,15 @@ export default function CartTable({
       title: "Sản phẩm",
       dataIndex: "product",
       render: (product: Product) => (
-        <Link href={`/abcd.${product.id}`} className="flex items-center gap-2">
+        <Link href={`/abcd.${product?.id}`} className="flex items-center gap-2">
           <Image
-            src={product.blobs[0].url}
-            alt={product.name}
+            src={product?.blobs?.[0]?.url || ""}
+            alt={product?.name || ""}
             width={40}
             height={40}
             className="rounded"
           />
-          <p className="text-xs md:text-sm line-clamp-2">{product.name}</p>
+          <p className="text-xs md:text-sm line-clamp-2">{product?.name}</p>
         </Link>
       ),
     },
@@ -143,7 +143,9 @@ export default function CartTable({
       render: (_: any, record: CartItem) => {
         return (
           <span className="text-xs md:text-sm font-semibold">
-            {convertToVnd(record.product.finalPrice * record.quantity)}
+            {convertToVnd(
+              (record?.product?.finalPrice || 0) * (record?.quantity || 0)
+            )}
           </span>
         );
       },

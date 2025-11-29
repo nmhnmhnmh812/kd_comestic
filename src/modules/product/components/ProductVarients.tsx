@@ -20,8 +20,8 @@ export default function ProductVarients({ variants }: { variants: Variant[] }) {
           onClick={() => updateVariant(variant)}
         >
           <Image
-            src={variant.blobs[0].url}
-            alt={variant.name}
+            src={variant?.blobs?.[0]?.url || ""}
+            alt={variant?.name || ""}
             width={28}
             height={28}
           />

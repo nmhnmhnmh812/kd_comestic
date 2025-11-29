@@ -50,11 +50,11 @@ export default function ProductInformation({
       <h2 className="text-base md:text-lg font-semibold text-red-600 uppercase">
         <Link
           href={`/danh-muc?brand=${convertToUrl(
-            product.brand.name,
-            product.brand.id
+            product.brand?.name,
+            product.brand?.id
           )}`}
         >
-          {product.brand.name}
+          {product.brand?.name}
         </Link>
       </h2>
       <h1 className="text-lg md:text-xl font-bold text-gray-800">
