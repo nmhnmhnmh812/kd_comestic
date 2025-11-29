@@ -1,6 +1,6 @@
 "use client";
 
-import { Form, message } from "antd";
+import { Form, message, Spin } from "antd";
 import PayInfo from "./components/PayInfo";
 import TransferInfo from "./components/TranferInfo";
 import CartInfo from "./components/CartInfo";
@@ -13,7 +13,7 @@ import { useEffect } from "react";
 export default function PayScreen() {
   const [form] = Form.useForm();
   const { cartItems, totalAmount: cartTotalAmount } = useCart();
-  const { buyNowAsCartItem, buyNowTotalAmount, isBuyNow, clearBuyNow } =
+  const { buyNowAsCartItem, buyNowTotalAmount, isBuyNow, clearBuyNow, loading: buyNowLoading } =
     useBuyNow();
   const updateAmount = usePayment((state) => state.updateAmount);
 
@@ -48,6 +48,16 @@ export default function PayScreen() {
       message.error(error.error);
     }
   };
+
+  // Show loading while fetching buy-now product data
+  if (buyNowLoading) {
+    return (
+      <div className="flex justify-center items-center py-20">
+        <Spin size="large" tip="Đang tải thông tin sản phẩm..." />
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col lg:flex-row gap-3 md:gap-4 py-3 md:py-4">
       <Form
