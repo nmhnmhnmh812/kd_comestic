@@ -1,15 +1,8 @@
 import { ENDPOINTS, getCart } from "@/api/cart";
 import { CartItem } from "@/types";
+import { getDisplayPrice } from "@/utils/cartUtils";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
-
-// Helper function to get display price for cart item (variant price if exists, otherwise product finalPrice)
-const getDisplayPrice = (item: CartItem): number => {
-  if (item.variant) {
-    return item.variant.price;
-  }
-  return item.product?.finalPrice || 0;
-};
 
 export default function useCart() {
   const [cartId, setCartId] = useState<string | null>(null);

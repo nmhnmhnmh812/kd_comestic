@@ -4,35 +4,16 @@ import { removeItemFromCart, updateCartItem } from "@/api/cart";
 import QuantityInput from "@/components/QuantityInput";
 import { CartItem } from "@/types";
 import { convertToVnd } from "@/utils";
+import {
+  getDisplayImage,
+  getDisplayName,
+  getDisplayPrice,
+} from "@/utils/cartUtils";
 import { useMutation } from "@tanstack/react-query";
 import { Button, message, Table } from "antd";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
-
-// Helper function to get display name for cart item (variant name if exists, otherwise product name)
-const getDisplayName = (item: CartItem): string => {
-  if (item.variant) {
-    return `${item.product?.name} - ${item.variant.name}`;
-  }
-  return item.product?.name || "";
-};
-
-// Helper function to get display image for cart item (variant image if exists, otherwise product image)
-const getDisplayImage = (item: CartItem): string => {
-  if (item.variant && item.variant.blobs && item.variant.blobs.length > 0) {
-    return item.variant.blobs[0].url;
-  }
-  return item.product?.blobs?.[0]?.url || "";
-};
-
-// Helper function to get display price for cart item (variant price if exists, otherwise product finalPrice)
-const getDisplayPrice = (item: CartItem): number => {
-  if (item.variant) {
-    return item.variant.price;
-  }
-  return item.product?.finalPrice || 0;
-};
 
 export default function CartTable({
   cartItems,

@@ -1,39 +1,13 @@
 import { CartItem } from "@/types";
-import { convertToOriginalPrice, convertToVnd } from "@/utils";
+import { convertToVnd } from "@/utils";
+import {
+  getDisplayImage,
+  getDisplayName,
+  getDisplayPrice,
+  getOriginalPrice,
+} from "@/utils/cartUtils";
 import { Spin } from "antd";
 import Image from "next/image";
-
-// Helper function to get display name for cart item (variant name if exists, otherwise product name)
-const getDisplayName = (item: CartItem): string => {
-  if (item.variant) {
-    return `${item.product?.name} - ${item.variant.name}`;
-  }
-  return item.product?.name || "";
-};
-
-// Helper function to get display image for cart item (variant image if exists, otherwise product image)
-const getDisplayImage = (item: CartItem): string => {
-  if (item.variant && item.variant.blobs && item.variant.blobs.length > 0) {
-    return item.variant.blobs[0].url;
-  }
-  return item.product?.blobs?.[0]?.url || "";
-};
-
-// Helper function to get display price for cart item (variant price if exists, otherwise product finalPrice)
-const getDisplayPrice = (item: CartItem): number => {
-  if (item.variant) {
-    return item.variant.price;
-  }
-  return item.product?.finalPrice || 0;
-};
-
-// Helper function to get original price for cart item
-const getOriginalPrice = (item: CartItem): number => {
-  if (item.variant) {
-    return convertToOriginalPrice(item.variant.price, item.variant.discount);
-  }
-  return item.product?.price || 0;
-};
 
 export default function PayItems({
   cartItems,
