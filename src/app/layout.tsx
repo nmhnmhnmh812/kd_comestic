@@ -1,21 +1,10 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.scss";
 import Header from "@/layout/Header";
 import Footer from "@/layout/Footer";
 import AntdRegistry from "@/lib/AntdRegistry";
 import ReactQueryProvider from "@/providers/ReactQueryProvider";
 import "@ant-design/v5-patch-for-react-19";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
 
 export const metadata: Metadata = {
   title: "KMP Cosmetics",
@@ -29,7 +18,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="vi">
-      <body className={`${geistSans.variable} ${geistMono.variable}`}>
+      <body className="font-sans">
         <ReactQueryProvider>
           <AntdRegistry>
             <Header />

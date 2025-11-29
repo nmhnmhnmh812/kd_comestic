@@ -2,10 +2,19 @@ import { Variant } from "@/types";
 import { Image } from "antd";
 import useProductDetail from "../store";
 import clsx from "clsx";
+import { useEffect, useState } from "react";
 
 export default function ProductVarients({ variants }: { variants: Variant[] }) {
+  const [currentVariant, setCurrentVariant] = useState<Variant | null>(null);
   const updateVariant = useProductDetail((state) => state.updateVariant);
-  const currentVariant = useProductDetail((state) => state.currentVariant);
+
+  useEffect(() => {
+    if (variants.length > 0 && !currentVariant) {
+      setCurrentVariant(variants[0]);
+      updateVariant(variants[0]);
+    }
+  }, [variants]);
+
   return (
     <div className="grid grid-cols-3 gap-3">
       {variants.map((variant) => (
@@ -17,7 +26,10 @@ export default function ProductVarients({ variants }: { variants: Variant[] }) {
             }
           )}
           key={variant.id}
-          onClick={() => updateVariant(variant)}
+          onClick={() => {
+            setCurrentVariant(variant);
+            updateVariant(variant);
+          }}
         >
           <Image
             src={variant?.blobs?.[0]?.url || ""}

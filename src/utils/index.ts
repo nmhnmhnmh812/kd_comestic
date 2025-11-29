@@ -17,8 +17,22 @@ export const convertToVnd = (price: number) => {
 };
 
 export const convertToOriginalPrice = (
-  price: number,
-  discountPercent: number
+  finalPrice: number,
+  discountAmount: number
 ) => {
-  return Math.round(price / (1 - discountPercent / 100));
+  return finalPrice + discountAmount;
+};
+
+/**
+ * Calculate discount percentage from original price and discount amount
+ * @param originalPrice - The original price before discount
+ * @param discountAmount - The discount amount
+ * @returns The discount percentage (0-100)
+ */
+export const calculateDiscountPercent = (
+  originalPrice: number,
+  discountAmount: number
+) => {
+  if (originalPrice <= 0 || discountAmount <= 0) return 0;
+  return Math.round((discountAmount / originalPrice) * 100);
 };

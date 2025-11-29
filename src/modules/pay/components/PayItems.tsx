@@ -31,7 +31,7 @@ export default function PayItems({
               width={80}
               height={80}
             />
-            <div className="flex flex-col gap-">
+            <div className="flex flex-col gap-2 flex-1">
               <span
                 className="font-medium line-clamp-2"
                 title={item?.product?.name}

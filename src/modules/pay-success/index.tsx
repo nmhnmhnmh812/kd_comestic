@@ -10,6 +10,7 @@ import OrderStatus from "./components/OrderStatus";
 import OrderSummary from "./components/OrderSummary";
 import ActionButtons from "./components/ActionButtons";
 import HelpSection from "./components/HelpSection";
+import { BUY_NOW_KEY } from "@/constants";
 
 interface PaySuccessScreenProps {
   orderId: string;
@@ -21,6 +22,11 @@ export default function PaySuccessScreen({ orderId }: PaySuccessScreenProps) {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    // Clear buy-now item on success page load
+    if (typeof window !== "undefined" && window.localStorage) {
+      localStorage.removeItem(BUY_NOW_KEY);
+    }
+
     const fetchOrder = async () => {
       try {
         if (!orderId) {

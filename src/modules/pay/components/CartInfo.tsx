@@ -1,6 +1,6 @@
 "use client";
 
-import useCart from "@/hooks/useCart";
+import { CartItem } from "@/types";
 import { Button, Divider, FormInstance, message } from "antd";
 import PayItems from "./PayItems";
 import { convertToVnd } from "@/utils";
@@ -18,11 +18,18 @@ const ERROR_STATUS = [
 export default function CartInfo({
   form,
   getShipFee,
+  cartItems,
+  totalAmount,
+  isBuyNow,
+  clearBuyNow,
 }: {
   form: FormInstance;
   getShipFee: (address: string) => void;
+  cartItems: CartItem[] | null | undefined;
+  totalAmount: number;
+  isBuyNow: boolean;
+  clearBuyNow: () => void;
 }) {
-  const { cartItems, isFetching, totalAmount } = useCart();
   const [loading, setLoading] = useState(false);
   const [modal, setModal] = useState({
     visible: false,
@@ -47,6 +54,12 @@ export default function CartInfo({
       };
       const response = await createOrder(params);
       const result = response?.data?.result;
+      
+      // Clear buy-now item after successful order creation
+      if (isBuyNow) {
+        clearBuyNow();
+      }
+      
       if (values.paymentMethod === "COD") {
         window.location.href = `/pay-success/${response?.data?.result?.id}`;
         return;
@@ -77,10 +90,12 @@ export default function CartInfo({
   return (
     <div className="bg-white rounded w-full lg:w-96">
       <div className="px-3 md:px-4 py-3">
-        <h3 className="font-bold text-sm md:text-base">Danh sách sản phẩm</h3>
+        <h3 className="font-bold text-sm md:text-base">
+          {isBuyNow ? "Sản phẩm mua ngay" : "Danh sách sản phẩm"}
+        </h3>
       </div>
       <Divider className="m-0" />
-      <PayItems cartItems={cartItems} loading={isFetching} />
+      <PayItems cartItems={cartItems || []} loading={false} />
       <Divider className="m-0" />
       <div className="px-3 md:px-4 py-3 flex flex-col gap-2">
         <div className="text-sm md:text-base">
@@ -112,14 +127,18 @@ export default function CartInfo({
         </Button>
       </div>
       <QRmodal
-        onClose={() =>
+        onClose={() => {
+          // Clear buy-now item when closing QR modal (exiting payment flow)
+          if (isBuyNow) {
+            clearBuyNow();
+          }
           setModal({
             visible: false,
             qrUrl: "",
             transferCode: "",
             orderId: "",
-          })
-        }
+          });
+        }}
         visible={modal.visible}
         qrCodeUrl={modal.qrUrl}
         transferCode={modal.transferCode}
