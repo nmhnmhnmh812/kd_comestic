@@ -1,6 +1,11 @@
 import QuantityInput from "@/components/QuantityInput";
 import { Product, Variant } from "@/types";
-import { calculateDiscountPercent, convertToOriginalPrice, convertToUrl, convertToVnd } from "@/utils";
+import {
+  calculateDiscountPercent,
+  convertToOriginalPrice,
+  convertToUrl,
+  convertToVnd,
+} from "@/utils";
 import { ShoppingCartOutlined, ShoppingOutlined } from "@ant-design/icons";
 import { Button, message } from "antd";
 import ProductVarients from "./ProductVarients";
@@ -12,7 +17,7 @@ import Link from "next/link";
 
 // Type guard to check if the item is a Product (has finalPrice) or Variant
 const isProductType = (item: Product | Variant): item is Product => {
-  return 'finalPrice' in item;
+  return "finalPrice" in item;
 };
 
 export default function ProductInformation({
@@ -24,41 +29,23 @@ export default function ProductInformation({
 }) {
   const [quantity, setQuantity] = React.useState(1);
   const currentVariant = useProductDetail((state) => state.currentVariant);
-  const updateVariant = useProductDetail((state) => state.updateVariant);
-  const resetVariant = useProductDetail((state) => state.resetVariant);
-  
-  // Check if product has real variants (not just the product itself)
+
   const hasRealVariants = variants.length > 0 && variants[0]?.id !== product.id;
-  
-  // Reset variant state when product changes and auto-select first variant if has variants
-  useEffect(() => {
-    // Reset when product changes
-    resetVariant();
-    
-    // Auto-select first variant if product has real variants
-    if (hasRealVariants) {
-      updateVariant(variants[0]);
-    }
-    
-    // Cleanup on unmount
-    return () => {
-      resetVariant();
-    };
-  }, [product.id, hasRealVariants, variants, updateVariant, resetVariant]);
-  
+
   const currentProduct = currentVariant || product;
-  
-  // For Product: price is original, finalPrice is final
-  // For Variant: price is final, need to calculate original
-  const displayPrice = isProductType(currentProduct) ? currentProduct.finalPrice : currentProduct.price;
-  const originalPrice = isProductType(currentProduct) ? currentProduct.price : convertToOriginalPrice(currentProduct.price, currentProduct.discount);
-  
-  // Calculate discount percentage from discount amount
+
+  const displayPrice = isProductType(currentProduct)
+    ? currentProduct.finalPrice
+    : currentProduct.price;
+  const originalPrice = isProductType(currentProduct)
+    ? currentProduct.price
+    : convertToOriginalPrice(currentProduct.price, currentProduct.discount);
+
   const discountPercent = calculateDiscountPercent(
     originalPrice,
     currentProduct.discount
   );
-  
+
   const { mutate, isPending } = useMutation({
     mutationFn: addItemToCart,
     onSuccess: () => {
@@ -68,14 +55,14 @@ export default function ProductInformation({
       message.error("Thêm vào giỏ hàng thất bại. Vui lòng thử lại.");
     },
   });
-  
+
   const addToCart = () => {
     // Require variant selection if product has variants
     if (hasRealVariants && !currentVariant) {
       message.warning("Vui lòng chọn phân loại sản phẩm");
       return;
     }
-    
+
     const cartId = localStorage.getItem("cart_id");
     const productId = product.id;
     const variantId = currentVariant?.id;
@@ -99,7 +86,9 @@ export default function ProductInformation({
           {product.brand.name}
         </Link>
       </h2>
-      <h1 className="text-lg md:text-xl font-bold text-gray-800">{currentProduct.name}</h1>
+      <h1 className="text-lg md:text-xl font-bold text-gray-800">
+        {currentProduct.name}
+      </h1>
       <p className="text-xs md:text-sm">Mã sản phẩm: {currentProduct.id}</p>
       <p>
         <span className="text-red-600 font-bold text-base md:text-lg">
@@ -130,7 +119,9 @@ export default function ProductInformation({
           loading={isPending}
           onClick={addToCart}
         >
-          <span className="text-xs sm:text-sm md:text-base">Thêm vào giỏ hàng</span>
+          <span className="text-xs sm:text-sm md:text-base">
+            Thêm vào giỏ hàng
+          </span>
         </Button>
         <Button
           color="danger"

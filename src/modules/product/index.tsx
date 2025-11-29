@@ -59,7 +59,11 @@ export default function ProductScreen({
 
   return (
     <div className="flex flex-col gap-3 md:gap-5 py-3 md:py-5">
-      <Breadcrumb items={breadcrumbItems} separator=">" className="text-xs md:text-sm" />
+      <Breadcrumb
+        items={breadcrumbItems}
+        separator=">"
+        className="text-xs md:text-sm"
+      />
       <div className="flex flex-col lg:flex-row gap-3 md:gap-5">
         <div className="flex flex-col gap-3 md:gap-5 flex-1">
           <ProductDetail product={product} variants={variants} />
