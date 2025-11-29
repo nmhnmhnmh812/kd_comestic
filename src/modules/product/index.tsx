@@ -28,8 +28,8 @@ export default function ProductScreen({
 
   const categoryUrl = convertToUrl(product.category.name);
   const subCategoryUrl = convertToUrl(
-    product.subCategory.name,
-    product.subCategory.id
+    product.subCategory?.name,
+    product.subCategory?.id
   );
 
   const breadcrumbItems = [
