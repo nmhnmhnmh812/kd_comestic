@@ -8,12 +8,22 @@ import { checkOrderInfo } from "@/api/order";
 import useCart from "@/hooks/useCart";
 import useBuyNow from "@/hooks/useBuyNow";
 import usePayment from "./store";
+import { useEffect } from "react";
 
 export default function PayScreen() {
   const [form] = Form.useForm();
   const { cartItems, totalAmount: cartTotalAmount } = useCart();
-  const { buyNowAsCartItem, buyNowTotalAmount, isBuyNow, clearBuyNow } = useBuyNow();
+  const { buyNowAsCartItem, buyNowTotalAmount, isBuyNow, clearBuyNow } =
+    useBuyNow();
   const updateAmount = usePayment((state) => state.updateAmount);
+
+  useEffect(() => {
+    return () => {
+      if (isBuyNow) {
+        clearBuyNow();
+      }
+    };
+  }, [isBuyNow, clearBuyNow]);
 
   // Use buy-now item if exists, otherwise use cart items
   const activeItems = isBuyNow ? buyNowAsCartItem : cartItems;
@@ -48,9 +58,9 @@ export default function PayScreen() {
         <PayInfo getShipFee={getShipFee} />
         <TransferInfo />
       </Form>
-      <CartInfo 
-        form={form} 
-        getShipFee={getShipFee} 
+      <CartInfo
+        form={form}
+        getShipFee={getShipFee}
         cartItems={activeItems}
         totalAmount={activeTotalAmount}
         isBuyNow={isBuyNow}

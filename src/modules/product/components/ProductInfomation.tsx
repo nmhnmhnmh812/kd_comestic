@@ -58,7 +58,6 @@ export default function ProductInformation({
   });
 
   const addToCart = () => {
-    // Require variant selection if product has variants
     if (!currentVariant) {
       message.warning("Vui lòng chọn phân loại sản phẩm");
       return;
@@ -77,21 +76,16 @@ export default function ProductInformation({
   };
 
   const buyNow = () => {
-    // Require variant selection if product has variants
-    if (hasRealVariants && !currentVariant) {
+    if (!currentVariant) {
       message.warning("Vui lòng chọn phân loại sản phẩm");
       return;
     }
-
-    // Save buy-now item to localStorage
     const buyNowItem = {
       product,
       variant: currentVariant,
       quantity,
     };
     localStorage.setItem(BUY_NOW_KEY, JSON.stringify(buyNowItem));
-    
-    // Navigate to payment page
     router.push("/pay");
   };
 
