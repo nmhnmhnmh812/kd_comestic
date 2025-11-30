@@ -1,4 +1,6 @@
 import { ENDPOINTS, getCart } from "@/api/cart";
+import { CartItem } from "@/types";
+import { getDisplayPrice } from "@/utils/cartUtils";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 
@@ -24,8 +26,8 @@ export default function useCart() {
   });
 
   const totalAmount =
-    data?.reduce((acc, item) => {
-      return acc + item.product.finalPrice * item.quantity;
+    data?.reduce((acc: number, item: CartItem) => {
+      return acc + getDisplayPrice(item) * item.quantity;
     }, 0) || 0;
 
   return { cartItems: data, isFetching, refetch, cartId, totalAmount };

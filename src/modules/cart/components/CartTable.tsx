@@ -2,8 +2,13 @@
 
 import { removeItemFromCart, updateCartItem } from "@/api/cart";
 import QuantityInput from "@/components/QuantityInput";
-import { CartItem, Product } from "@/types";
-import { convertToVnd } from "@/utils";
+import { CartItem } from "@/types";
+import { convertToUrl, convertToVnd } from "@/utils";
+import {
+  getDisplayImage,
+  getDisplayName,
+  getDisplayPrice,
+} from "@/utils/cartUtils";
 import { useMutation } from "@tanstack/react-query";
 import { Button, message, Table } from "antd";
 import Image from "next/image";
@@ -90,38 +95,51 @@ export default function CartTable({
     },
   });
 
-  console.log(localCartItems);
-
   const handleUpdateQuantity = (cartItemId: string, quantity: number) => {
     updateItem({ cartId: cartId!, cartItemId, quantity });
   };
 
   const totalAmount = cartItems?.reduce((total, item) => {
-    return total + (item?.product?.finalPrice || 0) * (item?.quantity || 0);
+    return total + getDisplayPrice(item) * (item?.quantity || 0);
   }, 0);
 
   const columns = [
     {
       title: "Sản phẩm",
-      dataIndex: "product",
-      render: (product: Product) => (
-        <Link href={`/abcd.${product?.id}`} className="flex items-center gap-2">
-          <Image
-            src={product?.blobs?.[0]?.url || ""}
-            alt={product?.name || ""}
-            width={40}
-            height={40}
-            className="rounded"
-          />
-          <p className="text-xs md:text-sm line-clamp-2">{product?.name}</p>
-        </Link>
-      ),
+      render: (_: unknown, record: CartItem) => {
+        const productUrl = convertToUrl(
+          record.product?.name,
+          record.product?.id
+        );
+        const varientUrl = convertToUrl(
+          record.variant?.name,
+          record.variant?.id
+        );
+        return (
+          <Link
+            href={`${productUrl}${varientUrl ? `/${varientUrl}` : ""}`}
+            className="flex items-center gap-2"
+          >
+            <Image
+              src={getDisplayImage(record)}
+              alt={getDisplayName(record)}
+              width={40}
+              height={40}
+              className="rounded"
+            />
+            <p className="text-xs md:text-sm line-clamp-2">
+              {getDisplayName(record)}
+            </p>
+          </Link>
+        );
+      },
     },
     {
       title: "Giá",
-      dataIndex: ["product", "finalPrice"],
-      render: (price: number) => (
-        <span className="text-xs md:text-sm">{convertToVnd(price)}</span>
+      render: (_: unknown, record: CartItem) => (
+        <span className="text-xs md:text-sm">
+          {convertToVnd(getDisplayPrice(record))}
+        </span>
       ),
       responsive: ["sm" as const],
     },
@@ -140,12 +158,10 @@ export default function CartTable({
     },
     {
       title: "Thành tiền",
-      render: (_: any, record: CartItem) => {
+      render: (_: unknown, record: CartItem) => {
         return (
           <span className="text-xs md:text-sm font-semibold">
-            {convertToVnd(
-              (record?.product?.finalPrice || 0) * (record?.quantity || 0)
-            )}
+            {convertToVnd(getDisplayPrice(record) * (record?.quantity || 0))}
           </span>
         );
       },
@@ -153,7 +169,7 @@ export default function CartTable({
     {
       title: "Thao tác",
       dataIndex: "action",
-      render: (_: any, record: CartItem) => (
+      render: (_: unknown, record: CartItem) => (
         <a
           onClick={() =>
             removeItem({ cartId: cartId!, cartItemId: record.id! })
