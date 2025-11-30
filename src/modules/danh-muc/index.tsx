@@ -23,7 +23,7 @@ export default async function CategoryScreen({
       title: <Link href="/">Trang chủ</Link>,
     },
     {
-      title: <Link href={`/danh-muc/${categorySlug}`}>Danh mục</Link>,
+      title: <Link href="/danh-muc">Danh mục</Link>,
     },
     {
       title: slug.title || categorySlug,
@@ -32,7 +32,11 @@ export default async function CategoryScreen({
 
   return (
     <div className="py-3 md:py-5 flex flex-col gap-3 md:gap-5">
-      <Breadcrumb items={breadcrumbItems} separator=">" className="text-xs md:text-sm" />
+      <Breadcrumb
+        items={breadcrumbItems}
+        separator=">"
+        className="text-xs md:text-sm"
+      />
       <div className="flex flex-col md:flex-row bg-white rounded-lg">
         <NavFilter path={resolvedParams.slug} />
         <ProductContainer slug={slug} />

@@ -5,8 +5,8 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { ENDPOINTS, getBlogs } from "@/api/blog";
 import { BlogPageResponse, ResponseApi } from "@/types";
-import Image from "next/image";
 import Link from "next/link";
+import Image from "next/image";
 import { convertToUrl } from "@/utils";
 
 export default function BlogScreen() {
@@ -41,13 +41,18 @@ export default function BlogScreen() {
         >
           <div className="relative w-full aspect-video">
             <Image
-              src={blog.thumbnail.url}
+              src={blog.thumbnail}
               alt={blog.title}
               fill
               className="object-cover"
             />
           </div>
           <div className="p-4">
+            <div className="flex items-center gap-2 mb-2">
+              <span className="text-xs bg-blue-100 text-blue-600 px-2 py-1 rounded">
+                {blog.categoryName}
+              </span>
+            </div>
             <h2 className="text-xl font-bold mb-2 line-clamp-2">
               {blog.title}
             </h2>
