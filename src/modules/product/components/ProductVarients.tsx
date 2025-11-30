@@ -1,19 +1,68 @@
-import { Variant } from "@/types";
+import { Product, Variant } from "@/types";
 import { Image } from "antd";
 import useProductDetail from "../store";
 import clsx from "clsx";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
+import { useRouter } from "next/navigation";
+import { convertToUrl } from "@/utils";
 
-export default function ProductVarients({ variants }: { variants: Variant[] }) {
+export default function ProductVarients({
+  product,
+  variants,
+  initialVariantId,
+}: {
+  product: Product;
+  variants: Variant[];
+  initialVariantId?: number;
+}) {
   const [currentVariant, setCurrentVariant] = useState<Variant | null>(null);
   const updateVariant = useProductDetail((state) => state.updateVariant);
+  const router = useRouter();
 
+  // Memoize the variant selection handler
+  const selectVariant = useCallback(
+    (variant: Variant) => {
+      setCurrentVariant(variant);
+      updateVariant(variant);
+    },
+    [updateVariant]
+  );
+
+  // Initialize variant from URL (initialVariantId) or default to first variant
   useEffect(() => {
-    if (variants.length > 0 && !currentVariant) {
-      setCurrentVariant(variants[0]);
-      updateVariant(variants[0]);
+    if (variants.length > 0) {
+      if (initialVariantId !== undefined) {
+        const variantFromUrl = variants.find((v) => v.id === initialVariantId);
+        if (variantFromUrl) {
+          selectVariant(variantFromUrl);
+          return;
+        }
+      }
+      // Default to first variant if no URL param or invalid variant ID
+      selectVariant(variants[0]);
     }
-  }, [variants]);
+  }, [variants, initialVariantId, selectVariant]);
+
+  // Build URL with product and variant in path format: /product-name.123/variant-name.456
+  const buildVariantUrl = (variant: Variant): string => {
+    const productSlug = convertToUrl(product.name, product.id);
+    // Only include variant in URL if it has a valid ID
+    if (variant.id !== undefined && variant.id !== null) {
+      const variantSlug = convertToUrl(variant.name, variant.id);
+      return `/${productSlug}/${variantSlug}`;
+    }
+    // Return product-only URL if variant has no ID
+    return `/${productSlug}`;
+  };
+
+  // Update URL when variant is selected
+  const handleVariantSelect = (variant: Variant) => {
+    selectVariant(variant);
+
+    // Update URL with variant in path format
+    const newUrl = buildVariantUrl(variant);
+    router.replace(newUrl, { scroll: false });
+  };
 
   return (
     <div className="grid grid-cols-3 gap-3">
@@ -26,10 +75,7 @@ export default function ProductVarients({ variants }: { variants: Variant[] }) {
             }
           )}
           key={variant.id}
-          onClick={() => {
-            setCurrentVariant(variant);
-            updateVariant(variant);
-          }}
+          onClick={() => handleVariantSelect(variant)}
         >
           <Image
             src={variant?.blobs?.[0]?.url || ""}

@@ -13,9 +13,11 @@ import { useEffect } from "react";
 export default function ProductScreen({
   product,
   variants,
+  initialVariantId,
 }: {
   product: Product;
   variants: Variant[];
+  initialVariantId?: number;
 }) {
   useEffect(() => {
     const cartId = localStorage.getItem("cart_id");
@@ -66,7 +68,11 @@ export default function ProductScreen({
       />
       <div className="flex flex-col lg:flex-row gap-3 md:gap-5">
         <div className="flex flex-col gap-3 md:gap-5 flex-1">
-          <ProductDetail product={product} variants={variants} />
+          <ProductDetail
+            product={product}
+            variants={variants}
+            initialVariantId={initialVariantId}
+          />
           <ProductDescription product={product} />
         </div>
         <div className="flex flex-col gap-3 md:gap-5">

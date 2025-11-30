@@ -25,9 +25,11 @@ const isProductType = (item: Product | Variant): item is Product => {
 export default function ProductInformation({
   product,
   variants,
+  initialVariantId,
 }: {
   product: Product;
   variants: Variant[];
+  initialVariantId?: number;
 }) {
   const [quantity, setQuantity] = React.useState(1);
   const currentVariant = useProductDetail((state) => state.currentVariant);
@@ -131,7 +133,11 @@ export default function ProductInformation({
       </p>
       <div className="flex flex-col gap-2 md:gap-3">
         <p className="text-sm md:text-base">Phân loại:</p>
-        <ProductVarients variants={variants} />
+        <ProductVarients
+          product={product}
+          variants={variants}
+          initialVariantId={initialVariantId}
+        />
       </div>
       <div className="flex gap-2 md:gap-3 items-center">
         <span className="text-sm md:text-base">Số lượng: </span>
