@@ -28,7 +28,7 @@ export default function ProductScreen({
     }
   }, []);
 
-  const categoryUrl = convertToUrl(product.category.name);
+  const categoryUrl = convertToUrl(product.category.name, product.category.id);
   const subCategoryUrl = convertToUrl(
     product.subCategory?.name,
     product.subCategory?.id

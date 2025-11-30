@@ -140,13 +140,26 @@ export type Blog = {
   id: number;
   title: string;
   shortDescription: string;
-  thumbnail: {
-    id: number;
-    url: string;
-  };
+  thumbnail: string;
+  categoryId: number;
+  categoryName: string;
   slug: string;
   displayOrder: number;
   createdDate: string;
+};
+
+export type BlogDetail = {
+  id: number;
+  title: string;
+  content: string;
+  shortDescription: string;
+  thumbnail: string;
+  categoryId: number;
+  categoryName: string;
+  slug: string;
+  displayOrder: number;
+  createdDate: string;
+  updatedDate: string;
 };
 
 export type BlogPageResponse = {
