@@ -106,23 +106,33 @@ export default function CartTable({
   const columns = [
     {
       title: "Sản phẩm",
-      render: (_: unknown, record: CartItem) => (
-        <Link
-          href={convertToUrl(record.product?.name, record.product?.id)}
-          className="flex items-center gap-2"
-        >
-          <Image
-            src={getDisplayImage(record)}
-            alt={getDisplayName(record)}
-            width={40}
-            height={40}
-            className="rounded"
-          />
-          <p className="text-xs md:text-sm line-clamp-2">
-            {getDisplayName(record)}
-          </p>
-        </Link>
-      ),
+      render: (_: unknown, record: CartItem) => {
+        const productUrl = convertToUrl(
+          record.product?.name,
+          record.product?.id
+        );
+        const varientUrl = convertToUrl(
+          record.variant?.name,
+          record.variant?.id
+        );
+        return (
+          <Link
+            href={`${productUrl}${varientUrl ? `/${varientUrl}` : ""}`}
+            className="flex items-center gap-2"
+          >
+            <Image
+              src={getDisplayImage(record)}
+              alt={getDisplayName(record)}
+              width={40}
+              height={40}
+              className="rounded"
+            />
+            <p className="text-xs md:text-sm line-clamp-2">
+              {getDisplayName(record)}
+            </p>
+          </Link>
+        );
+      },
     },
     {
       title: "Giá",
