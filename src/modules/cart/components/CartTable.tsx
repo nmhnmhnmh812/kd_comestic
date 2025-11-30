@@ -3,7 +3,7 @@
 import { removeItemFromCart, updateCartItem } from "@/api/cart";
 import QuantityInput from "@/components/QuantityInput";
 import { CartItem } from "@/types";
-import { convertToVnd } from "@/utils";
+import { convertToUrl, convertToVnd } from "@/utils";
 import {
   getDisplayImage,
   getDisplayName,
@@ -95,8 +95,6 @@ export default function CartTable({
     },
   });
 
-  console.log(localCartItems);
-
   const handleUpdateQuantity = (cartItemId: string, quantity: number) => {
     updateItem({ cartId: cartId!, cartItemId, quantity });
   };
@@ -110,7 +108,7 @@ export default function CartTable({
       title: "Sản phẩm",
       render: (_: unknown, record: CartItem) => (
         <Link
-          href={`/abcd.${record.product?.id}`}
+          href={convertToUrl(record.product?.name, record.product?.id)}
           className="flex items-center gap-2"
         >
           <Image
