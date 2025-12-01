@@ -1,6 +1,7 @@
 import Banner from "./components/Banner";
 import ProductSession from "./components/ProductSession";
 import PromoteSession from "./components/PromoteSession";
+import RecentBlogs from "./components/RecentBlogs";
 
 export default function HomePage() {
   const categories = [36, 37, 38];
@@ -17,6 +18,7 @@ export default function HomePage() {
           reverse={index % 2 === 1}
         />
       ))}
+      <RecentBlogs />
     </div>
   );
 }

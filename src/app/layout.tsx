@@ -5,6 +5,7 @@ import Footer from "@/layout/Footer";
 import AntdRegistry from "@/lib/AntdRegistry";
 import ReactQueryProvider from "@/providers/ReactQueryProvider";
 import "@ant-design/v5-patch-for-react-19";
+import FloatingButtons from "@/components/FloatingButtons";
 
 export const metadata: Metadata = {
   title: "KMP Cosmetics",
@@ -26,6 +27,7 @@ export default function RootLayout({
               <div className="max-w-7xl mx-auto px-4 md:px-6">{children}</div>
             </main>
             <Footer />
+            <FloatingButtons />
           </AntdRegistry>
         </ReactQueryProvider>
       </body>
