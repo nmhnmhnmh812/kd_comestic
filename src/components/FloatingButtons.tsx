@@ -39,7 +39,7 @@ export default function FloatingButtons() {
       {/* Phone Button */}
       <Link
         href={phoneNumber}
-        className="w-12 h-12 md:w-14 md:h-14 bg-green-500 rounded-full flex items-center justify-center shadow-lg hover:bg-green-600 transition-all duration-300 hover:scale-110 animate-pulse"
+        className="w-12 h-12 md:w-14 md:h-14 bg-green-500 rounded-full flex items-center justify-center shadow-lg hover:bg-green-600 transition-all duration-300 hover:scale-110"
         aria-label="Gọi điện"
       >
         <PhoneFilled className="text-white text-xl md:text-2xl" />
