@@ -9,8 +9,10 @@ export default function SelectCard({
 }) {
   return (
     <div
-      className={`h-10 border border-solid border-gray-300 rounded-lg py-2 px-4 text-center cursor-pointer bg-white hover:border-blue-400 transition-all duration-300 ${
-        active ? "border-blue-500 text-black font-semibold" : "text-gray-400"
+      className={`h-10 border border-solid rounded-lg py-2 px-4 text-center cursor-pointer bg-white hover:border-blue-400 transition-all duration-300 ${
+        active
+          ? "border-blue-500 text-black font-semibold"
+          : "text-gray-400 border-gray-300"
       }`}
       onClick={onClick}
     >

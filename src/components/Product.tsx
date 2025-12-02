@@ -14,7 +14,7 @@ export default function Product({ ...rest }: ProductType) {
   return (
     <Link
       href={`/${url}`}
-      className="w-full h-fit my-1 relative flex flex-col gap-2 cursor-pointer hover:shadow-md rounded-lg"
+      className="w-full h-fit my-1 relative flex flex-col gap-2 cursor-pointer hover:shadow-md rounded-lg overflow-hidden"
     >
       <div className="flex flex-col gap-2 text-black">
         <div className="relative w-full aspect-square">
