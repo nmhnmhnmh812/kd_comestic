@@ -17,7 +17,7 @@ export default function BrandCard({ brand }: { brand: Brand }) {
               src={brand.image.url}
               alt={brand.name}
               fill
-              className="object-contain p-4 group-hover:scale-110 transition-transform duration-300"
+              className="object-cover group-hover:scale-110 transition-transform duration-300"
             />
           ) : (
             <div className="absolute inset-0 flex items-center justify-center">

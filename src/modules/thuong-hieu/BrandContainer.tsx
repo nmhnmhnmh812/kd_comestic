@@ -27,7 +27,6 @@ export default function BrandContainer() {
     sortedLetters,
     isLoading,
     isFetchingNextPage,
-    hasNextPage,
     loaderRef,
   } = useBrands(debouncedKeyword);
 
@@ -59,7 +58,6 @@ export default function BrandContainer() {
           sortedLetters={sortedLetters}
           isLoading={isLoading}
           isFetchingNextPage={isFetchingNextPage}
-          hasNextPage={hasNextPage}
           loaderRef={loaderRef}
         />
       </div>
