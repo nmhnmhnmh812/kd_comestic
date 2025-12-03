@@ -57,7 +57,7 @@ export default function ProductContainer({ slug }: { slug?: ISlug }) {
           <Spin />
         </div>
       )}
-      <div className="p-2">
+      <div className="p-4">
         <Pagination
           align="end"
           current={pagination.page + 1}
@@ -66,8 +66,9 @@ export default function ProductContainer({ slug }: { slug?: ISlug }) {
           onChange={(page, pageSize) =>
             setPagination({ page: page - 1, size: pageSize })
           }
-          size="small"
+          size="default"
           responsive
+          className="[&_.ant-pagination-item]:min-w-[36px] [&_.ant-pagination-item]:h-[36px] [&_.ant-pagination-item]:leading-[34px] [&_.ant-pagination-item]:mx-1 [&_.ant-pagination-prev]:min-w-[36px] [&_.ant-pagination-prev]:h-[36px] [&_.ant-pagination-next]:min-w-[36px] [&_.ant-pagination-next]:h-[36px] [&_.ant-pagination-jump-prev]:mx-1 [&_.ant-pagination-jump-next]:mx-1"
         />
       </div>
     </div>

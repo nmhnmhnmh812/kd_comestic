@@ -170,6 +170,8 @@ export default function ProductFilter() {
     }
 
     router.replace(`?${params.toString()}`, { scroll: false });
+    // Smooth scroll to top after filter change
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const handlePriceChange = (value: string | undefined) => {

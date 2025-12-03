@@ -54,7 +54,7 @@ export default function SideSession({
         subCategoryId: subCategoryId || undefined,
         brandId: brandId || undefined,
         page: 0,
-        size: 2,
+        size: 4,
       });
       if (error) {
         message.error(error || "Đã có lỗi xảy ra");
