@@ -2,7 +2,6 @@ import { Product, Variant } from "@/types";
 import { Image } from "antd";
 import useProductDetail from "../store";
 import { useMemo, useState, useEffect } from "react";
-import clsx from "clsx";
 
 export default function ProductImage({
   product,
@@ -52,6 +51,7 @@ export default function ProductImage({
 
   const imagesSrc = allImages.map((img) => img.url);
   const mainImage = imagesSrc[selectedImageIndex] || imagesSrc[0];
+  // Show thumbnails excluding the currently selected main image
   const thumbnailImages = imagesSrc.filter((_, index) => index !== selectedImageIndex).slice(0, 4);
 
   return (
@@ -75,13 +75,7 @@ export default function ProductImage({
             return (
               <div
                 key={image}
-                className={clsx(
-                  "cursor-pointer w-16 md:w-20 aspect-square rounded-lg transition-all overflow-hidden border-2",
-                  {
-                    "border-red-500": actualIndex === selectedImageIndex,
-                    "border-transparent hover:border-gray-300": actualIndex !== selectedImageIndex,
-                  }
-                )}
+                className="cursor-pointer w-16 md:w-20 aspect-square rounded-lg transition-all overflow-hidden border-2 border-transparent hover:border-gray-300"
                 onClick={() => setSelectedImageIndex(actualIndex)}
               >
                 <Image
@@ -92,7 +86,6 @@ export default function ProductImage({
                   preview={{
                     mask: "Xem",
                   }}
-                  onClick={(e) => e.stopPropagation()}
                 />
               </div>
             );
