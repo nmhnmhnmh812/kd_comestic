@@ -1,12 +1,13 @@
 import Banner from "./components/Banner";
 import ProductSession from "./components/ProductSession";
 import PromoteSession from "./components/PromoteSession";
+import RecentBlogs from "./components/RecentBlogs";
 
 export default function HomePage() {
   const categories = [36, 37, 38];
 
   return (
-    <div className="flex flex-col gap-3 md:gap-5 py-3 md:py-5">
+    <div className="flex flex-col gap-3 md:gap-5 md:py-5">
       <Banner />
       {/* <ProductSession title="Flash sale" link="/flash-sale" />
       <ProductSession title="Sản phẩm hot" link="/hot-deals" /> */}
@@ -17,6 +18,7 @@ export default function HomePage() {
           reverse={index % 2 === 1}
         />
       ))}
+      <RecentBlogs />
     </div>
   );
 }

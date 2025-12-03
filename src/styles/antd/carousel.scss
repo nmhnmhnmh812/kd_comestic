@@ -5,3 +5,20 @@
 .slick-arrow.slick-prev {
   color: black !important;
 }
+
+// Banner carousel specific styles
+.banner-carousel {
+  .slick-slider,
+  .slick-list,
+  .slick-track {
+    height: 100%;
+  }
+
+  .slick-slide {
+    height: 100%;
+
+    > div {
+      height: 100%;
+    }
+  }
+}

@@ -10,7 +10,7 @@ import { Skeleton, Carousel } from "antd";
 // Component to render a single banner
 const BannerItem = ({ banner }: { banner: BannerType }) => {
   const bannerContent = (
-    <div className="relative w-full h-full overflow-hidden rounded-lg group">
+    <div className="relative w-full h-full overflow-hidden md:rounded-lg group">
       <Image
         alt={banner.title || "Banner"}
         src={banner.imageUrl}
@@ -63,7 +63,7 @@ export default function Banner() {
   if (isLoading) {
     return (
       <div className="w-full flex justify-center items-center">
-        <div className="w-full max-w-7xl aspect-[3/1]">
+        <div className="w-full max-w-screen-2xl aspect-[3/1]">
           <Skeleton.Image active className="w-full h-full" />
         </div>
       </div>
@@ -128,15 +128,25 @@ export default function Banner() {
           <div className="w-1/5 h-full">
             <BannerItem banner={data[0]} />
           </div>
-          <div className="flex-1 h-full">
-            <BannerItem banner={data[1]} />
+          <div className="flex-1 h-full relative">
+            <Carousel
+              autoplay
+              autoplaySpeed={3000}
+              className="absolute inset-0 banner-carousel"
+            >
+              {data.slice(3).map((banner, index) => (
+                <div key={index} className="relative w-full h-full">
+                  <BannerItem banner={banner} />
+                </div>
+              ))}
+            </Carousel>
           </div>
           <div className="w-1/5 h-full flex flex-col gap-2">
             <div className="flex-1">
-              <BannerItem banner={data[2]} />
+              <BannerItem banner={data[1]} />
             </div>
             <div className="flex-1">
-              <BannerItem banner={data[3]} />
+              <BannerItem banner={data[2]} />
             </div>
           </div>
         </div>
@@ -151,7 +161,7 @@ export default function Banner() {
     return (
       <Carousel autoplay className="w-full">
         {data.map((banner, index) => (
-          <div key={index} className="w-full aspect-[3/1]">
+          <div key={index} className="w-full aspect-[16/9]">
             <BannerItem banner={banner} />
           </div>
         ))}
@@ -161,7 +171,7 @@ export default function Banner() {
 
   return (
     <div className="w-full flex justify-center items-center">
-      <div className="w-full max-w-7xl">
+      <div className="w-full max-w-screen-2xl">
         {/* Desktop view */}
         <div className="hidden md:block w-full aspect-[3/1]">
           {renderDesktopBanners()}

@@ -43,7 +43,7 @@ export default function PromoteSession({
   return (
     <div
       className={clsx(
-        "bg-white flex flex-col lg:flex-row rounded-lg overflow-hidden",
+        "bg-white flex flex-col lg:flex-row md:rounded-lg overflow-hidden",
         reverse && "lg:flex-row-reverse"
       )}
     >
@@ -51,14 +51,14 @@ export default function PromoteSession({
         <div className="h-12 uppercase bg-black text-white font-bold flex justify-center items-center">
           <span className="text-sm md:text-base">{category?.name}</span>
         </div>
-        <div className="flex-1 relative min-h-[200px] lg:min-h-0">
+        <div className="flex-1 relative min-h-[200px] lg:min-h-0 hidden md:block">
           <Image alt="" src={banner3} fill className="object-cover" />
         </div>
       </div>
       <div className="flex-1">
         <div
           className={clsx(
-            "flex flex-col sm:flex-row justify-between items-start sm:items-center h-auto sm:h-12 px-4 py-2 sm:py-0 gap-2 sm:gap-0 bg-gray-200",
+            "flex sm:flex-row justify-between items-start sm:items-center h-auto sm:h-12 px-4 py-2 sm:py-0 gap-2 sm:gap-0 bg-gray-200",
             reverse && "sm:flex-row-reverse"
           )}
         >
@@ -91,7 +91,8 @@ export default function PromoteSession({
         <div
           className={clsx(" p-2 min-h-[400px] md:min-h-[616px] min-w-[80%]", {
             "flex flex-col justify-center items-center w-full": isFetching,
-            "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2": !isFetching,
+            "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2":
+              !isFetching,
           })}
         >
           {!isFetching ? (

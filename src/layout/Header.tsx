@@ -5,10 +5,10 @@ import {
   PhoneOutlined,
   SearchOutlined,
   ShoppingCartOutlined,
-  UserOutlined,
   MenuOutlined,
+  DownOutlined,
 } from "@ant-design/icons";
-import { Input, Spin, Drawer, Button } from "antd";
+import { Input, Spin, Drawer, Button, Collapse } from "antd";
 import CategoryBtn from "./CategoryBtn";
 import BrandBtn from "./BrandBtn";
 import { Logo } from "@/assets/icons";
@@ -16,11 +16,14 @@ import Link from "next/link";
 import { useState, useMemo, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { debounce } from "@/utils/lodash";
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { getProducts } from "@/api/product";
-import { Product } from "@/types";
+import { Category, Product } from "@/types";
 import { convertToUrl } from "@/utils";
 import Image from "next/image";
+import { ENDPOINTS, getCategories } from "@/api/category";
+
+const { Panel } = Collapse;
 
 export default function Header() {
   const [keyword, setKeyword] = useState("");
@@ -29,6 +32,13 @@ export default function Header() {
   const router = useRouter();
   const inputRef = useRef<any>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const { data: categories = [] } = useQuery<any, Error, Category[]>({
+    queryKey: [ENDPOINTS.CATEGORIES],
+    queryFn: getCategories,
+    select: (res) => (res.data.result as Category[]) || [],
+    staleTime: Infinity,
+  });
 
   const debouncedSetKeyword = useMemo(
     () =>
@@ -103,27 +113,14 @@ export default function Header() {
     setShowDropdown(false);
   };
 
+  const handleHotProductClick = () => {
+    router.push("/danh-muc?sort=ban-chay-nhat");
+  };
+
   return (
     <header className="bg-white shadow-md w-full relative">
-      {/* Top bar - hide on mobile */}
-      <div className="hidden md:block bg-black py-2">
-        <div className="flex justify-between max-w-7xl mx-auto px-4">
-          <div className="flex justify-between items-center text-white gap-4">
-            <span className="text-sm">
-              <PhoneOutlined /> 0988888825
-            </span>
-            <span className="text-sm">
-              <MailOutlined /> myphamkhanh@gmail.com
-            </span>
-          </div>
-          <div className="text-white cursor-pointer hover:opacity-80 hover:text-gray-300 transition-colors text-sm">
-            <UserOutlined /> Đăng nhập/Đăng kí
-          </div>
-        </div>
-      </div>
-
       {/* Main header */}
-      <div className="flex justify-between items-center max-w-7xl mx-auto py-3 md:py-4 px-4 gap-2 md:gap-10">
+      <div className="flex justify-between items-center max-w-screen-2xl mx-auto py-3 md:py-4 px-4 gap-2 md:gap-10">
         {/* Mobile menu button */}
         <Button
           className="md:hidden"
@@ -217,20 +214,20 @@ export default function Header() {
 
       {/* Bottom nav - hide on mobile, show in drawer */}
       <div className="hidden md:block bg-black">
-        <div className="max-w-7xl mx-auto flex gap-10 text-white font-semibold px-4 items-center">
+        <div className="max-w-screen-2xl mx-auto flex gap-10 text-white font-semibold px-4 items-center">
           <CategoryBtn isMobile={false} />
-          <p className="uppercase py-2 cursor-pointer hover:opacity-80 hover:text-gray-300 transition-colors text-sm">
-            Flash Sale
-          </p>
           <Link
             href="/thuong-hieu"
             className="uppercase py-2 cursor-pointer hover:opacity-80 hover:text-gray-300 transition-colors text-sm"
           >
             Thương hiệu
           </Link>
-          <p className="uppercase py-2 cursor-pointer hover:opacity-80 hover:text-gray-300 transition-colors text-sm">
+          <button
+            onClick={handleHotProductClick}
+            className="uppercase py-2 cursor-pointer hover:opacity-80 hover:text-gray-300 transition-colors text-sm bg-transparent border-none text-white font-semibold"
+          >
             Sản phẩm hot
-          </p>
+          </button>
           <Link
             href="/blog"
             className="uppercase py-2 cursor-pointer hover:opacity-80 hover:text-gray-300 transition-colors text-sm"
@@ -246,24 +243,134 @@ export default function Header() {
         placement="left"
         onClose={() => setDrawerVisible(false)}
         open={drawerVisible}
+        styles={{
+          body: { padding: 0 },
+        }}
       >
-        <div className="flex flex-col gap-4">
-          <Link href="/" onClick={() => setDrawerVisible(false)}>
+        <div className="flex flex-col">
+          <Link
+            href="/"
+            onClick={() => setDrawerVisible(false)}
+            className="px-4 py-3 border-b border-gray-100 text-gray-800 hover:bg-gray-50"
+          >
             Trang chủ
           </Link>
-          <CategoryBtn isMobile={true} />
-          <Link href="/flash-sale" onClick={() => setDrawerVisible(false)}>
-            Flash Sale
-          </Link>
+
+          {/* Category Section with Collapse */}
+          <Collapse
+            accordion
+            ghost
+            expandIcon={({ isActive }) => (
+              <DownOutlined
+                rotate={isActive ? 180 : 0}
+                className="text-xs text-gray-600"
+              />
+            )}
+            className="border-b border-gray-100"
+          >
+            <Panel
+              header={
+                <span className="text-gray-800 font-medium">
+                  Danh mục sản phẩm
+                </span>
+              }
+              key="categories"
+            >
+              <div className="flex flex-col">
+                {categories.map((category) => {
+                  if (!category.subCategories?.length) {
+                    return (
+                      <Link
+                        key={category.id}
+                        href={`/danh-muc/${convertToUrl(
+                          category.name,
+                          category.id
+                        )}`}
+                        onClick={() => setDrawerVisible(false)}
+                        className="py-2 px-2 text-gray-600 hover:text-red-600 text-sm"
+                      >
+                        {category.name}
+                      </Link>
+                    );
+                  }
+
+                  return (
+                    <Collapse
+                      key={category.id}
+                      ghost
+                      expandIcon={({ isActive }) => (
+                        <DownOutlined
+                          rotate={isActive ? 180 : 0}
+                          className="text-xs text-gray-500"
+                        />
+                      )}
+                    >
+                      <Panel
+                        header={
+                          <span className="text-gray-600 text-sm">
+                            {category.name}
+                          </span>
+                        }
+                        key={category.id}
+                      >
+                        <div className="flex flex-col pl-2">
+                          <Link
+                            href={`/danh-muc/${convertToUrl(
+                              category.name,
+                              category.id
+                            )}`}
+                            onClick={() => setDrawerVisible(false)}
+                            className="py-1 text-gray-500 hover:text-red-600 text-sm"
+                          >
+                            Tất cả {category.name}
+                          </Link>
+                          {category.subCategories.map((sub) => (
+                            <Link
+                              key={sub.id}
+                              href={`/danh-muc/${convertToUrl(
+                                category.name,
+                                category.id
+                              )}/${convertToUrl(sub.name, sub.id)}`}
+                              onClick={() => setDrawerVisible(false)}
+                              className="py-1 text-gray-500 hover:text-red-600 text-sm"
+                            >
+                              {sub.name}
+                            </Link>
+                          ))}
+                        </div>
+                      </Panel>
+                    </Collapse>
+                  );
+                })}
+              </div>
+            </Panel>
+          </Collapse>
+
           <BrandBtn isMobile={true} />
-          <Link href="/hot" onClick={() => setDrawerVisible(false)}>
+
+          <button
+            onClick={() => {
+              handleHotProductClick();
+              setDrawerVisible(false);
+            }}
+            className="px-4 py-3 border-b border-gray-100 text-left text-gray-800 hover:bg-gray-50 bg-transparent border-none cursor-pointer"
+          >
             Sản phẩm hot
+          </button>
+
+          <Link
+            href="/blog"
+            onClick={() => setDrawerVisible(false)}
+            className="px-4 py-3 border-b border-gray-100 text-gray-800 hover:bg-gray-50"
+          >
+            Blog
           </Link>
-          <div className="border-t pt-4 mt-4">
-            <p className="mb-2">
+
+          <div className="border-t pt-4 mt-4 px-4">
+            <p className="mb-2 text-gray-600">
               <PhoneOutlined /> 0988888825
             </p>
-            <p>
+            <p className="text-gray-600">
               <MailOutlined /> myphamkhanh@gmail.com
             </p>
           </div>
