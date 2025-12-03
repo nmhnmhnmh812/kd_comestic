@@ -15,7 +15,11 @@ export default function ProductImage({
 
   // Combine all images from product and all variants
   const allImages = useMemo(() => {
-    const images: { url: string; source: "product" | "variant"; variantId?: number }[] = [];
+    const images: {
+      url: string;
+      source: "product" | "variant";
+      variantId?: number;
+    }[] = [];
 
     // Add product images
     product.blobs?.forEach((blob) => {
@@ -28,7 +32,11 @@ export default function ProductImage({
     variants.forEach((variant) => {
       variant.blobs?.forEach((blob) => {
         if (blob?.url && !images.some((img) => img.url === blob.url)) {
-          images.push({ url: blob.url, source: "variant", variantId: variant.id });
+          images.push({
+            url: blob.url,
+            source: "variant",
+            variantId: variant.id,
+          });
         }
       });
     });
@@ -41,7 +49,9 @@ export default function ProductImage({
     if (currentVariant && currentVariant.blobs?.length > 0) {
       const variantFirstImageUrl = currentVariant.blobs[0]?.url;
       if (variantFirstImageUrl) {
-        const imageIndex = allImages.findIndex((img) => img.url === variantFirstImageUrl);
+        const imageIndex = allImages.findIndex(
+          (img) => img.url === variantFirstImageUrl
+        );
         if (imageIndex >= 0) {
           setSelectedImageIndex(imageIndex);
         }
@@ -52,11 +62,13 @@ export default function ProductImage({
   const imagesSrc = allImages.map((img) => img.url);
   const mainImage = imagesSrc[selectedImageIndex] || imagesSrc[0];
   // Show thumbnails excluding the currently selected main image
-  const thumbnailImages = imagesSrc.filter((_, index) => index !== selectedImageIndex).slice(0, 4);
+  const thumbnailImages = imagesSrc
+    .filter((_, index) => index !== selectedImageIndex)
+    .slice(0, 4);
 
   return (
     <Image.PreviewGroup>
-      <div className="flex w-full md:w-[44%] aspect-square bg-white rounded-lg flex-col md:flex-row gap-1 md:gap-2">
+      <div className="flex w-full md:w-1/2 aspect-square bg-white rounded-lg flex-col md:flex-row gap-1 md:gap-2">
         <div className="flex-1 rounded-lg flex items-center justify-center overflow-hidden aspect-square md:aspect-auto">
           <Image
             src={mainImage}
