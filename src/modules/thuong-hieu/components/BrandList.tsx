@@ -8,7 +8,6 @@ type BrandListProps = {
   sortedLetters: string[];
   isLoading: boolean;
   isFetchingNextPage: boolean;
-  hasNextPage: boolean;
   loaderRef: React.RefObject<HTMLDivElement>;
 };
 
@@ -18,7 +17,6 @@ export default function BrandList({
   sortedLetters,
   isLoading,
   isFetchingNextPage,
-  hasNextPage,
   loaderRef,
 }: BrandListProps) {
   if (isLoading) {
@@ -60,13 +58,6 @@ export default function BrandList({
       <div ref={loaderRef} className="flex justify-center py-8">
         {isFetchingNextPage && <Spin />}
       </div>
-
-      {/* End of list */}
-      {!hasNextPage && brands.length > 0 && (
-        <div className="text-center py-8 text-gray-500">
-          Đã hiển thị tất cả thương hiệu
-        </div>
-      )}
     </>
   );
 }
