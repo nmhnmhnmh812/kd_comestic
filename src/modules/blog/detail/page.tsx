@@ -153,7 +153,7 @@ export default function BlogDetailScreen({ slug }: BlogDetailScreenProps) {
 
           {/* Main Content - Sanitized with DOMPurify */}
           <div
-            className="prose prose-lg max-w-none
+            className="prose prose-lg max-w-none whitespace-pre-wrap
               prose-headings:font-bold prose-headings:text-gray-900
               prose-h1:text-3xl prose-h2:text-2xl prose-h3:text-xl
               prose-p:text-gray-700 prose-p:leading-relaxed
