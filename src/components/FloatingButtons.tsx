@@ -2,19 +2,7 @@
 
 import { MessageFilled, PhoneFilled } from "@ant-design/icons";
 import Link from "next/link";
-
-// Zalo Icon Component
-const ZaloIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 48 48"
-    width="28"
-    height="28"
-    fill="currentColor"
-  >
-    <path d="M24,4C12.954,4,4,12.954,4,24s8.954,20,20,20s20-8.954,20-20S35.046,4,24,4z M30.176,31.855 c-0.451,0.609-1.329,0.735-1.938,0.285c-0.609-0.451-0.735-1.329-0.285-1.938c1.014-1.373,1.014-2.823,1.014-4.201 c0-3.314-2.686-6-6-6s-6,2.686-6,6c0,1.378,0,2.828,1.014,4.201c0.451,0.609,0.324,1.488-0.285,1.938 c-0.609,0.451-1.488,0.324-1.938-0.285c-1.349-1.825-1.791-3.806-1.791-5.854c0-4.418,3.582-8,8-8s8,3.582,8,8 C31.967,28.049,31.525,30.03,30.176,31.855z M36.5,17.5h-10c-0.828,0-1.5-0.672-1.5-1.5s0.672-1.5,1.5-1.5h10 c0.828,0,1.5,0.672,1.5,1.5S37.328,17.5,36.5,17.5z" />
-  </svg>
-);
+import Image from "next/image";
 
 // Facebook Messenger Icon Component
 const MessengerIcon = () => (
@@ -53,9 +41,7 @@ export default function FloatingButtons() {
         className="w-12 h-12 md:w-14 md:h-14 bg-blue-500 rounded-full flex items-center justify-center shadow-lg hover:bg-blue-600 transition-all duration-300 hover:scale-110"
         aria-label="Chat Zalo"
       >
-        <span className="text-white">
-          <ZaloIcon />
-        </span>
+        <Image src="/zalo.svg" alt="Zalo" width={32} height={32} />
       </Link>
 
       {/* Messenger Button */}
