@@ -13,7 +13,7 @@ export default function ProductDetail({
 }) {
   return (
     <div className="bg-white p-3 md:p-5 rounded-lg flex flex-col md:flex-row gap-3 md:gap-5">
-      <ProductImage product={product} />
+      <ProductImage product={product} variants={variants} />
       <ProductInformation
         product={product}
         variants={variants}

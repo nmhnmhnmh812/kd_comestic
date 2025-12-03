@@ -90,7 +90,7 @@ export default function ProductInformation({
       quantity,
     };
     localStorage.setItem(BUY_NOW_KEY, JSON.stringify(buyNowItem));
-    
+
     // Build URL with query parameters for persistence
     const params = new URLSearchParams();
     params.set("productId", product.id.toString());
@@ -99,7 +99,7 @@ export default function ProductInformation({
     }
     params.set("quantity", quantity.toString());
     params.set("buyNow", "true");
-    
+
     // Navigate to payment page with query params
     router.push(`/pay?${params.toString()}`);
   };
@@ -127,9 +127,13 @@ export default function ProductInformation({
         <span className="text-xs md:text-sm">(Đã bao gồm VAT)</span>
       </p>
       <p className="text-sm md:text-base">
-        Giá gốc: {convertToVnd(originalPrice)} - Tiết kiệm:{" "}
-        {convertToVnd(currentProduct.discount)}{" "}
-        <span className="text-red-600">{`(${discountPercent}%)`}</span>
+        Giá gốc: {convertToVnd(originalPrice)}{" "}
+        {currentProduct.discount
+          ? `- Tiết kiệm: ${convertToVnd(currentProduct.discount)}`
+          : ""}{" "}
+        {discountPercent ? (
+          <span className="text-red-600">{`(${discountPercent}%)`}</span>
+        ) : null}
       </p>
       <div className="flex flex-col gap-2 md:gap-3">
         <p className="text-sm md:text-base">Phân loại:</p>
