@@ -55,15 +55,14 @@ export default function Banner() {
       const sorted =
         data?.sort((a, b) => (a.displayOrder || 0) - (b.displayOrder || 0)) ||
         [];
-      return sorted.slice(0, 4);
+      return sorted;
     },
   });
 
-  // Loading state
   if (isLoading) {
     return (
       <div className="w-full flex justify-center items-center">
-        <div className="w-full max-w-screen-2xl aspect-[3/1]">
+        <div className="w-full max-w-[1320px] aspect-[3/1]">
           <Skeleton.Image active className="w-full h-full" />
         </div>
       </div>
@@ -122,38 +121,34 @@ export default function Banner() {
     }
 
     // Case 4: Four banners - current layout (1 left + 1 main + 2 right)
-    if (bannerCount === 4) {
-      return (
-        <div className="w-full h-full flex gap-2">
-          <div className="w-1/5 h-full">
-            <BannerItem banner={data[0]} />
+    return (
+      <div className="w-full h-full flex gap-2">
+        <div className="w-1/5 h-full">
+          <BannerItem banner={data[0]} />
+        </div>
+        <div className="flex-1 h-full relative">
+          <Carousel
+            autoplay
+            autoplaySpeed={3000}
+            className="absolute inset-0 banner-carousel"
+          >
+            {data.slice(3).map((banner, index) => (
+              <div key={index} className="relative w-full h-full">
+                <BannerItem banner={banner} />
+              </div>
+            ))}
+          </Carousel>
+        </div>
+        <div className="w-1/5 h-full flex flex-col gap-2">
+          <div className="flex-1">
+            <BannerItem banner={data[1]} />
           </div>
-          <div className="flex-1 h-full relative">
-            <Carousel
-              autoplay
-              autoplaySpeed={3000}
-              className="absolute inset-0 banner-carousel"
-            >
-              {data.slice(3).map((banner, index) => (
-                <div key={index} className="relative w-full h-full">
-                  <BannerItem banner={banner} />
-                </div>
-              ))}
-            </Carousel>
-          </div>
-          <div className="w-1/5 h-full flex flex-col gap-2">
-            <div className="flex-1">
-              <BannerItem banner={data[1]} />
-            </div>
-            <div className="flex-1">
-              <BannerItem banner={data[2]} />
-            </div>
+          <div className="flex-1">
+            <BannerItem banner={data[2]} />
           </div>
         </div>
-      );
-    }
-
-    return null;
+      </div>
+    );
   };
 
   // Mobile carousel
@@ -171,7 +166,7 @@ export default function Banner() {
 
   return (
     <div className="w-full flex justify-center items-center">
-      <div className="w-full max-w-screen-2xl">
+      <div className="w-full max-w-[1320px]">
         {/* Desktop view */}
         <div className="hidden md:block w-full aspect-[3/1]">
           {renderDesktopBanners()}
