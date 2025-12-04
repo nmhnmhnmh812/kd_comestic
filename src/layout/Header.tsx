@@ -234,6 +234,12 @@ export default function Header() {
           >
             Blog
           </Link>
+          <Link
+            href="/tra-cuu-don-hang"
+            className="uppercase py-2 cursor-pointer hover:opacity-80 hover:text-gray-300 transition-colors text-sm"
+          >
+            Tra cứu đơn hàng
+          </Link>
         </div>
       </div>
 
@@ -364,6 +370,14 @@ export default function Header() {
             className="px-4 py-3 border-b border-gray-100 text-gray-800 hover:bg-gray-50"
           >
             Blog
+          </Link>
+
+          <Link
+            href="/tra-cuu-don-hang"
+            onClick={() => setDrawerVisible(false)}
+            className="px-4 py-3 border-b border-gray-100 text-gray-800 hover:bg-gray-50"
+          >
+            Tra cứu đơn hàng
           </Link>
 
           <div className="border-t pt-4 mt-4 px-4">

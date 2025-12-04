@@ -4,6 +4,7 @@ export const ENDPOINTS = {
   CHECK_ORDER_INFO: "/orders/check-order-info",
   CREATE_ORDER: "/orders/create-order",
   ORDERS: "/orders",
+  GET_USER_ORDERS: "/orders/get-user-orders",
 };
 
 type CheckOrderInfoParams = {
@@ -45,4 +46,11 @@ export async function createOrder(params: CreateOrderParams) {
 
 export const getOrderDetail = async (orderId: string) => {
   return baseAxios.get(`${ENDPOINTS.ORDERS}/${orderId}`);
+};
+
+// Get user orders by phone number
+export const getUserOrders = async (phoneNumber: string) => {
+  return baseAxios.get(ENDPOINTS.GET_USER_ORDERS, {
+    params: { phoneNumber },
+  });
 };

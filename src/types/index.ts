@@ -228,3 +228,133 @@ export interface Order {
   createdDate: string;
   updatedDate: string;
 }
+
+// Types for user orders search response
+export interface UserOrderPayment {
+  id: number;
+  transferCode: string;
+  transactionId: number;
+  paymentMethod: "BANK_TRANSFER" | "COD";
+  totalAmount: number;
+  paymentStatus: "NOT_YET" | "PAID" | "FAILED";
+  createdAt: string;
+  updatedAt: string;
+  status: string;
+}
+
+export interface UserOrderItemVariant {
+  id: number;
+  name: string;
+  description: string;
+  price: number;
+  costPrice: number;
+  discount: number;
+  finalPrice: number;
+  createdDate: string;
+  updatedDate: string;
+  stockQuantity: number;
+  buyCount: number;
+  blobs: { id: number; url: string }[];
+  flashSale?: {
+    flashSaleId: number;
+    flashSaleProductId: number;
+    salePrice: number;
+    originalPrice: number;
+    startTime: string;
+    endTime: string;
+    quantity: number;
+    soldQuantity: number;
+    remainingQuantity: number;
+  };
+}
+
+export interface UserOrderItemProduct {
+  id: number;
+  category: {
+    id: number;
+    name: string;
+    displayOrder: number;
+    createdDate: string;
+    updatedDate: string;
+    subCategories: {
+      id: number;
+      name: string;
+      displayOrder: number;
+      categoryId: number;
+      categoryName: string;
+      createdDate: string;
+      updatedDate: string;
+    }[];
+  };
+  subCategory: {
+    id: number;
+    name: string;
+    displayOrder: number;
+    categoryId: number;
+    categoryName: string;
+    createdDate: string;
+    updatedDate: string;
+  };
+  brand: {
+    id: number;
+    name: string;
+    image: { id: number; url: string } | null;
+    link: string;
+    description: string;
+    createdDate: string;
+    updatedDate: string;
+  };
+  name: string;
+  price: number;
+  costPrice: number;
+  description: string;
+  discount: number;
+  finalPrice: number;
+  isDeleted: boolean;
+  stockQuantity: number;
+  viewCount: number;
+  buyCount: number;
+  createdDate: string;
+  updatedDate: string;
+  blobs: { id: number; url: string }[];
+  flashSale?: {
+    flashSaleId: number;
+    flashSaleProductId: number;
+    salePrice: number;
+    originalPrice: number;
+    startTime: string;
+    endTime: string;
+    quantity: number;
+    soldQuantity: number;
+    remainingQuantity: number;
+  };
+}
+
+export interface UserOrderItem {
+  id: number;
+  variant: UserOrderItemVariant | null;
+  product: UserOrderItemProduct;
+  quantity: number;
+  price: number;
+  costPrice: number;
+  discount: number;
+  finalPrice: number;
+}
+
+export interface UserOrder {
+  id: number;
+  payment: UserOrderPayment;
+  status: "WAITING_CONFIRMATION" | "CONFIRMED" | "SHIPPING" | "DELIVERED" | "CANCELLED";
+  totalProductAmount: number;
+  shipAmount: number;
+  totalAmountFinal: number;
+  totalCostPrice: number;
+  userName: string;
+  address: string;
+  phoneNumber: string;
+  note: string;
+  createdAt: string;
+  updatedAt: string;
+  orderItems: UserOrderItem[];
+  qrCodeUrl: string;
+}
