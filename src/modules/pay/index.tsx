@@ -8,7 +8,7 @@ import { checkOrderInfo } from "@/api/order";
 import useCart from "@/hooks/useCart";
 import useBuyNow from "@/hooks/useBuyNow";
 import usePayment from "./store";
-import { useEffect } from "react";
+import { useState, useCallback } from "react";
 
 export default function PayScreen() {
   const [form] = Form.useForm();
@@ -21,11 +21,18 @@ export default function PayScreen() {
     loading: buyNowLoading,
   } = useBuyNow();
   const updateAmount = usePayment((state) => state.updateAmount);
+  const [fullAddress, setFullAddress] = useState<string>("");
 
   const activeItems = isBuyNow ? buyNowAsCartItem : cartItems;
   const activeTotalAmount = isBuyNow ? buyNowTotalAmount : cartTotalAmount;
 
-  const getShipFee = async (address: string) => {
+  const getShipFee = useCallback(async (address: string) => {
+    // Update the full address state
+    setFullAddress(address);
+    
+    // Also set it in the form for submission
+    form.setFieldValue("address", address);
+    
     const orderItems =
       activeItems?.map((item) => ({
         productId: item?.product?.id || undefined,
@@ -40,10 +47,10 @@ export default function PayScreen() {
       const { shipAmount, totalAmountFinal, totalProductAmount } =
         response.data.result;
       updateAmount({ shipAmount, totalAmountFinal, totalProductAmount });
-    } catch (error) {
+    } catch (error: any) {
       message.error(error.error);
     }
-  };
+  }, [activeItems, form, updateAmount]);
 
   // Show loading while fetching buy-now product data
   if (buyNowLoading) {
@@ -71,6 +78,7 @@ export default function PayScreen() {
         totalAmount={activeTotalAmount}
         isBuyNow={isBuyNow}
         clearBuyNow={clearBuyNow}
+        fullAddress={fullAddress}
       />
     </div>
   );
