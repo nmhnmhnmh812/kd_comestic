@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
-import { Divider, Form, Input, Select, Spin } from "antd";
+import { useEffect, useState, useCallback, useMemo, useRef } from "react";
+import { Divider, Form, Input, Select, Spin, message } from "antd";
 import {
   getProvinces,
   getDistricts,
@@ -10,6 +10,7 @@ import {
   District,
   Ward,
 } from "@/api/address";
+import { debounce } from "@/utils/lodash";
 
 export default function PayInfo({
   getShipFee,
@@ -38,6 +39,15 @@ export default function PayInfo({
   const [loadingDistricts, setLoadingDistricts] = useState(false);
   const [loadingWards, setLoadingWards] = useState(false);
 
+  // Debounced ship fee calculation
+  const debouncedGetShipFee = useMemo(
+    () => debounce((address: string) => getShipFee(address), 500),
+    [getShipFee]
+  );
+
+  // Track if initial load has happened
+  const initialLoadDone = useRef(false);
+
   // Load provinces on mount
   useEffect(() => {
     const fetchProvinces = async () => {
@@ -45,8 +55,8 @@ export default function PayInfo({
       try {
         const data = await getProvinces();
         setProvinces(data);
-      } catch (error) {
-        console.error("Error fetching provinces:", error);
+      } catch {
+        message.error("Không thể tải danh sách tỉnh/thành phố");
       } finally {
         setLoadingProvinces(false);
       }
@@ -62,8 +72,8 @@ export default function PayInfo({
         try {
           const data = await getDistricts(selectedProvince.code);
           setDistricts(data);
-        } catch (error) {
-          console.error("Error fetching districts:", error);
+        } catch {
+          message.error("Không thể tải danh sách quận/huyện");
         } finally {
           setLoadingDistricts(false);
         }
@@ -82,8 +92,8 @@ export default function PayInfo({
         try {
           const data = await getWards(selectedDistrict.code);
           setWards(data);
-        } catch (error) {
-          console.error("Error fetching wards:", error);
+        } catch {
+          message.error("Không thể tải danh sách phường/xã");
         } finally {
           setLoadingWards(false);
         }
@@ -94,7 +104,7 @@ export default function PayInfo({
     }
   }, [selectedDistrict]);
 
-  // Build full address and trigger ship fee calculation
+  // Build full address
   const buildFullAddress = useCallback(() => {
     const parts: string[] = [];
     if (detailAddress.trim()) {
@@ -112,12 +122,19 @@ export default function PayInfo({
     return parts.join(", ");
   }, [detailAddress, selectedWard, selectedDistrict, selectedProvince]);
 
+  // Trigger debounced ship fee calculation when address changes
   useEffect(() => {
+    // Skip initial render to avoid unnecessary API call
+    if (!initialLoadDone.current) {
+      initialLoadDone.current = true;
+      return;
+    }
+    
     const fullAddress = buildFullAddress();
     if (fullAddress) {
-      getShipFee(fullAddress);
+      debouncedGetShipFee(fullAddress);
     }
-  }, [buildFullAddress, getShipFee]);
+  }, [buildFullAddress, debouncedGetShipFee]);
 
   const handleProvinceChange = (value: number) => {
     const province = provinces.find((p) => p.code === value);

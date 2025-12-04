@@ -7,6 +7,19 @@ import { getUserOrders } from "@/api/order";
 import { UserOrder } from "@/types";
 import OrderCard from "./components/OrderCard";
 
+// Helper to extract error message from various error formats
+const getErrorMessage = (error: unknown): string => {
+  if (error && typeof error === "object") {
+    if ("error" in error && typeof (error as { error: unknown }).error === "string") {
+      return (error as { error: string }).error;
+    }
+    if ("message" in error && typeof (error as { message: unknown }).message === "string") {
+      return (error as { message: string }).message;
+    }
+  }
+  return "Có lỗi xảy ra khi tìm kiếm đơn hàng";
+};
+
 export default function OrderSearchScreen() {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [orders, setOrders] = useState<UserOrder[]>([]);
@@ -28,8 +41,8 @@ export default function OrderSearchScreen() {
       } else {
         setOrders([]);
       }
-    } catch (error: any) {
-      message.error(error?.error || "Có lỗi xảy ra khi tìm kiếm đơn hàng");
+    } catch (error: unknown) {
+      message.error(getErrorMessage(error));
       setOrders([]);
     } finally {
       setLoading(false);
