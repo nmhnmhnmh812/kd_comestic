@@ -34,7 +34,7 @@ export default function BrandContainer() {
     <div className="bg-gray-50 min-h-screen">
       <BrandHeader />
 
-      <div className="max-w-screen-2xl mx-auto px-4 py-8">
+      <div className="max-w-[1320px] mx-auto px-4 py-8">
         {/* Search bar */}
         <div className="mb-8">
           <Input

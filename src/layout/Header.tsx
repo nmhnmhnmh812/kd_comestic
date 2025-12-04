@@ -120,7 +120,7 @@ export default function Header() {
   return (
     <header className="bg-white shadow-md w-full relative">
       {/* Main header */}
-      <div className="flex justify-between items-center max-w-screen-2xl mx-auto py-3 md:py-4 px-4 gap-2 md:gap-10">
+      <div className="flex justify-between items-center max-w-[1320px] mx-auto py-3 md:py-4 px-4 gap-2 md:gap-10">
         {/* Mobile menu button */}
         <Button
           className="md:hidden"
@@ -214,7 +214,7 @@ export default function Header() {
 
       {/* Bottom nav - hide on mobile, show in drawer */}
       <div className="hidden md:block bg-black">
-        <div className="max-w-screen-2xl mx-auto flex gap-10 text-white font-semibold px-4 items-center">
+        <div className="max-w-[1320px] mx-auto flex gap-10 text-white font-semibold px-4 items-center">
           <CategoryBtn isMobile={false} />
           <Link
             href="/thuong-hieu"
