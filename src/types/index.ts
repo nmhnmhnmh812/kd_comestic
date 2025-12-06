@@ -358,3 +358,13 @@ export interface UserOrder {
   orderItems: UserOrderItem[];
   qrCodeUrl: string;
 }
+
+export interface StoreLocation {
+  id: number;
+  name: string;
+  address: string;
+  phone: string;
+  hours: string;
+  mapUrl: string;
+  active: boolean;
+}

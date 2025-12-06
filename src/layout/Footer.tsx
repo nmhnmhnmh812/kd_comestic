@@ -10,41 +10,43 @@ import {
   EnvironmentFilled,
 } from "@ant-design/icons";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import clsx from "clsx";
-
-const STORES = [
-  {
-    id: 1,
-    name: "KMP COSMETICS - HÀ NỘI",
-    address: "Số 123 Đường ABC, Phường XYZ, Quận Hoàn Kiếm, Hà Nội",
-    phone: "0988888825",
-    hours: "8:00 - 22:00 (Hàng ngày)",
-    mapUrl:
-      "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3724.0969032103434!2d105.84388731533427!3d21.028511092313994!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135ab9bd9861ca1%3A0xe7887f7b72ca17a!2zSG9hbiBLaeG6v20sIEhhIE5vaQ!5e0!3m2!1svi!2s!4v1234567890123!5m2!1svi!2s",
-  },
-  {
-    id: 2,
-    name: "KMP COSMETICS - HÀ NỘI 2",
-    address: "Số 456 Đường XYZ, Phường ABC, Quận Đống Đa, Hà Nội",
-    phone: "0988888826",
-    hours: "8:30 - 21:30 (Hàng ngày)",
-    mapUrl:
-      "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3724.5!2d105.82!3d21.02!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135ab9bd9861ca1%3A0xe7887f7b72ca17b!2zxJDhu5FuZyDEkGEsIEhhIE5vaQ!5e0!3m2!1svi!2s!4v1234567890124!5m2!1svi!2s",
-  },
-  {
-    id: 3,
-    name: "KMP COSMETICS - HÀ NỘI 3",
-    address: "Số 789 Đường DEF, Phường GHI, Quận Cầu Giấy, Hà Nội",
-    phone: "0988888827",
-    hours: "9:00 - 22:00 (Hàng ngày)",
-    mapUrl:
-      "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3723.8!2d105.78!3d21.03!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135ab9bd9861ca1%3A0xe7887f7b72ca17c!2zQ-G6p3UgR2nhuqV5LCBIYSBOT2k!5e0!3m2!1svi!2s!4v1234567890125!5m2!1svi!2s",
-  },
-];
+import { getStoreLocations } from "@/api/storeLocation";
+import { StoreLocation } from "@/types";
 
 export default function Footer() {
-  const [selectedStore, setSelectedStore] = useState(STORES[0]);
+  const [stores, setStores] = useState<StoreLocation[]>([]);
+  const [selectedStore, setSelectedStore] = useState<StoreLocation | null>(
+    null
+  );
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchStores = async () => {
+      try {
+        const data = await getStoreLocations();
+        const activeStores = data.filter((store) => store.active);
+        setStores(activeStores);
+        if (activeStores.length > 0) {
+          setSelectedStore(activeStores[0]);
+        }
+      } catch (error) {
+        console.error("Failed to fetch store locations:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchStores();
+  }, []);
+
+  const handleStoreClick = (store: StoreLocation) => {
+    setSelectedStore(store);
+    // Redirect to Google Maps
+    if (store.mapUrl) {
+      window.open(store.mapUrl, "_blank");
+    }
+  };
 
   return (
     <footer className="bg-black text-white">
@@ -154,29 +156,32 @@ export default function Footer() {
           <div className="space-y-4">
             <h3 className="text-base font-semibold">LIÊN HỆ</h3>
 
-            {/* Contact Info */}
+            {/* Contact Info - Uses primary (first) store for contact details */}
             <div className="space-y-3">
-              <div className="flex items-start gap-2">
-                <EnvironmentFilled className="text-lg mt-0.5 flex-shrink-0" />
-                <div>
-                  <p className="text-sm text-gray-400">
-                    Số 123 Đường ABC, Phường XYZ
-                  </p>
-                  <p className="text-sm text-gray-400">
-                    Quận Hoàn Kiếm, Hà Nội
-                  </p>
-                </div>
-              </div>
+              {stores.length > 0 &&
+                (() => {
+                  const primaryStore = stores[0];
+                  return (
+                    <>
+                      <div className="flex items-start gap-2">
+                        <EnvironmentFilled className="text-lg mt-0.5 flex-shrink-0" />
+                        <p className="text-sm text-gray-400">
+                          {primaryStore.address}
+                        </p>
+                      </div>
 
-              <div className="flex items-center gap-2">
-                <PhoneFilled className="text-lg" />
-                <a
-                  href="tel:0988888825"
-                  className="text-sm text-gray-400 hover:text-white transition-colors"
-                >
-                  0988 888 825
-                </a>
-              </div>
+                      <div className="flex items-center gap-2">
+                        <PhoneFilled className="text-lg" />
+                        <a
+                          href={`tel:${primaryStore.phone}`}
+                          className="text-sm text-gray-400 hover:text-white transition-colors"
+                        >
+                          {primaryStore.phone}
+                        </a>
+                      </div>
+                    </>
+                  );
+                })()}
 
               <div className="flex items-center gap-2">
                 <MailFilled className="text-lg" />
@@ -229,19 +234,28 @@ export default function Footer() {
         <div className="mt-12 pt-8 border-t border-gray-800">
           <h3 className="text-base font-semibold mb-6">HỆ THỐNG CỬA HÀNG</h3>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Store List - Scrollable */}
-            <div className="space-y-3 max-h-96 overflow-y-auto pr-2 custom-scrollbar">
-              {STORES.map((store) => (
+          {loading ? (
+            <p
+              className="text-gray-400 text-sm"
+              role="status"
+              aria-live="polite"
+            >
+              Đang tải...
+            </p>
+          ) : stores.length === 0 ? (
+            <p className="text-gray-400 text-sm">Không có cửa hàng nào</p>
+          ) : (
+            <div className="space-y-3 max-h-96 overflow-y-auto pr-2 custom-scrollbar grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {stores.map((store) => (
                 <button
                   key={store.id}
-                  onClick={() => setSelectedStore(store)}
+                  onClick={() => handleStoreClick(store)}
                   className={clsx(
-                    "w-full text-left bg-gray-900 rounded-lg p-4 transition-all duration-300 hover:bg-gray-800 border-2",
+                    "w-full text-left bg-gray-900 rounded-lg p-4 transition-all duration-300 hover:bg-gray-800 border-2 cursor-pointer",
                     {
                       "border-red-500 bg-gray-800":
-                        selectedStore.id === store.id,
-                      "border-transparent": selectedStore.id !== store.id,
+                        selectedStore?.id === store.id,
+                      "border-transparent": selectedStore?.id !== store.id,
                     }
                   )}
                 >
@@ -264,23 +278,7 @@ export default function Footer() {
                 </button>
               ))}
             </div>
-
-            {/* Google Map */}
-            <div className="lg:col-span-2 w-full h-96 rounded-lg overflow-hidden">
-              <iframe
-                key={selectedStore.id}
-                src={selectedStore.mapUrl}
-                width="100%"
-                height="100%"
-                style={{ border: 0 }}
-                allowFullScreen
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                title={`Vị trí ${selectedStore.name}`}
-                className="grayscale hover:grayscale-0 transition-all duration-300"
-              />
-            </div>
-          </div>
+          )}
         </div>
 
         {/* Copyright */}
