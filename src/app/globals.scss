@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-@import "../styles/antd/carousel.scss";
+@use "../styles/antd/carousel.scss";
 
 html {
   scroll-behavior: smooth;
