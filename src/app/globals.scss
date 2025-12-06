@@ -1,8 +1,8 @@
+@use "../styles/antd/carousel.scss";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@use "../styles/antd/carousel.scss";
 
 html {
   scroll-behavior: smooth;
