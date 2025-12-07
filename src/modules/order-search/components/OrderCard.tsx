@@ -107,7 +107,7 @@ export default function OrderCard({ order }: OrderCardProps) {
             </p>
             <p className="flex items-center gap-2">
               <span className="font-medium">Trạng thái:</span>{" "}
-              {getPaymentStatusTag(order.payment.paymentStatus)}
+              {getPaymentStatusTag(order.payment.status)}
             </p>
             {order.payment.transferCode && (
               <p>
