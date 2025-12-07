@@ -129,32 +129,28 @@ export default function PayInfo({
       initialLoadDone.current = true;
       return;
     }
-    
-    const fullAddress = buildFullAddress();
-    if (fullAddress) {
-      debouncedGetShipFee(fullAddress);
-    }
-  }, [buildFullAddress, debouncedGetShipFee]);
 
-  const handleProvinceChange = (value: number) => {
-    const province = provinces.find((p) => p.code === value);
-    setSelectedProvince(province ? { code: province.code, name: province.name } : null);
+    if (selectedProvince) {
+      debouncedGetShipFee(selectedProvince.name);
+    }
+  }, [selectedProvince, debouncedGetShipFee]);
+
+  const handleProvinceChange = (value: { value: number; label: string }) => {
+    setSelectedProvince({ code: value.value, name: value.label });
     setSelectedDistrict(null);
     setSelectedWard(null);
     setDistricts([]);
     setWards([]);
   };
 
-  const handleDistrictChange = (value: number) => {
-    const district = districts.find((d) => d.code === value);
-    setSelectedDistrict(district ? { code: district.code, name: district.name } : null);
+  const handleDistrictChange = (value: { value: number; label: string }) => {
+    setSelectedDistrict({ code: value.value, name: value.label });
     setSelectedWard(null);
     setWards([]);
   };
 
-  const handleWardChange = (value: number) => {
-    const ward = wards.find((w) => w.code === value);
-    setSelectedWard(ward ? { code: ward.code, name: ward.name } : null);
+  const handleWardChange = (value: { value: number; label: string }) => {
+    setSelectedWard({ code: value.value, name: value.label });
   };
 
   return (
@@ -184,11 +180,13 @@ export default function PayInfo({
           label="Tỉnh/Thành phố"
           name="province"
           rules={[{ required: true, message: "Vui lòng chọn tỉnh/thành phố" }]}
+          normalize={(value) => value?.label || value}
         >
           <Select
             placeholder="Chọn tỉnh/thành phố"
             loading={loadingProvinces}
             showSearch
+            labelInValue
             optionFilterProp="label"
             onChange={handleProvinceChange}
             notFoundContent={loadingProvinces ? <Spin size="small" /> : null}
@@ -204,11 +202,13 @@ export default function PayInfo({
           label="Quận/Huyện"
           name="district"
           rules={[{ required: true, message: "Vui lòng chọn quận/huyện" }]}
+          normalize={(value) => value?.label || value}
         >
           <Select
             placeholder="Chọn quận/huyện"
             loading={loadingDistricts}
             showSearch
+            labelInValue
             optionFilterProp="label"
             disabled={!selectedProvince}
             onChange={handleDistrictChange}
@@ -225,11 +225,13 @@ export default function PayInfo({
           label="Phường/Xã"
           name="ward"
           rules={[{ required: true, message: "Vui lòng chọn phường/xã" }]}
+          normalize={(value) => value?.label || value}
         >
           <Select
             placeholder="Chọn phường/xã"
             loading={loadingWards}
             showSearch
+            labelInValue
             optionFilterProp="label"
             disabled={!selectedDistrict}
             onChange={handleWardChange}
@@ -244,7 +246,7 @@ export default function PayInfo({
         {/* Detail Address Input */}
         <Form.Item
           label="Địa chỉ chi tiết"
-          name="detailAddress"
+          name="address"
           rules={[
             { required: true, message: "Vui lòng nhập địa chỉ chi tiết" },
           ]}

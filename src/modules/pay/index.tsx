@@ -21,36 +21,32 @@ export default function PayScreen() {
     loading: buyNowLoading,
   } = useBuyNow();
   const updateAmount = usePayment((state) => state.updateAmount);
-  const [fullAddress, setFullAddress] = useState<string>("");
 
   const activeItems = isBuyNow ? buyNowAsCartItem : cartItems;
   const activeTotalAmount = isBuyNow ? buyNowTotalAmount : cartTotalAmount;
 
-  const getShipFee = useCallback(async (address: string) => {
-    // Update the full address state
-    setFullAddress(address);
-    
-    // Also set it in the form for submission
-    form.setFieldValue("address", address);
-    
-    const orderItems =
-      activeItems?.map((item) => ({
-        productId: item?.product?.id || undefined,
-        variantId: item?.variant?.id || undefined,
-        quantity: item?.quantity,
-      })) || [];
-    try {
-      const response = await checkOrderInfo({
-        orderItems,
-        address,
-      });
-      const { shipAmount, totalAmountFinal, totalProductAmount } =
-        response.data.result;
-      updateAmount({ shipAmount, totalAmountFinal, totalProductAmount });
-    } catch (error: any) {
-      message.error(error.error);
-    }
-  }, [activeItems, form, updateAmount]);
+  const getShipFee = useCallback(
+    async (province: string) => {
+      const orderItems =
+        activeItems?.map((item) => ({
+          productId: item?.product?.id || undefined,
+          variantId: item?.variant?.id || undefined,
+          quantity: item?.quantity,
+        })) || [];
+      try {
+        const response = await checkOrderInfo({
+          orderItems,
+          province,
+        });
+        const { shipAmount, totalAmountFinal, totalProductAmount } =
+          response.data.result;
+        updateAmount({ shipAmount, totalAmountFinal, totalProductAmount });
+      } catch (error: any) {
+        message.error(error.error);
+      }
+    },
+    [activeItems, form, updateAmount]
+  );
 
   // Show loading while fetching buy-now product data
   if (buyNowLoading) {
@@ -78,7 +74,6 @@ export default function PayScreen() {
         totalAmount={activeTotalAmount}
         isBuyNow={isBuyNow}
         clearBuyNow={clearBuyNow}
-        fullAddress={fullAddress}
       />
     </div>
   );

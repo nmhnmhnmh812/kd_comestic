@@ -147,9 +147,10 @@ export default function BlogDetailScreen({ slug }: BlogDetailScreenProps) {
           </div>
 
           {/* Short Description */}
-          <div className="text-lg text-gray-700 font-medium mb-6 p-4 bg-gray-50 rounded-lg border-l-4 border-blue-600">
-            {data.shortDescription}
-          </div>
+          <div
+            className="text-lg text-gray-700 font-medium mb-6 p-4 bg-gray-50 rounded-lg border-l-4 border-blue-600"
+            dangerouslySetInnerHTML={{ __html: data.shortDescription }}
+          />
 
           {/* Main Content - Sanitized with DOMPurify */}
           <div

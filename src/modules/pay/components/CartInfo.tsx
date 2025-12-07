@@ -22,7 +22,6 @@ export default function CartInfo({
   totalAmount,
   isBuyNow,
   clearBuyNow,
-  fullAddress,
 }: {
   form: FormInstance;
   getShipFee: (address: string) => void;
@@ -30,7 +29,6 @@ export default function CartInfo({
   totalAmount: number;
   isBuyNow: boolean;
   clearBuyNow: () => void;
-  fullAddress: string;
 }) {
   const [loading, setLoading] = useState(false);
   const [modal, setModal] = useState({
@@ -45,10 +43,8 @@ export default function CartInfo({
     setLoading(true);
     try {
       const values = await form.validateFields();
-      // Use the fullAddress prop for the address field
       const params = {
         ...values,
-        address: fullAddress || values.address,
         orderItems: cartItems?.map((item) => ({
           productId: item?.product?.id || undefined,
           variantId: item?.variant?.id || undefined,
@@ -58,12 +54,12 @@ export default function CartInfo({
       };
       const response = await createOrder(params);
       const result = response?.data?.result;
-      
+
       // Clear buy-now item after successful order creation
       if (isBuyNow) {
         clearBuyNow();
       }
-      
+
       if (values.paymentMethod === "COD") {
         window.location.href = `/pay-success/${response?.data?.result?.id}`;
         return;
@@ -72,7 +68,7 @@ export default function CartInfo({
         message.error(
           "Có thay đổi về giá sản phẩm hoặc phí vận chuyển. Vui lòng kiểm tra lại giỏ hàng."
         );
-        getShipFee(fullAddress || values.address);
+        getShipFee(values.province);
         setLoading(false);
         return;
       }
