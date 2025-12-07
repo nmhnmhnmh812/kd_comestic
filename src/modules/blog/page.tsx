@@ -56,9 +56,10 @@ export default function BlogScreen() {
             <h2 className="text-xl font-bold mb-2 line-clamp-2">
               {blog.title}
             </h2>
-            <p className="text-gray-600 line-clamp-3 mb-2">
-              {blog.shortDescription}
-            </p>
+            <p
+              className="text-gray-600 line-clamp-3 mb-2"
+              dangerouslySetInnerHTML={{ __html: blog.shortDescription }}
+            />
             <p className="text-sm text-gray-400">
               {new Date(blog.createdDate).toLocaleDateString("vi-VN", {
                 year: "numeric",

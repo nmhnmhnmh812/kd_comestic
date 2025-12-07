@@ -22,6 +22,12 @@ export default function Footer() {
   );
   const [loading, setLoading] = useState(true);
 
+  const extractMapEmbedUrl = (iframeCode: string): string => {
+    if (!iframeCode) return "";
+    const srcMatch = iframeCode.match(/src="([^"]+)"/);
+    return srcMatch ? srcMatch[1] : "";
+  };
+
   useEffect(() => {
     const fetchStores = async () => {
       try {
@@ -42,10 +48,6 @@ export default function Footer() {
 
   const handleStoreClick = (store: StoreLocation) => {
     setSelectedStore(store);
-    // Redirect to Google Maps
-    if (store.mapUrl) {
-      window.open(store.mapUrl, "_blank");
-    }
   };
 
   return (
@@ -245,38 +247,60 @@ export default function Footer() {
           ) : stores.length === 0 ? (
             <p className="text-gray-400 text-sm">Không có cửa hàng nào</p>
           ) : (
-            <div className="space-y-3 max-h-96 overflow-y-auto pr-2 custom-scrollbar grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {stores.map((store) => (
-                <button
-                  key={store.id}
-                  onClick={() => handleStoreClick(store)}
-                  className={clsx(
-                    "w-full text-left bg-gray-900 rounded-lg p-4 transition-all duration-300 hover:bg-gray-800 border-2 cursor-pointer",
-                    {
-                      "border-red-500 bg-gray-800":
-                        selectedStore?.id === store.id,
-                      "border-transparent": selectedStore?.id !== store.id,
-                    }
-                  )}
-                >
-                  <h4 className="text-sm font-semibold text-white mb-2">
-                    {store.name}
-                  </h4>
-                  <div className="flex items-start gap-2 mb-2">
-                    <EnvironmentFilled className="text-red-500 text-base mt-0.5 flex-shrink-0" />
-                    <span className="text-xs text-gray-400">
-                      {store.address}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              {/* Store List - Scrollable */}
+              <div className="space-y-3 max-h-96 overflow-y-auto pr-2 custom-scrollbar">
+                {stores.map((store) => (
+                  <button
+                    key={store.id}
+                    onClick={() => handleStoreClick(store)}
+                    className={clsx(
+                      "w-full text-left bg-gray-900 rounded-lg p-4 transition-all duration-300 hover:bg-gray-800 border-2 cursor-pointer",
+                      {
+                        "border-red-500 bg-gray-800":
+                          selectedStore?.id === store.id,
+                        "border-transparent": selectedStore?.id !== store.id,
+                      }
+                    )}
+                  >
+                    <h4 className="text-sm font-semibold text-white mb-2">
+                      {store.name}
+                    </h4>
+                    <div className="flex items-start gap-2 mb-2">
+                      <EnvironmentFilled className="text-red-500 text-base mt-0.5 flex-shrink-0" />
+                      <span className="text-xs text-gray-400">
+                        {store.address}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2 mb-1">
+                      <PhoneFilled className="text-red-500 text-sm" />
+                      <span className="text-xs text-gray-400">
+                        {store.phone}
+                      </span>
+                    </div>
+                    <span className="text-xs text-gray-500 ml-5 block">
+                      {store.hours}
                     </span>
-                  </div>
-                  <div className="flex items-center gap-2 mb-1">
-                    <PhoneFilled className="text-red-500 text-sm" />
-                    <span className="text-xs text-gray-400">{store.phone}</span>
-                  </div>
-                  <span className="text-xs text-gray-500 ml-5 block">
-                    {store.hours}
-                  </span>
-                </button>
-              ))}
+                  </button>
+                ))}
+              </div>
+
+              {/* Google Map */}
+              {selectedStore && (
+                <div className="lg:col-span-2 w-full h-96 rounded-lg overflow-hidden">
+                  <iframe
+                    key={selectedStore.id}
+                    src={extractMapEmbedUrl(selectedStore.mapUrl)}
+                    width="100%"
+                    height="100%"
+                    style={{ border: 0 }}
+                    allowFullScreen
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                    title={`Vị trí ${selectedStore.name}`}
+                  />
+                </div>
+              )}
             </div>
           )}
         </div>

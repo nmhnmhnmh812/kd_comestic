@@ -15,7 +15,7 @@ type CheckOrderInfoParams = {
       quantity: number;
     }
   ];
-  address: string;
+  province: string;
 };
 
 export async function checkOrderInfo(params: CheckOrderInfoParams) {
