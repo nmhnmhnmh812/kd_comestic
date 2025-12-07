@@ -13,6 +13,7 @@ import {
 } from "@ant-design/icons";
 import DOMPurify from "dompurify";
 import { useMemo } from "react";
+import { sanitizedDescription } from "@/utils";
 
 interface BlogDetailScreenProps {
   slug: string;
@@ -39,18 +40,6 @@ export default function BlogDetailScreen({ slug }: BlogDetailScreenProps) {
     staleTime: 0,
     enabled: !!blogId,
   });
-
-  // Sanitize HTML content using DOMPurify
-  // Must be called before any early returns to comply with React Hooks rules
-  const sanitizedContent = useMemo(() => {
-    if (!data?.content) return "";
-    return DOMPurify.sanitize(data.content, {
-      ADD_TAGS: ["iframe"], // Allow iframe if needed for embedded content
-      ADD_ATTR: ["allow", "allowfullscreen", "frameborder", "scrolling"], // Allow iframe attributes
-      ALLOWED_URI_REGEXP:
-        /^(?:(?:(?:f|ht)tps?|mailto|tel|callto|sms|cid|xmpp):|[^a-z]|[a-z+.\-]+(?:[^a-z+.\-:]|$))/i, // Allow common protocols
-    });
-  }, [data?.content]);
 
   if (isFetching) {
     return (
@@ -149,7 +138,9 @@ export default function BlogDetailScreen({ slug }: BlogDetailScreenProps) {
           {/* Short Description */}
           <div
             className="text-lg text-gray-700 font-medium mb-6 p-4 bg-gray-50 rounded-lg border-l-4 border-blue-600"
-            dangerouslySetInnerHTML={{ __html: data.shortDescription }}
+            dangerouslySetInnerHTML={{
+              __html: sanitizedDescription(data.shortDescription),
+            }}
           />
 
           {/* Main Content - Sanitized with DOMPurify */}
@@ -163,7 +154,9 @@ export default function BlogDetailScreen({ slug }: BlogDetailScreenProps) {
               prose-strong:text-gray-900 prose-strong:font-semibold
               prose-ul:list-disc prose-ol:list-decimal
               prose-li:text-gray-700"
-            dangerouslySetInnerHTML={{ __html: sanitizedContent }}
+            dangerouslySetInnerHTML={{
+              __html: sanitizedDescription(data.content),
+            }}
           />
         </div>
       </article>

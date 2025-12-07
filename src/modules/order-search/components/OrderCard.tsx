@@ -13,19 +13,14 @@ const getStatusTag = (status: string) => {
   const statusMap: Record<string, { color: string; text: string }> = {
     WAITING_CONFIRMATION: { color: "orange", text: "Chờ xác nhận" },
     CONFIRMED: { color: "blue", text: "Đã xác nhận" },
-    SHIPPING: { color: "cyan", text: "Đang giao hàng" },
-    DELIVERED: { color: "green", text: "Đã giao hàng" },
+    SHIPPING: { color: "cyan", text: "Đang giao" },
+    DELIVERED: { color: "purple", text: "Đã giao hàng" },
+    FINISHED: { color: "green", text: "Hoàn thành" },
     CANCELLED: { color: "red", text: "Đã hủy" },
-  };
-
-  const statusInfo = statusMap[status] || { color: "default", text: status };
-  return <Tag color={statusInfo.color}>{statusInfo.text}</Tag>;
-};
-
-const getPaymentStatusTag = (status: string) => {
-  const statusMap: Record<string, { color: string; text: string }> = {
+    RETURNED: { color: "volcano", text: "Đã trả hàng" },
     NOT_YET: { color: "orange", text: "Chưa thanh toán" },
-    PAID: { color: "green", text: "Đã thanh toán" },
+    PENDING: { color: "orange", text: "Chờ thanh toán" },
+    COMPLETED: { color: "green", text: "Đã thanh toán" },
     FAILED: { color: "red", text: "Thanh toán thất bại" },
   };
 
@@ -107,7 +102,7 @@ export default function OrderCard({ order }: OrderCardProps) {
             </p>
             <p className="flex items-center gap-2">
               <span className="font-medium">Trạng thái:</span>{" "}
-              {getPaymentStatusTag(order.payment.paymentStatus)}
+              {getStatusTag(order.payment.status)}
             </p>
             {order.payment.transferCode && (
               <p>
