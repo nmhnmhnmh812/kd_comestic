@@ -16,7 +16,7 @@ const getStatusTag = (status: string) => {
     SHIPPING: { color: "cyan", text: "Đang giao" },
     DELIVERED: { color: "purple", text: "Đã giao hàng" },
     FINISHED: { color: "green", text: "Hoàn thành" },
-    CANCELLED: { color: "red", text: "Đã hủy" },
+    CANCELED: { color: "red", text: "Đã hủy" },
     RETURNED: { color: "volcano", text: "Đã trả hàng" },
     NOT_YET: { color: "orange", text: "Chưa thanh toán" },
     PENDING: { color: "orange", text: "Chờ thanh toán" },
