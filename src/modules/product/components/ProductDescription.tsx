@@ -17,7 +17,7 @@ export default function ProductDescription({ product }: { product: Product }) {
         </h3>
         {sanitizedDescriptionContent ? (
           <div
-            className="text-sm md:text-base prose prose-sm max-w-none"
+            className="ql-editor text-sm md:text-base prose prose-sm max-w-none"
             dangerouslySetInnerHTML={{ __html: sanitizedDescriptionContent }}
           />
         ) : (
