@@ -12,3 +12,7 @@ export async function getProducts(params) {
 export async function getProductById(id: string) {
   return await baseAxios.get(`${ENDPOINTS.PRODUCT}/${id}`);
 }
+
+export async function increaseProductView(id: number) {
+  return await baseAxios.put(`${ENDPOINTS.PRODUCT}/${id}/increase-view`);
+}

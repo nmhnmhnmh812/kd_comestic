@@ -9,6 +9,7 @@ import {
   Select,
   DatePicker,
   Button,
+  Tooltip,
 } from "antd";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
@@ -106,27 +107,30 @@ export default function BlogScreen() {
             />
           </div>
           <div className="p-4">
-            <div className="flex items-center gap-2 mb-2">
+            <div className="flex items-center justify-between gap-2 mb-2">
               <span className="text-xs bg-blue-100 text-blue-600 px-2 py-1 rounded">
                 {blog.categoryName}
               </span>
+              <p className="text-sm text-gray-400">
+                {new Date(blog.createdDate).toLocaleDateString("vi-VN", {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                })}
+              </p>
             </div>
-            <h2 className="text-xl font-bold mb-2 line-clamp-2">
-              {blog.title}
-            </h2>
+            <Tooltip title={blog.title}>
+              <h2 className="text-lg font-bold mb-2 line-clamp-1 w-fit">
+                {blog.title}
+              </h2>
+            </Tooltip>
+
             <p
-              className="ql-editor text-gray-600 line-clamp-3 mb-2"
+              className="ql-editor text-gray-600 h-20 line-clamp-3 p-0"
               dangerouslySetInnerHTML={{
                 __html: sanitizedDescription(blog.shortDescription),
               }}
             />
-            <p className="text-sm text-gray-400">
-              {new Date(blog.createdDate).toLocaleDateString("vi-VN", {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-              })}
-            </p>
           </div>
         </Link>
       );
@@ -141,64 +145,65 @@ export default function BlogScreen() {
     <div className="max-w-screen-xl mx-auto flex flex-col gap-5 py-5 px-4">
       <h1 className="text-3xl font-bold uppercase">Tin tức & Blog</h1>
 
-      {/* Filter Section */}
-      <div className="bg-white rounded-md p-4 shadow-sm">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <Input
-            placeholder="Tìm kiếm theo từ khóa..."
-            value={tempFilters.keyword}
-            onChange={(e) =>
-              setTempFilters({ ...tempFilters, keyword: e.target.value })
-            }
-            allowClear
-          />
-
-          <Select
-            placeholder="Chọn danh mục"
-            value={tempFilters.categoryId}
-            onChange={(value) =>
-              setTempFilters({ ...tempFilters, categoryId: value })
-            }
-            allowClear
-            className="w-full"
-            options={categoriesData?.map((cat: any) => ({
-              label: cat.name,
-              value: cat.id,
-            }))}
-          />
-
-          <RangePicker
-            placeholder={["Từ ngày", "Đến ngày"]}
-            value={tempFilters.dateRange}
-            onChange={(dates) =>
-              setTempFilters({
-                ...tempFilters,
-                dateRange: dates as [Dayjs, Dayjs] | null,
-              })
-            }
-            format="DD/MM/YYYY"
-            className="w-full"
-          />
-
-          <div className="flex gap-2">
-            <Button
-              type="primary"
-              onClick={handleApplyFilters}
-              className="flex-1"
-            >
-              Lọc
-            </Button>
-            <Button onClick={handleResetFilters} className="flex-1">
-              Đặt lại
-            </Button>
-          </div>
-        </div>
-      </div>
-
       <div className="bg-white rounded-md flex flex-col gap-4 p-4">
         {!isFetching ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {renderBlogs}
+          <div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+              <Input
+                placeholder="Nhập từ khóa..."
+                value={tempFilters.keyword}
+                onChange={(e) =>
+                  setTempFilters({
+                    ...tempFilters,
+                    keyword: e.target.value,
+                  })
+                }
+                allowClear
+              />
+
+              <Select
+                placeholder="Chọn danh mục..."
+                value={tempFilters.categoryId}
+                onChange={(value) =>
+                  setTempFilters({ ...tempFilters, categoryId: value })
+                }
+                allowClear
+                className="w-full"
+                options={categoriesData?.map((cat: any) => ({
+                  label: cat.name,
+                  value: cat.id,
+                }))}
+              />
+
+              <RangePicker
+                placeholder={["Từ ngày", "Đến ngày"]}
+                value={tempFilters.dateRange}
+                onChange={(dates) =>
+                  setTempFilters({
+                    ...tempFilters,
+                    dateRange: dates as [Dayjs, Dayjs] | null,
+                  })
+                }
+                format="DD/MM/YYYY"
+                className="w-full"
+              />
+
+              <div className="flex gap-2">
+                <Button
+                  className="flex-1"
+                  type="primary"
+                  onClick={handleApplyFilters}
+                >
+                  Lọc
+                </Button>
+                <Button className="flex-1" onClick={handleResetFilters}>
+                  Đặt lại
+                </Button>
+              </div>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {renderBlogs}
+            </div>
           </div>
         ) : (
           <div className="flex justify-center items-center h-60">

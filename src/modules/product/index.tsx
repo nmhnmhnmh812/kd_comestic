@@ -8,6 +8,7 @@ import ProductDescription from "./components/ProductDescription";
 import SideSession from "./components/SideSession";
 import { Product, Variant } from "@/types";
 import { createCart } from "@/api/cart";
+import { increaseProductView } from "@/api/product";
 import { useEffect } from "react";
 
 export default function ProductScreen({
@@ -26,7 +27,14 @@ export default function ProductScreen({
         localStorage.setItem("cart_id", data.result.id);
       });
     }
-  }, []);
+
+    // Track product view count
+    if (product?.id) {
+      increaseProductView(product.id).catch(() => {
+        // Silently handle errors - don't disrupt user experience
+      });
+    }
+  }, [product?.id]);
 
   const categoryUrl = convertToUrl(product.category.name, product.category.id);
   const subCategoryUrl = convertToUrl(
