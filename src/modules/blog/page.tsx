@@ -9,7 +9,6 @@ import {
   Select,
   DatePicker,
   Button,
-  Tooltip,
 } from "antd";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
@@ -119,14 +118,12 @@ export default function BlogScreen() {
                 })}
               </p>
             </div>
-            <Tooltip title={blog.title}>
-              <h2 className="text-lg font-bold mb-2 line-clamp-1 w-fit">
-                {blog.title}
-              </h2>
-            </Tooltip>
+            <h2 className="text-lg font-bold mb-2 line-clamp-2">
+              {blog.title}
+            </h2>
 
             <p
-              className="ql-editor text-gray-600 h-20 line-clamp-3 p-0"
+              className="ql-editor text-gray-600 h-[66px] line-clamp-3 p-0"
               dangerouslySetInnerHTML={{
                 __html: sanitizedDescription(blog.shortDescription),
               }}
