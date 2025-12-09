@@ -63,14 +63,13 @@ export default function SideSession({
       }
       let productList = data?.result?.content || [];
 
-      // ← Lọc bỏ sản phẩm hiện tại
       if (currentProductId) {
         productList = productList.filter((p) => p.id !== currentProductId);
       }
 
       return productList;
     },
-    staleTime: 5 * 60 * 1000,
+    staleTime: 0,
   });
 
   const renderProducts = products?.length ? (
