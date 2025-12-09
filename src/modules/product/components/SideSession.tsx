@@ -16,11 +16,13 @@ export default function SideSession({
   brand,
   category,
   subCategory,
+  currentProductId, // ← Thêm prop này
 }: {
   title: string;
   brand?: Brand;
   category?: ProductType["category"];
   subCategory?: ProductType["subCategory"];
+  currentProductId?: number; // ← Thêm type này
 }) {
   const brandId = brand?.id;
   const categoryId = category?.id;
@@ -59,8 +61,14 @@ export default function SideSession({
       if (error) {
         message.error(error || "Đã có lỗi xảy ra");
       }
-      const products = data?.result?.content || [];
-      return products;
+      let productList = data?.result?.content || [];
+
+      // ← Lọc bỏ sản phẩm hiện tại
+      if (currentProductId) {
+        productList = productList.filter((p) => p.id !== currentProductId);
+      }
+
+      return productList;
     },
     staleTime: 5 * 60 * 1000,
   });
@@ -75,7 +83,9 @@ export default function SideSession({
 
   return (
     <div className="bg-white rounded-lg w-full lg:w-[220px] overflow-hidden shadow-sm">
-      <h2 className="font-semibold text-sm md:text-base text-center py-2">{title}</h2>
+      <h2 className="font-semibold text-sm md:text-base text-center py-2">
+        {title}
+      </h2>
       <Divider className="my-0" />
       <div className="grid grid-cols-2 lg:flex lg:flex-col gap-2 p-2">
         {!isFetching ? (
@@ -86,7 +96,11 @@ export default function SideSession({
           </div>
         )}
       </div>
-      <Button color="default" variant="filled" className="w-full rounded-none text-xs md:text-sm">
+      <Button
+        color="default"
+        variant="filled"
+        className="w-full rounded-none text-xs md:text-sm"
+      >
         <Link href={generateLink()}>Xem tất cả</Link>
       </Button>
     </div>

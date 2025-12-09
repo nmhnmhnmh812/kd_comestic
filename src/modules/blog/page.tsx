@@ -115,7 +115,7 @@ export default function BlogScreen() {
               {blog.title}
             </h2>
             <p
-              className="text-gray-600 line-clamp-3 mb-2"
+              className="ql-editor text-gray-600 line-clamp-3 mb-2"
               dangerouslySetInnerHTML={{
                 __html: sanitizedDescription(blog.shortDescription),
               }}

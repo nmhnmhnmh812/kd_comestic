@@ -76,11 +76,16 @@ export default function ProductScreen({
           <ProductDescription product={product} />
         </div>
         <div className="flex flex-col gap-3 md:gap-5">
-          <SideSession title="Sản phẩm cùng thương hiệu" brand={brand} />
+          <SideSession
+            title="Sản phẩm cùng thương hiệu"
+            currentProductId={product.id}
+            brand={brand}
+          />
           <SideSession
             title="Sản phẩm liên quan"
             category={category}
             subCategory={subCategory}
+            currentProductId={product.id}
           />
         </div>
       </div>

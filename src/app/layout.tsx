@@ -6,6 +6,8 @@ import AntdRegistry from "@/lib/AntdRegistry";
 import ReactQueryProvider from "@/providers/ReactQueryProvider";
 import "@ant-design/v5-patch-for-react-19";
 import FloatingButtons from "@/components/FloatingButtons";
+import "react-quill/dist/quill.core.css";
+import "react-quill/dist/quill.snow.css";
 
 export const metadata: Metadata = {
   title: "KMP Cosmetics",
