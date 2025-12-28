@@ -20,7 +20,8 @@ const MessengerIcon = () => (
 
 export default function FloatingButtons() {
   const zaloLink = "https://zalo.me/84984657786";
-  const messengerLink = "https://m.me/myphamkhanh";
+  const messengerLink =
+    "https://www.facebook.com/share/1BF5XoDkJq/?mibextid=wwXIfr";
   const phoneNumber = "tel:0984657786";
 
   const [isVisible, setIsVisible] = useState(false);
