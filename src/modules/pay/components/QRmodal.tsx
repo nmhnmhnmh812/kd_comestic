@@ -222,7 +222,7 @@ export default function QRModal({
           </div>
         )}
 
-        <div className="pt-2">
+        <div>
           {isChecking && (
             <div className="text-center text-blue-600 font-medium py-2 mb-2 flex items-center justify-center gap-2">
               <LoadingOutlined spin />
