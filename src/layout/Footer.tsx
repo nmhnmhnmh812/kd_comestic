@@ -72,7 +72,7 @@ export default function Footer() {
             <ul className="space-y-2">
               <li>
                 <Link
-                  href="/about"
+                  href="/ve-chung-toi"
                   className="text-sm text-gray-400 hover:text-white transition-colors"
                 >
                   Về chúng tôi
