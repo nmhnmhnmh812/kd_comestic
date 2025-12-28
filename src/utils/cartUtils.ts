@@ -29,7 +29,7 @@ export const getDisplayImage = (item: CartItem): string => {
  */
 export const getDisplayPrice = (item: CartItem): number => {
   if (item.variant) {
-    return item.variant.price;
+    return item?.variant?.finalPrice;
   }
   return item.product?.finalPrice || 0;
 };

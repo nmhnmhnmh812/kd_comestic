@@ -92,6 +92,7 @@ export type Variant = {
   updatedDate: string;
   stockQuantity: number;
   buyCount: number;
+  finalPrice: number;
   blobs: {
     id: number;
     url: string;
@@ -344,7 +345,12 @@ export interface UserOrderItem {
 export interface UserOrder {
   id: number;
   payment: UserOrderPayment;
-  status: "WAITING_CONFIRMATION" | "CONFIRMED" | "SHIPPING" | "DELIVERED" | "CANCELLED";
+  status:
+    | "WAITING_CONFIRMATION"
+    | "CONFIRMED"
+    | "SHIPPING"
+    | "DELIVERED"
+    | "CANCELLED";
   totalProductAmount: number;
   shipAmount: number;
   totalAmountFinal: number;

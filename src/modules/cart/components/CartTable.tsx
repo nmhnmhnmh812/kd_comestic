@@ -172,6 +172,7 @@ export default function CartTable({
     {
       title: "Thao tác",
       dataIndex: "action",
+      width: 100,
       render: (_: unknown, record: CartItem) => (
         <a
           onClick={() =>
