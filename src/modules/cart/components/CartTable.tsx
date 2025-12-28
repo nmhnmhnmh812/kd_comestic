@@ -14,6 +14,7 @@ import { Button, message, Table } from "antd";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
+import { useCartStore } from "@/store/useCartStore";
 
 export default function CartTable({
   cartItems,
@@ -54,6 +55,7 @@ export default function CartTable({
         const index = localCartItems.indexOf(find);
         localCartItems.splice(index, 1);
         setLocalCartItems([...localCartItems]);
+        useCartStore.getState().fetchCartCount(cartId);
       }
       refetch();
     },
@@ -81,6 +83,7 @@ export default function CartTable({
       if (find) {
         find.quantity = quantity;
         setLocalCartItems([...localCartItems]);
+        useCartStore.getState().fetchCartCount(cartId);
       }
     },
     onError: (error: { error: string; cartItemId: string }) => {
