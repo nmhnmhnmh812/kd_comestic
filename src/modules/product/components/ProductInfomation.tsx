@@ -16,6 +16,7 @@ import { addItemToCart } from "@/api/cart";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { BUY_NOW_KEY } from "@/constants";
+import { useCartStore } from "@/store/useCartStore";
 
 // Type guard to check if the item is a Product (has finalPrice) or Variant
 const isProductType = (item: Product | Variant): item is Product => {
@@ -53,8 +54,11 @@ export default function ProductInformation({
 
   const { mutate, isPending } = useMutation({
     mutationFn: addItemToCart,
-    onSuccess: () => {
+    onSuccess: (_, variables) => {
       message.success("Đã thêm vào giỏ hàng");
+      if (variables.cartId) {
+        useCartStore.getState().fetchCartCount(variables.cartId);
+      }
     },
     onError: () => {
       message.error("Thêm vào giỏ hàng thất bại. Vui lòng thử lại.");
@@ -80,7 +84,7 @@ export default function ProductInformation({
   };
 
   const buyNow = () => {
-    if (!currentVariant) {
+    if (hasRealVariants && !currentVariant) {
       message.warning("Vui lòng chọn phân loại sản phẩm");
       return;
     }

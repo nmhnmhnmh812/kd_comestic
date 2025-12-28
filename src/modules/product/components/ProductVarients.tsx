@@ -28,18 +28,13 @@ export default function ProductVarients({
     [updateVariant]
   );
 
-  // Initialize variant from URL (initialVariantId) or default to first variant
+  // Initialize variant from URL (initialVariantId)
   useEffect(() => {
-    if (variants.length > 0) {
-      if (initialVariantId !== undefined) {
-        const variantFromUrl = variants.find((v) => v.id === initialVariantId);
-        if (variantFromUrl) {
-          selectVariant(variantFromUrl);
-          return;
-        }
+    if (variants.length > 0 && initialVariantId !== undefined) {
+      const variantFromUrl = variants.find((v) => v.id === initialVariantId);
+      if (variantFromUrl) {
+        selectVariant(variantFromUrl);
       }
-      // Default to first variant if no URL param or invalid variant ID
-      selectVariant(variants[0]);
     }
   }, [variants, initialVariantId, selectVariant]);
 

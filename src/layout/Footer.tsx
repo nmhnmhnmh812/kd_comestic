@@ -3,9 +3,7 @@
 import { LogoWhite } from "@/assets/icons";
 import {
   FacebookFilled,
-  InstagramFilled,
   MailFilled,
-  YoutubeFilled,
   PhoneFilled,
   EnvironmentFilled,
 } from "@ant-design/icons";
@@ -82,7 +80,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  href="/brand-story"
+                  href="/cau-chuyen-thuong-hieu"
                   className="text-sm text-gray-400 hover:text-white transition-colors"
                 >
                   Câu chuyện thương hiệu
@@ -158,40 +156,32 @@ export default function Footer() {
           <div className="space-y-4">
             <h3 className="text-base font-semibold">LIÊN HỆ</h3>
 
-            {/* Contact Info - Uses primary (first) store for contact details */}
+            {/* Contact Info */}
             <div className="space-y-3">
-              {stores.length > 0 &&
-                (() => {
-                  const primaryStore = stores[0];
-                  return (
-                    <>
-                      <div className="flex items-start gap-2">
-                        <EnvironmentFilled className="text-lg mt-0.5 flex-shrink-0" />
-                        <p className="text-sm text-gray-400">
-                          {primaryStore.address}
-                        </p>
-                      </div>
+              {stores.length > 0 && (
+                <div className="flex items-start gap-2">
+                  <EnvironmentFilled className="text-lg mt-0.5 flex-shrink-0" />
+                  <p className="text-sm text-gray-400">{stores[0].address}</p>
+                </div>
+              )}
 
-                      <div className="flex items-center gap-2">
-                        <PhoneFilled className="text-lg" />
-                        <a
-                          href={`tel:${primaryStore.phone}`}
-                          className="text-sm text-gray-400 hover:text-white transition-colors"
-                        >
-                          {primaryStore.phone}
-                        </a>
-                      </div>
-                    </>
-                  );
-                })()}
+              <div className="flex items-center gap-2">
+                <PhoneFilled className="text-lg" />
+                <a
+                  href="tel:0984657786"
+                  className="text-sm text-gray-400 hover:text-white transition-colors"
+                >
+                  0984657786
+                </a>
+              </div>
 
               <div className="flex items-center gap-2">
                 <MailFilled className="text-lg" />
                 <a
-                  href="mailto:myphamkhanh@gmail.com"
+                  href="mailto:Myphamkhanhdiem@gmail.com"
                   className="text-sm text-gray-400 hover:text-white transition-colors"
                 >
-                  myphamkhanh@gmail.com
+                  Myphamkhanhdiem@gmail.com
                 </a>
               </div>
             </div>
@@ -201,7 +191,7 @@ export default function Footer() {
               <h4 className="text-sm font-semibold mb-2">KẾT NỐI</h4>
               <div className="flex space-x-4">
                 <Link
-                  href="https://facebook.com"
+                  href="https://www.facebook.com/share/1BF5XoDkJq/?mibextid=wwXIfr"
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="Facebook"
@@ -210,22 +200,13 @@ export default function Footer() {
                   <FacebookFilled className="text-2xl" />
                 </Link>
                 <Link
-                  href="https://instagram.com"
+                  href="https://zalo.me/84984657786"
                   target="_blank"
                   rel="noopener noreferrer"
-                  aria-label="Instagram"
-                  className="hover:text-pink-500 transition-colors"
+                  aria-label="Zalo"
+                  className="flex items-center justify-center bg-blue-600 rounded-full w-6 h-6 hover:bg-blue-700 transition-colors"
                 >
-                  <InstagramFilled className="text-2xl" />
-                </Link>
-                <Link
-                  href="https://youtube.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="Youtube"
-                  className="hover:text-red-500 transition-colors"
-                >
-                  <YoutubeFilled className="text-2xl" />
+                  <span className="font-bold text-xs text-white">Z</span>
                 </Link>
               </div>
             </div>

@@ -1,9 +1,13 @@
 "use client";
 
 import { Modal, Button, message, Progress } from "antd";
-import { CopyOutlined, ClockCircleOutlined } from "@ant-design/icons";
+import {
+  CopyOutlined,
+  ClockCircleOutlined,
+  LoadingOutlined,
+} from "@ant-design/icons";
 import Image from "next/image";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { getOrderDetail } from "@/api/order";
 
@@ -62,7 +66,7 @@ export default function QRModal({
     };
   }, [visible, onClose]);
 
-  const checkPaymentStatus = async () => {
+  const checkPaymentStatus = useCallback(async () => {
     try {
       const response = await getOrderDetail(orderId);
       if (response?.data?.result) {
@@ -91,28 +95,31 @@ export default function QRModal({
       console.error("Error checking payment status:", error);
       setIsChecking(false);
     }
-  };
-
-  const handleConfirmPayment = async () => {
-    if (isConfirmed) {
-      if (checkIntervalRef.current) clearInterval(checkIntervalRef.current);
-      setIsConfirmed(false);
-      return;
-    }
-
-    setIsConfirmed(true);
-    setIsChecking(true);
-
-    await checkPaymentStatus();
-
-    checkIntervalRef.current = setInterval(async () => {
-      await checkPaymentStatus();
-    }, CHECK_INTERVAL);
-  };
+  }, [orderId, onClose, router]);
 
   const progressPercent = Math.round((timeLeft / TIMEOUT_SECONDS) * 100);
   const minutesLeft = Math.floor(timeLeft / 60);
   const secondsLeft = timeLeft % 60;
+
+  // Auto polling logic
+  useEffect(() => {
+    if (!visible) return;
+
+    // Start checking after 30 seconds
+    const startPollingTimeout = setTimeout(() => {
+      setIsChecking(true);
+      checkPaymentStatus(); // Check immediately once
+
+      checkIntervalRef.current = setInterval(() => {
+        checkPaymentStatus();
+      }, CHECK_INTERVAL);
+    }, 30000);
+
+    return () => {
+      clearTimeout(startPollingTimeout);
+      if (checkIntervalRef.current) clearInterval(checkIntervalRef.current);
+    };
+  }, [visible]);
 
   useEffect(() => {
     return () => {
@@ -215,7 +222,13 @@ export default function QRModal({
           </div>
         )}
 
-        <div className="pt-2 flex gap-2">
+        <div className="pt-2">
+          {isChecking && (
+            <div className="text-center text-blue-600 font-medium py-2 mb-2 flex items-center justify-center gap-2">
+              <LoadingOutlined spin />
+              <span>Đang tự động kiểm tra thanh toán...</span>
+            </div>
+          )}
           <Button
             block
             onClick={() => {
@@ -226,23 +239,8 @@ export default function QRModal({
               setIsChecking(false);
               onClose();
             }}
-            disabled={isConfirmed}
           >
-            Hủy
-          </Button>
-          <Button
-            type="primary"
-            block
-            onClick={handleConfirmPayment}
-            loading={isChecking && isConfirmed}
-            danger={isConfirmed}
-            disabled={isChecking && !isConfirmed}
-          >
-            {isConfirmed
-              ? `Kiểm tra (${minutesLeft}:${secondsLeft
-                  .toString()
-                  .padStart(2, "0")})`
-              : "Đã thanh toán"}
+            Đóng
           </Button>
         </div>
       </div>

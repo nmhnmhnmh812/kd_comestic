@@ -20,8 +20,12 @@ import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { getProducts } from "@/api/product";
 import { Category, Product } from "@/types";
 import { convertToUrl } from "@/utils";
+
+// Actually, I should just check what was removed.
+// I removed lines 23-25.
 import Image from "next/image";
 import { ENDPOINTS, getCategories } from "@/api/category";
+import { useCartStore } from "@/store/useCartStore";
 
 const { Panel } = Collapse;
 
@@ -32,6 +36,16 @@ export default function Header() {
   const router = useRouter();
   const inputRef = useRef<any>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const cartCount = useCartStore((state) => state.cartCount);
+  const fetchCartCount = useCartStore((state) => state.fetchCartCount);
+
+  useEffect(() => {
+    const id = localStorage.getItem("cart_id");
+    if (id) {
+      fetchCartCount(id);
+    }
+  }, [fetchCartCount]);
 
   const { data: categories = [] } = useQuery<any, Error, Category[]>({
     queryKey: [ENDPOINTS.CATEGORIES],
@@ -202,13 +216,23 @@ export default function Header() {
 
         {/* Right icons - hide text on mobile */}
         <div className="flex gap-3 md:gap-10 items-center">
-          <Link href="/cart" className="flex items-center gap-1">
-            <ShoppingCartOutlined className="text-lg" />
+          <Link href="/cart" className="flex items-center gap-1 relative">
+            <div className="relative">
+              <ShoppingCartOutlined className="text-lg md:text-2xl" />
+              {cartCount > 0 && (
+                <span className="absolute -top-2 -right-2 bg-red-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[18px] text-center border-2 border-white">
+                  {cartCount > 99 ? "99+" : cartCount}
+                </span>
+              )}
+            </div>
             <span className="hidden md:inline text-sm">Giỏ hàng</span>
           </Link>
-          <span className="hidden lg:flex items-center gap-1 text-sm">
+          <a
+            href="tel:0984657786"
+            className="hidden lg:flex items-center gap-1 text-sm hover:text-red-500 transition-colors"
+          >
             <PhoneOutlined /> Hỗ trợ
-          </span>
+          </a>
         </div>
       </div>
 

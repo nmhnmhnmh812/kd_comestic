@@ -1,8 +1,9 @@
 "use client";
 
-import { MessageFilled, PhoneFilled } from "@ant-design/icons";
+import { PhoneFilled, ArrowUpOutlined } from "@ant-design/icons";
 import Link from "next/link";
 import Image from "next/image";
+import { useEffect, useState } from "react";
 
 // Facebook Messenger Icon Component
 const MessengerIcon = () => (
@@ -18,12 +19,46 @@ const MessengerIcon = () => (
 );
 
 export default function FloatingButtons() {
-  const zaloLink = "https://zalo.me/0988888825";
+  const zaloLink = "https://zalo.me/84984657786";
   const messengerLink = "https://m.me/myphamkhanh";
-  const phoneNumber = "tel:0988888825";
+  const phoneNumber = "tel:0984657786";
+
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const toggleVisibility = () => {
+      if (window.scrollY > 300) {
+        setIsVisible(true);
+      } else {
+        setIsVisible(false);
+      }
+    };
+
+    window.addEventListener("scroll", toggleVisibility);
+
+    return () => window.removeEventListener("scroll", toggleVisibility);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
 
   return (
     <div className="fixed bottom-6 right-6 flex flex-col gap-3 z-50">
+      {/* Scroll To Top Button */}
+      {isVisible && (
+        <button
+          onClick={scrollToTop}
+          className="w-12 h-12 md:w-14 md:h-14 bg-gray-500 rounded-full flex items-center justify-center shadow-lg hover:bg-gray-600 transition-all duration-300 hover:scale-110"
+          aria-label="Lên đầu trang"
+        >
+          <ArrowUpOutlined className="text-white text-xl md:text-2xl" />
+        </button>
+      )}
+
       {/* Phone Button */}
       <Link
         href={phoneNumber}
