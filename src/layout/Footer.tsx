@@ -8,41 +8,32 @@ import {
   EnvironmentFilled,
 } from "@ant-design/icons";
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import clsx from "clsx";
-import { getStoreLocations } from "@/api/storeLocation";
+import { useStoreLocations } from "@/hooks/useStoreLocations";
 import { StoreLocation } from "@/types";
 
 export default function Footer() {
-  const [stores, setStores] = useState<StoreLocation[]>([]);
+  const { data: storesData, isLoading } = useStoreLocations();
+  const stores = useMemo(
+    () => storesData?.filter((store) => store.active) || [],
+    [storesData]
+  );
   const [selectedStore, setSelectedStore] = useState<StoreLocation | null>(
     null
   );
-  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (stores.length > 0 && !selectedStore) {
+      setSelectedStore(stores[0]);
+    }
+  }, [stores, selectedStore]);
 
   const extractMapEmbedUrl = (iframeCode: string): string => {
     if (!iframeCode) return "";
     const srcMatch = iframeCode.match(/src="([^"]+)"/);
     return srcMatch ? srcMatch[1] : "";
   };
-
-  useEffect(() => {
-    const fetchStores = async () => {
-      try {
-        const data = await getStoreLocations();
-        const activeStores = data.filter((store) => store.active);
-        setStores(activeStores);
-        if (activeStores.length > 0) {
-          setSelectedStore(activeStores[0]);
-        }
-      } catch (error) {
-        console.error("Failed to fetch store locations:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchStores();
-  }, []);
 
   const handleStoreClick = (store: StoreLocation) => {
     setSelectedStore(store);
@@ -88,7 +79,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  href="/contact"
+                  href="/lien-he"
                   className="text-sm text-gray-400 hover:text-white transition-colors"
                 >
                   Liên hệ
@@ -217,7 +208,7 @@ export default function Footer() {
         <div className="mt-12 pt-8 border-t border-gray-800">
           <h3 className="text-base font-semibold mb-6">HỆ THỐNG CỬA HÀNG</h3>
 
-          {loading ? (
+          {isLoading ? (
             <p
               className="text-gray-400 text-sm"
               role="status"
