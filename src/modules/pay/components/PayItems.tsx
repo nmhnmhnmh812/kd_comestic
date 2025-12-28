@@ -48,7 +48,6 @@ export default function PayItems({
               <span className="font-bold text-red-600">
                 {convertToVnd(getDisplayPrice(item) * (item?.quantity || 0))}
               </span>
-              <span className="font-bold">{originalPrice(item)}</span>
             </div>
           </div>
         ))

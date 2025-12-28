@@ -231,7 +231,7 @@ export default function Header() {
             href="tel:0984657786"
             className="hidden lg:flex items-center gap-1 text-sm hover:text-red-500 transition-colors"
           >
-            <PhoneOutlined /> Hỗ trợ
+            <PhoneOutlined /> Hỗ trợ: 0984657786
           </a>
         </div>
       </div>
