@@ -1,6 +1,7 @@
 "use client";
 
 import { ENDPOINTS, getBlogs } from "@/api/blog";
+import BlogItem from "@/components/BlogItem";
 import { Blog, BlogPageResponse, ResponseApi } from "@/types";
 import { convertToUrl } from "@/utils";
 import { useQuery } from "@tanstack/react-query";
@@ -51,43 +52,9 @@ export default function RecentBlogs() {
         </Link>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4">
-        {blogs.map((blog) => {
-          const blogUrl = convertToUrl(blog.title, blog.id);
-          return (
-            <Link
-              key={blog.id}
-              href={`/blog/${blogUrl}`}
-              className="group flex flex-col bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300"
-            >
-              <div className="relative w-full aspect-video">
-                <Image
-                  src={blog.thumbnail}
-                  alt={blog.title}
-                  fill
-                  className="object-cover group-hover:scale-105 transition-transform duration-300"
-                />
-              </div>
-              <div className="p-3 flex flex-col gap-2">
-                <span className="text-xs bg-blue-100 text-blue-600 px-2 py-1 rounded w-fit">
-                  {blog.categoryName}
-                </span>
-                <h3 className="font-bold text-sm md:text-base line-clamp-2 group-hover:text-red-600 transition-colors">
-                  {blog.title}
-                </h3>
-                <p className="text-gray-600 text-xs md:text-sm line-clamp-2">
-                  {blog.shortDescription}
-                </p>
-                <p className="text-xs text-gray-400">
-                  {new Date(blog.createdDate).toLocaleDateString("vi-VN", {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                  })}
-                </p>
-              </div>
-            </Link>
-          );
-        })}
+        {blogs.map((blog) => (
+          <BlogItem key={blog.id} blog={blog} />
+        ))}
       </div>
     </div>
   );
