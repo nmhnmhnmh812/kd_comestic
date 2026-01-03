@@ -53,18 +53,7 @@ export type Product = {
     categoryId: number;
     categoryName: string;
   };
-  brand: {
-    id: number;
-    name: string;
-    image: {
-      id: number;
-      url: string;
-    } | null;
-    link: string;
-    description: string;
-    createdDate: string;
-    updatedDate: string;
-  };
+  brand: Brand;
   name: string;
   price: number;
   description: string;
@@ -135,6 +124,7 @@ export type Brand = {
   description: string;
   createdDate: string;
   updatedDate: string;
+  status: boolean;
 };
 
 export type Blog = {

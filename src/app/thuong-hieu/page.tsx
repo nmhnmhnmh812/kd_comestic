@@ -12,12 +12,11 @@ export default async function BrandPage() {
 
   // Prefetch initial brands data
   await queryClient.prefetchInfiniteQuery({
-    queryKey: [ENDPOINTS.BRANDS, ""],
+    queryKey: [ENDPOINTS.BRANDS],
     queryFn: async () => {
       const response: ResponseApi = await getBrands({
         page: 0,
-        size: 24,
-        keyword: "",
+        size: 150,
       });
       return response.data.result;
     },

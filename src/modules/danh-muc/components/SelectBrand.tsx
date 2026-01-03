@@ -74,7 +74,11 @@ export default function SelectBrand({
       select: (data) => {
         if (!data?.pages) return { pages: [], pageParams: [] };
         return {
-          pages: data.pages.flatMap((page) => page?.content || []),
+          pages: data.pages.flatMap((page) =>
+            (page?.content || []).filter(
+              (brand: Brand) => brand.status === true
+            )
+          ),
           pageParams: data.pageParams,
         };
       },

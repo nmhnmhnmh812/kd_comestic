@@ -19,7 +19,7 @@ export default function BrandBtn({ isMobile = false }: { isMobile?: boolean }) {
     useInfiniteQuery({
       queryKey: [ENDPOINTS.BRANDS],
       queryFn: ({ pageParam = 0 }) =>
-        getBrands({ page: pageParam, size: 20, keyword: "" }),
+        getBrands({ page: pageParam, size: 150, keyword: "" }),
       getNextPageParam: (lastPage, allPages) => {
         const totalPages = lastPage.data.result.totalPages;
         const nextPage = allPages.length;
@@ -27,7 +27,11 @@ export default function BrandBtn({ isMobile = false }: { isMobile?: boolean }) {
       },
       initialPageParam: 0,
       select: (data) => ({
-        pages: data.pages.flatMap((page) => page.data.result.content),
+        pages: data.pages.flatMap((page) =>
+          page.data.result.content.filter(
+            (brand: Brand) => brand.status === true
+          )
+        ),
         pageParams: data.pageParams,
       }),
       staleTime: 5 * 60 * 1000,
