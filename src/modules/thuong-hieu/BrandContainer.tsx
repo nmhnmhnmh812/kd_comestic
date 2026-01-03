@@ -30,6 +30,8 @@ export default function BrandContainer() {
     loaderRef,
   } = useBrands(debouncedKeyword);
 
+  console.log(brands);
+
   return (
     <div className="bg-gray-50 min-h-screen">
       <BrandHeader />

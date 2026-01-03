@@ -12,7 +12,7 @@ export default function useBrands(keyword: string) {
       queryFn: async ({ pageParam = 0 }) => {
         const response: ResponseApi = await getBrands({
           page: pageParam,
-          size: 24,
+          size: 150,
           keyword: keyword,
         });
         return response.data.result;
@@ -24,12 +24,14 @@ export default function useBrands(keyword: string) {
       },
       initialPageParam: 0,
       select: (data) => ({
-        pages: data.pages.flatMap((page) => page.content),
+        pages: data.pages.flatMap((page) =>
+          page.content.filter((brand: Brand) => brand.status === true)
+        ),
         pageParams: data.pageParams,
       }),
     });
 
-  const brands = (data?.pages || []) as Brand[];
+  const brands = useMemo(() => (data?.pages || []) as Brand[], [data?.pages]);
 
   // Infinite scroll with Intersection Observer
   useEffect(() => {
