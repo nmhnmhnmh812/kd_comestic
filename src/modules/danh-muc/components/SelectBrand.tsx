@@ -75,9 +75,7 @@ export default function SelectBrand({
         if (!data?.pages) return { pages: [], pageParams: [] };
         return {
           pages: data.pages.flatMap((page) =>
-            (page?.content || []).filter(
-              (brand: Brand) => brand.status === true
-            )
+            (page?.content || []).filter((brand: Brand) => !brand.isDeleted)
           ),
           pageParams: data.pageParams,
         };

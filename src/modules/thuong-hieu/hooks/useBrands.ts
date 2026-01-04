@@ -25,7 +25,7 @@ export default function useBrands(keyword: string) {
       initialPageParam: 0,
       select: (data) => ({
         pages: data.pages.flatMap((page) =>
-          page.content.filter((brand: Brand) => brand.status === true)
+          page.content.filter((brand: Brand) => !brand?.isDeleted)
         ),
         pageParams: data.pageParams,
       }),
