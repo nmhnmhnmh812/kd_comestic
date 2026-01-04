@@ -1,6 +1,6 @@
 "use client";
 
-import { LogoWhite } from "@/assets/icons";
+import LogoWhite from "@/assets/images/logoWhite.png";
 import {
   FacebookFilled,
   MailFilled,
@@ -12,6 +12,7 @@ import { useState, useEffect, useMemo } from "react";
 import clsx from "clsx";
 import { useStoreLocations } from "@/hooks/useStoreLocations";
 import { StoreLocation } from "@/types";
+import Image from "next/image";
 
 export default function Footer() {
   const { data: storesData, isLoading } = useStoreLocations();
@@ -45,7 +46,13 @@ export default function Footer() {
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 lg:gap-12">
           {/* Logo & Description */}
           <div className="space-y-4">
-            <LogoWhite />
+            <Image
+              src={LogoWhite}
+              alt="Logo"
+              width={100}
+              height={100}
+              className="h-auto md:w-auto"
+            />
             <p className="text-sm text-gray-400 leading-relaxed">
               KMP là thương hiệu phân phối mỹ phẩm chính hãng và dịch vụ chăm
               sóc khách hàng tận tâm
@@ -59,7 +66,9 @@ export default function Footer() {
 
           {/* VỀ KMP */}
           <div>
-            <h3 className="text-base font-semibold mb-4">VỀ KMP</h3>
+            <h3 className="text-base font-semibold mb-4">
+              VỀ MỸ PHẨM KHÁNH DIỂM
+            </h3>
             <ul className="space-y-2">
               <li>
                 <Link

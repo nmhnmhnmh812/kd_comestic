@@ -11,7 +11,7 @@ import {
 import { Input, Spin, Drawer, Button, Collapse } from "antd";
 import CategoryBtn from "./CategoryBtn";
 import BrandBtn from "./BrandBtn";
-import { Logo } from "@/assets/icons";
+import Logo from "@/assets/images/logo.jpg";
 import Link from "next/link";
 import { useState, useMemo, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -143,7 +143,13 @@ export default function Header() {
         />
 
         <Link href="/" className="shrink-0">
-          <Logo className="w-20 h-auto md:w-auto" />
+          <Image
+            src={Logo}
+            alt="Logo"
+            width={100}
+            height={100}
+            className="h-auto md:w-auto"
+          />
         </Link>
 
         {/* Search - responsive width */}

@@ -28,9 +28,7 @@ export default function BrandBtn({ isMobile = false }: { isMobile?: boolean }) {
       initialPageParam: 0,
       select: (data) => ({
         pages: data.pages.flatMap((page) =>
-          page.data.result.content.filter(
-            (brand: Brand) => brand.status === true
-          )
+          page.data.result.content.filter((brand: Brand) => !brand.isDeleted)
         ),
         pageParams: data.pageParams,
       }),

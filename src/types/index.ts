@@ -124,7 +124,7 @@ export type Brand = {
   description: string;
   createdDate: string;
   updatedDate: string;
-  status: boolean;
+  isDeleted: boolean;
 };
 
 export type Blog = {
