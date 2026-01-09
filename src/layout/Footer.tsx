@@ -127,7 +127,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  href="/policy/general"
+                  href="/quy-dinh-chung"
                   className="text-sm text-gray-400 hover:text-white transition-colors"
                 >
                   Chính sách và quy định chung

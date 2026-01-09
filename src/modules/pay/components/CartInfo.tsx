@@ -4,6 +4,7 @@ import { CartItem } from "@/types";
 import { Button, Divider, FormInstance, message } from "antd";
 import PayItems from "./PayItems";
 import { convertToVnd } from "@/utils";
+import { getOriginalPrice } from "@/utils/cartUtils";
 import { useState } from "react";
 import usePayment from "../store";
 import { createOrder } from "@/api/order";
@@ -104,6 +105,27 @@ export default function CartInfo({
             {convertToVnd(totalAmount)}
           </span>
         </div>
+
+        {(() => {
+          const totalOriginalAmount = (cartItems || []).reduce(
+            (total, item) => {
+              return total + getOriginalPrice(item) * (item?.quantity || 0);
+            },
+            0
+          );
+          const totalSavings = totalOriginalAmount - totalAmount;
+
+          if (totalSavings <= 0) return null;
+
+          return (
+            <div className="text-sm md:text-base">
+              <span>Tiết kiệm:</span>
+              <span className="float-right font-bold text-red-600">
+                {convertToVnd(totalSavings)}
+              </span>
+            </div>
+          );
+        })()}
         <div className="text-sm md:text-base">
           <span>Phí vận chuyển:</span>
           <span className="float-right font-bold">

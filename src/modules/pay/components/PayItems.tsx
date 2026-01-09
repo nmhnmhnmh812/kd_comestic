@@ -33,6 +33,7 @@ export default function PayItems({
               alt={getDisplayName(item)}
               width={80}
               height={80}
+              className="overflow-hidden"
             />
             <div className="flex flex-col gap-2 flex-1">
               <span
@@ -44,10 +45,15 @@ export default function PayItems({
               <span>SL: {item.quantity}</span>
             </div>
 
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-2 items-end">
               <span className="font-bold text-red-600">
                 {convertToVnd(getDisplayPrice(item) * (item?.quantity || 0))}
               </span>
+              {getOriginalPrice(item) > getDisplayPrice(item) && (
+                <span className="text-gray-400 line-through">
+                  {originalPrice(item)}
+                </span>
+              )}
             </div>
           </div>
         ))

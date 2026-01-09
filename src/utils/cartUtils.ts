@@ -41,7 +41,10 @@ export const getDisplayPrice = (item: CartItem): number => {
  */
 export const getOriginalPrice = (item: CartItem): number => {
   if (item.variant) {
-    return convertToOriginalPrice(item.variant.price, item.variant.discount);
+    return convertToOriginalPrice(
+      item.variant.finalPrice,
+      item.variant.discount
+    );
   }
-  return item.product?.price || 0;
+  return item.product?.finalPrice || 0;
 };
