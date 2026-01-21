@@ -6,10 +6,13 @@ type State = {
     totalAmountFinal: number;
     totalProductAmount: number;
   };
+  couponCode: string;
+  discountAmount: number;
 };
 
 type Action = {
   updateAmount: (amount: State["amount"]) => void;
+  setCoupon: (code: string, discount: number) => void;
 };
 
 const usePayment = create<Action & State>((set) => ({
@@ -18,6 +21,10 @@ const usePayment = create<Action & State>((set) => ({
     totalAmountFinal: 0,
     totalProductAmount: 0,
   },
+  couponCode: "",
+  discountAmount: 0,
   updateAmount: (amount) => set({ amount }),
+  setCoupon: (code, discount) =>
+    set({ couponCode: code, discountAmount: discount }),
 }));
 export default usePayment;

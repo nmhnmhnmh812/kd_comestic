@@ -39,6 +39,8 @@ export default function CartInfo({
     orderId: "",
   });
   const amount = usePayment((state) => state.amount);
+  const couponCode = usePayment((state) => state.couponCode);
+  const discountAmount = usePayment((state) => state.discountAmount);
 
   const handlePay = async () => {
     setLoading(true);
@@ -52,6 +54,7 @@ export default function CartInfo({
           quantity: item?.quantity,
         })),
         ...amount,
+        couponCode: couponCode || undefined, // Add coupon code to API params
       };
       const response = await createOrder(params);
       const result = response?.data?.result;
@@ -67,7 +70,7 @@ export default function CartInfo({
       }
       if (ERROR_STATUS.includes(result.status)) {
         message.error(
-          "Có thay đổi về giá sản phẩm hoặc phí vận chuyển. Vui lòng kiểm tra lại giỏ hàng."
+          "Có thay đổi về giá sản phẩm hoặc phí vận chuyển. Vui lòng kiểm tra lại giỏ hàng.",
         );
         getShipFee(values.province);
         setLoading(false);
@@ -89,68 +92,133 @@ export default function CartInfo({
   };
 
   return (
-    <div className="bg-white rounded w-full lg:w-96">
-      <div className="px-3 md:px-4 py-3">
-        <h3 className="font-bold text-sm md:text-base">
+    <div className="bg-white p-6 rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.04)] border border-gray-100 sticky top-4 w-full lg:w-96 flex flex-col gap-5">
+      <div className="border-b border-gray-100 pb-3">
+        <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider">
           {isBuyNow ? "Sản phẩm mua ngay" : "Danh sách sản phẩm"}
         </h3>
       </div>
-      <Divider className="m-0" />
-      <PayItems cartItems={cartItems || []} loading={false} />
-      <Divider className="m-0" />
-      <div className="px-3 md:px-4 py-3 flex flex-col gap-2">
-        <div className="text-sm md:text-base">
-          <span>Tạm tính:</span>
-          <span className="float-right font-bold">
-            {convertToVnd(totalAmount)}
-          </span>
-        </div>
 
+      {/* Scrollable list if too long */}
+      <div className="max-h-[300px] overflow-y-auto custom-scrollbar">
+        <PayItems cartItems={cartItems || []} loading={false} />
+      </div>
+
+      <div className="flex flex-col gap-3 pt-3 border-t border-gray-100">
         {(() => {
           const totalOriginalAmount = (cartItems || []).reduce(
             (total, item) => {
               return total + getOriginalPrice(item) * (item?.quantity || 0);
             },
-            0
+            0,
           );
-          const totalSavings = totalOriginalAmount - totalAmount;
-
-          if (totalSavings <= 0) return null;
+          const productDiscount = totalOriginalAmount - totalAmount;
+          const totalSavings = productDiscount + discountAmount;
 
           return (
-            <div className="text-sm md:text-base">
-              <span>Tiết kiệm:</span>
-              <span className="float-right font-bold text-red-600">
-                {convertToVnd(totalSavings)}
-              </span>
-            </div>
+            <>
+              {productDiscount > 0 ? (
+                <>
+                  <div className="flex justify-between items-center text-sm">
+                    <span className="text-gray-500">Tổng tiền hàng</span>
+                    <span className="font-medium text-gray-900">
+                      {convertToVnd(totalOriginalAmount)}
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center text-sm">
+                    <span className="text-gray-500">Phí vận chuyển</span>
+                    <span className="font-medium text-gray-900">
+                      {convertToVnd(amount.shipAmount)}
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center text-sm">
+                    <span className="text-gray-500">Giảm giá trực tiếp</span>
+                    <span className="font-medium text-green-600">
+                      -{convertToVnd(productDiscount)}
+                    </span>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="flex justify-between items-center text-sm">
+                    <span className="text-gray-500">Tổng tiền hàng</span>
+                    <span className="font-medium text-gray-900">
+                      {convertToVnd(totalAmount)}
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center text-sm">
+                    <span className="text-gray-500">Phí vận chuyển</span>
+                    <span className="font-medium text-gray-900">
+                      {convertToVnd(amount.shipAmount)}
+                    </span>
+                  </div>
+                </>
+              )}
+
+              {discountAmount > 0 && (
+                <div className="flex justify-between items-center text-sm">
+                  <span className="text-gray-500 flex items-center gap-1">
+                    Voucher{" "}
+                    <span className="text-xs bg-red-50 text-red-600 px-1 rounded border border-red-100 font-bold">
+                      {couponCode}
+                    </span>
+                  </span>
+                  <span className="font-medium text-green-600">
+                    -{convertToVnd(discountAmount)}
+                  </span>
+                </div>
+              )}
+
+              {/* Divider */}
+              <div className="h-px bg-gray-50 my-1"></div>
+
+              {totalSavings > 0 && (
+                <div className="flex justify-between items-center text-sm bg-red-50 p-2 rounded-lg border border-red-100">
+                  <span className="text-red-600 font-medium">
+                    Tiết kiệm được
+                  </span>
+                  <span className="text-red-700 font-bold">
+                    {convertToVnd(totalSavings)}
+                  </span>
+                </div>
+              )}
+
+              <div className="flex justify-between items-end mt-2">
+                <span className="text-base font-bold text-gray-800">
+                  Tổng cộng
+                </span>
+                <div className="text-right flex flex-col items-end">
+                  <span className="text-2xl font-bold text-red-600 leading-none">
+                    {convertToVnd(
+                      Math.max(
+                        0,
+                        totalAmount + amount.shipAmount - discountAmount,
+                      ),
+                    )}
+                  </span>
+                  <span className="text-[10px] text-gray-400 mt-1 font-medium">
+                    (Đã bao gồm VAT nếu có)
+                  </span>
+                </div>
+              </div>
+            </>
           );
         })()}
-        <div className="text-sm md:text-base">
-          <span>Phí vận chuyển:</span>
-          <span className="float-right font-bold">
-            {convertToVnd(amount.shipAmount)}
-          </span>
-        </div>
-        <div className="text-sm md:text-base">
-          <span>Tổng cộng:</span>
-          <span className="float-right font-bold text-red-600">
-            {convertToVnd(totalAmount + amount.shipAmount)}
-          </span>
-        </div>
-        <Button
-          type="primary"
-          size="large"
-          className="bg-red-600"
-          loading={loading}
-          onClick={handlePay}
-        >
-          Thanh toán
-        </Button>
       </div>
+
+      <Button
+        type="primary"
+        size="large"
+        className="!bg-red-600 hover:!bg-red-700 !h-12 !rounded-lg !text-sm !font-bold !uppercase !tracking-wider w-full shadow-lg shadow-red-200"
+        style={{ border: "none" }}
+        loading={loading}
+        onClick={handlePay}
+      >
+        ĐẶT HÀNG NGAY
+      </Button>
+
       <QRmodal
         onClose={() => {
-          // Clear buy-now item when closing QR modal (exiting payment flow)
           if (isBuyNow) {
             clearBuyNow();
           }

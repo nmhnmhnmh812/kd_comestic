@@ -11,7 +11,7 @@ import {
   getOriginalPrice,
 } from "@/utils/cartUtils";
 import { useMutation } from "@tanstack/react-query";
-import { Button, message, Table } from "antd";
+import { message, Table } from "antd";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
@@ -29,7 +29,7 @@ export default function CartTable({
   refetch: () => void;
 }) {
   const [localCartItems, setLocalCartItems] = useState<CartItem[]>(
-    cartItems || []
+    cartItems || [],
   );
 
   useEffect(() => {
@@ -51,13 +51,9 @@ export default function CartTable({
       cartItemId: string;
     }) => removeItemFromCart(cartId, cartItemId),
     onSuccess: (_, { cartItemId }) => {
-      const find = localCartItems.find((item) => item.id === cartItemId);
-      if (find) {
-        const index = localCartItems.indexOf(find);
-        localCartItems.splice(index, 1);
-        setLocalCartItems([...localCartItems]);
-        useCartStore.getState().fetchCartCount(cartId);
-      }
+      const newItems = localCartItems.filter((item) => item.id !== cartItemId);
+      setLocalCartItems(newItems);
+      useCartStore.getState().fetchCartCount(cartId);
       refetch();
     },
     onError: (error: { error: string }) => {
@@ -80,16 +76,18 @@ export default function CartTable({
       quantity: number;
     }) => updateCartItem(cartId, cartItemId, quantity),
     onSuccess: (_, { cartItemId, quantity }) => {
-      const find = localCartItems.find((item) => item.id === cartItemId);
-      if (find) {
-        find.quantity = quantity;
-        setLocalCartItems([...localCartItems]);
+      const index = localCartItems.findIndex((item) => item.id === cartItemId);
+      if (index > -1) {
+        const newItems = [...localCartItems];
+        newItems[index] = { ...newItems[index], quantity };
+        setLocalCartItems(newItems);
         useCartStore.getState().fetchCartCount(cartId);
       }
+      refetch();
     },
     onError: (error: { error: string; cartItemId: string }) => {
       message.error(
-        error.error || "Cập nhật số lượng thất bại. Vui lòng thử lại."
+        error.error || "Cập nhật số lượng thất bại. Vui lòng thử lại.",
       );
       const find = localCartItems.find((item) => item.id === error.cartItemId);
       if (find) {
@@ -103,21 +101,17 @@ export default function CartTable({
     updateItem({ cartId: cartId!, cartItemId, quantity });
   };
 
-  const totalAmount = cartItems?.reduce((total, item) => {
-    return total + getDisplayPrice(item) * (item?.quantity || 0);
-  }, 0);
-
   const columns = [
     {
       title: "Sản phẩm",
       render: (_: unknown, record: CartItem) => {
         const productUrl = convertToUrl(
           record.product?.name,
-          record.product?.id
+          record.product?.id,
         );
         const varientUrl = convertToUrl(
           record.variant?.name,
-          record.variant?.id
+          record.variant?.id,
         );
         return (
           <Link
@@ -212,12 +206,6 @@ export default function CartTable({
     },
   ];
 
-  const totalOriginalAmount = cartItems?.reduce((total, item) => {
-    return total + getOriginalPrice(item) * (item?.quantity || 0);
-  }, 0);
-
-  const totalSavings = (totalOriginalAmount || 0) - (totalAmount || 0);
-
   return (
     <>
       <Table
@@ -228,30 +216,6 @@ export default function CartTable({
         pagination={false}
         scroll={{ x: 800 }}
       />
-      <div className="flex flex-col gap-2 items-end mt-4">
-        {totalSavings > 0 && (
-          <div className="text-sm md:text-base text-gray-500">
-            Tiết kiệm:{" "}
-            <span className="text-red-600 font-medium">
-              {convertToVnd(totalSavings)}
-            </span>
-          </div>
-        )}
-        <div className="flex flex-col sm:flex-row gap-3 md:gap-4 items-center">
-          <h1 className="font-bold text-base md:text-lg">
-            Tổng tiền: {convertToVnd(totalAmount)}
-          </h1>
-          <Link href="/pay">
-            <Button
-              type="primary"
-              size="large"
-              className="bg-red-600 w-full sm:w-auto"
-            >
-              Thanh toán
-            </Button>
-          </Link>
-        </div>
-      </div>
     </>
   );
 }

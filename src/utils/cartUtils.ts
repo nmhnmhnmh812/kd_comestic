@@ -43,8 +43,11 @@ export const getOriginalPrice = (item: CartItem): number => {
   if (item.variant) {
     return convertToOriginalPrice(
       item.variant.finalPrice,
-      item.variant.discount
+      item.variant.discount,
     );
   }
-  return item.product?.finalPrice || 0;
+  return convertToOriginalPrice(
+    item.product?.finalPrice || 0,
+    item.product?.discount || 0,
+  );
 };

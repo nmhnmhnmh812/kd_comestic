@@ -2,6 +2,7 @@ import { Divider } from "antd";
 import { Order } from "@/types";
 import { convertToVnd } from "@/utils";
 import { getStatusLabel } from "../utils";
+import OrderItems from "./OrderItems";
 
 interface OrderSummaryProps {
   order: Order;
@@ -26,23 +27,87 @@ export default function OrderSummary({ order }: OrderSummaryProps) {
 
       <Divider />
 
+      <OrderItems order={order} />
+
+      <Divider />
+
       {/* Order Total */}
-      <div className="space-y-2">
-        <div className="flex justify-between text-sm">
-          <span>Tiền hàng:</span>
-          <span>
-            {convertToVnd(order.totalProductAmount - order.shipAmount)}
-          </span>
-        </div>
-        <div className="flex justify-between text-sm">
-          <span>Phí ship:</span>
-          <span>{convertToVnd(order.shipAmount)}</span>
-        </div>
-        <div className="flex justify-between text-lg font-bold text-red-600 pt-2 border-t">
-          <span>Thành tiền:</span>
-          <span>{convertToVnd(order.totalAmountFinal)}</span>
-        </div>
-      </div>
+      {/* Order Total */}
+      {(() => {
+        // Attempt to calculate Original Price from items
+        // Schema assumes item.price is ORIGINAL price, item.finalPrice is SOLD price.
+        // Fallback: If item.finalPrice missing, assume item.price is SOLD price (no Product Discount).
+        const totalOriginalPrice = order.orderItems.reduce((sum, item) => {
+          const originalPrice = item.price; // Assuming this is original
+          return sum + originalPrice * item.quantity;
+        }, 0);
+
+        const totalProductAmount = order.totalProductAmount;
+
+        // If product discount exists (Original > Sold Total)
+        // Note: This relies on backend returning 'price' as Original.
+        // If backend returns 'price' as Final, this will be 0.
+        const productDiscount = Math.max(
+          0,
+          totalOriginalPrice - totalProductAmount,
+        );
+
+        const couponDiscount =
+          totalProductAmount + order.shipAmount - order.totalAmountFinal;
+
+        const totalSavings = productDiscount + couponDiscount;
+
+        return (
+          <div className="space-y-2">
+            {productDiscount > 0 ? (
+              <>
+                <div className="flex justify-between text-sm">
+                  <span>Tổng tiền hàng:</span>
+                  <span>{convertToVnd(totalOriginalPrice)}</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span>Phí vận chuyển:</span>
+                  <span>{convertToVnd(order.shipAmount)}</span>
+                </div>
+                <div className="flex justify-between text-sm text-gray-500">
+                  <span>Giảm giá sản phẩm:</span>
+                  <span>-{convertToVnd(productDiscount)}</span>
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="flex justify-between text-sm">
+                  <span>Tổng tiền hàng:</span>
+                  <span>{convertToVnd(totalProductAmount)}</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span>Phí vận chuyển:</span>
+                  <span>{convertToVnd(order.shipAmount)}</span>
+                </div>
+              </>
+            )}
+
+            {couponDiscount > 0 && (
+              <div className="flex justify-between text-sm text-green-600">
+                <span>Voucher giảm giá:</span>
+                <span>-{convertToVnd(couponDiscount)}</span>
+              </div>
+            )}
+
+            {totalSavings > 0 && (
+              <div className="flex justify-between text-red-600 font-medium border-t border-dashed pt-2 mt-2">
+                <span>Tiết kiệm được:</span>
+                <span>{convertToVnd(totalSavings)}</span>
+              </div>
+            )}
+
+            <div className="flex justify-between text-lg font-bold text-red-600 pt-2 border-t mt-2">
+              <span>Tổng cộng:</span>
+              <span>{convertToVnd(order.totalAmountFinal)}</span>
+            </div>
+          </div>
+        );
+      })()}
     </>
   );
 }

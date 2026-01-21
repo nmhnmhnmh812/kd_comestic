@@ -202,6 +202,18 @@ export interface OrderItem {
   variantId?: number;
   quantity: number;
   price: number;
+  discount?: number;
+  finalPrice?: number;
+  product?: {
+    id: number;
+    name: string;
+    blobs: { id: number; url: string }[];
+  };
+  variant?: {
+    id: number;
+    name: string;
+    blobs: { id: number; url: string }[];
+  } | null;
 }
 
 export interface Order {
@@ -363,4 +375,41 @@ export interface StoreLocation {
   hours: string;
   mapUrl: string;
   active: boolean;
+}
+
+// Coupon types
+export interface Coupon {
+  id: number;
+  code: string;
+  discountAmount: number;
+  minOrderAmount: number;
+  quantity: number;
+  startDate: string;
+  endDate: string;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+// Gift Promotion types
+export interface GiftItem {
+  id: number;
+  product: Product;
+  variant: Variant | null;
+  giftQuantity: number;
+  giftPromotionName: string;
+}
+
+export interface GiftPromotion {
+  id: number;
+  name: string;
+  description?: string;
+  minOrderAmount?: number;
+  qualifyingProductIds?: number[];
+  giftItems: GiftItem[];
+  startDate: string;
+  endDate: string;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
 }

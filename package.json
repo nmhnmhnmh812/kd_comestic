@@ -16,12 +16,14 @@
     "antd": "^5.27.4",
     "axios": "^1.12.2",
     "clsx": "^2.1.1",
+    "dayjs": "^1.11.19",
     "dompurify": "^3.3.0",
     "next": "^15.4.10",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-quill": "^2.0.0",
     "slugify": "^1.6.6",
+    "tailwind-merge": "^3.4.0",
     "zustand": "^5.0.8"
   },
   "devDependencies": {

@@ -1,7 +1,7 @@
 import { ENDPOINTS, getCart } from "@/api/cart";
 import { CartItem } from "@/types";
 import { getDisplayPrice } from "@/utils/cartUtils";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, keepPreviousData } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 
 export default function useCart() {
@@ -23,6 +23,7 @@ export default function useCart() {
     select: (data) => data.result.cartItems,
     staleTime: 0,
     retryOnMount: true,
+    placeholderData: keepPreviousData,
   });
 
   const totalAmount =

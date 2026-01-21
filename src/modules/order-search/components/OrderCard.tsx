@@ -184,21 +184,76 @@ export default function OrderCard({ order }: OrderCardProps) {
         <Divider className="my-3" />
 
         {/* Order Total */}
+        {/* Order Total */}
         <div className="space-y-2 text-sm">
-          <div className="flex justify-between">
-            <span className="text-gray-600">Tạm tính:</span>
-            <span>{convertToVnd(order.totalProductAmount)}</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-gray-600">Phí vận chuyển:</span>
-            <span>{convertToVnd(order.shipAmount)}</span>
-          </div>
-          <div className="flex justify-between font-bold text-base">
-            <span>Tổng cộng:</span>
-            <span className="text-red-600">
-              {convertToVnd(order.totalAmountFinal)}
-            </span>
-          </div>
+          {(() => {
+            const totalOriginalPrice = order.orderItems.reduce(
+              (sum, item) => sum + item.price * item.quantity,
+              0,
+            );
+            const totalProductAmount = order.totalProductAmount;
+            const productDiscount = totalOriginalPrice - totalProductAmount;
+            const couponDiscount =
+              totalProductAmount + order.shipAmount - order.totalAmountFinal;
+            const totalSavings = productDiscount + couponDiscount;
+
+            return (
+              <>
+                {productDiscount > 0 ? (
+                  <>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Tổng tiền hàng:</span>
+                      <span>{convertToVnd(totalOriginalPrice)}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Phí vận chuyển:</span>
+                      <span>{convertToVnd(order.shipAmount)}</span>
+                    </div>
+                    <div className="flex justify-between text-gray-500">
+                      <span>Giảm giá sản phẩm:</span>
+                      <span>-{convertToVnd(productDiscount)}</span>
+                    </div>
+                    {/* <div className="flex justify-between font-medium">
+                      <span className="text-gray-600">Tạm tính:</span>
+                      <span>{convertToVnd(totalProductAmount)}</span>
+                    </div> */}
+                  </>
+                ) : (
+                  <>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Tổng tiền hàng:</span>
+                      <span>{convertToVnd(totalProductAmount)}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Phí vận chuyển:</span>
+                      <span>{convertToVnd(order.shipAmount)}</span>
+                    </div>
+                  </>
+                )}
+
+                {couponDiscount > 0 && (
+                  <div className="flex justify-between text-green-600">
+                    <span>Voucher giảm giá:</span>
+                    <span>-{convertToVnd(couponDiscount)}</span>
+                  </div>
+                )}
+
+                {totalSavings > 0 && (
+                  <div className="flex justify-between text-red-600 font-medium border-t border-dashed pt-2 mt-2">
+                    <span>Tiết kiệm được:</span>
+                    <span>{convertToVnd(totalSavings)}</span>
+                  </div>
+                )}
+
+                <div className="flex justify-between font-bold text-base border-t mt-2 pt-2">
+                  <span>Tổng cộng:</span>
+                  <span className="text-red-600">
+                    {convertToVnd(order.totalAmountFinal)}
+                  </span>
+                </div>
+              </>
+            );
+          })()}
         </div>
       </div>
     </div>

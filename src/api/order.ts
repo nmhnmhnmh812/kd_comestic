@@ -8,14 +8,13 @@ export const ENDPOINTS = {
 };
 
 type CheckOrderInfoParams = {
-  orderItems: [
-    {
-      productId: number;
-      variantId: number;
-      quantity: number;
-    }
-  ];
+  orderItems: {
+    productId: number;
+    variantId: number;
+    quantity: number;
+  }[];
   province: string;
+  couponCode?: string;
 };
 
 export async function checkOrderInfo(params: CheckOrderInfoParams) {
@@ -33,12 +32,13 @@ type CreateOrderParams = {
       productId: number;
       variantId: number;
       quantity: number;
-    }
+    },
   ];
   totalProductAmount: number;
   shipAmount: number;
   totalAmountFinal: number;
   paymentMethod: string;
+  couponCode?: string;
 };
 export async function createOrder(params: CreateOrderParams) {
   return await baseAxios.post(ENDPOINTS.CREATE_ORDER, params);
