@@ -3,7 +3,9 @@ export type HomeDisplaySection = {
   displayOrder: number;
   categoryId: number | null;
   subCategoryId: number | null;
-  type: "CATEGORY" | "SUBCATEGORY" | "TRENDING" | "SALE" | "BRAND";
+  sectionName: string | null;
+  type: "CATEGORY" | "SUBCATEGORY" | "TRENDING" | "SALE" | "BRAND" | "CUSTOM";
+  products: any[] | null;
 };
 
 export async function getHomeSections(): Promise<HomeDisplaySection[]> {
