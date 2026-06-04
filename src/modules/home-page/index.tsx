@@ -1,17 +1,19 @@
 import Banner from "./components/Banner";
-import ProductSession from "./components/ProductSession";
 import PromoteSession from "./components/PromoteSession";
 import RecentBlogs from "./components/RecentBlogs";
+import { getHomeSections } from "@/api/home";
 
-export default function HomePage() {
-  const categories = [36, 37, 38];
+export default async function HomePage() {
+  const sections = await getHomeSections();
+  const categoryIds = sections
+    .filter((s) => s.type === "CATEGORY" && s.categoryId != null)
+    .sort((a, b) => (a.displayOrder ?? 0) - (b.displayOrder ?? 0))
+    .map((s) => s.categoryId as number);
 
   return (
     <div className="flex flex-col gap-3 md:gap-5 md:py-5">
       <Banner />
-      {/* <ProductSession title="Flash sale" link="/flash-sale" />
-      <ProductSession title="Sản phẩm hot" link="/hot-deals" /> */}
-      {categories.map((categoryId, index) => (
+      {categoryIds.map((categoryId, index) => (
         <PromoteSession
           key={categoryId}
           categoryId={categoryId}
