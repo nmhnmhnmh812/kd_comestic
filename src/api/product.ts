@@ -16,3 +16,15 @@ export async function getProductById(id: string) {
 export async function increaseProductView(id: number) {
   return await baseAxios.put(`${ENDPOINTS.PRODUCT}/${id}/increase-view`);
 }
+
+export async function getTrendingProducts(size = 10) {
+  return await baseAxios.get(ENDPOINTS.SEARCH, {
+    params: { page: 0, size, sort: "buyCount,desc" },
+  });
+}
+
+export async function getSaleProducts(size = 10) {
+  return await baseAxios.get(ENDPOINTS.SEARCH, {
+    params: { page: 0, size, hasDiscount: true },
+  });
+}

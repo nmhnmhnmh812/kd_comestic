@@ -3,7 +3,7 @@ export type HomeDisplaySection = {
   displayOrder: number;
   categoryId: number | null;
   subCategoryId: number | null;
-  type: string;
+  type: "CATEGORY" | "SUBCATEGORY" | "TRENDING" | "SALE" | "BRAND";
 };
 
 export async function getHomeSections(): Promise<HomeDisplaySection[]> {
