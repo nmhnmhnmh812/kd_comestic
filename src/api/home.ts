@@ -11,7 +11,7 @@ export type HomeDisplaySection = {
 export async function getHomeSections(): Promise<HomeDisplaySection[]> {
   try {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}home`, {
-      next: { revalidate: 300 },
+      next: { revalidate: 60 },
     });
     const json = await res.json();
     return json.result ?? [];
