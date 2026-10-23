@@ -13,6 +13,7 @@ import LocalBusinessSchema, {
 } from "@/components/StructuredData";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://myphamkhanhdiem.vn"),
   title: "Mỹ phẩm Khánh Diễm – Mỹ phẩm chính hãng",
   description:
     "Mỹ phẩm Khánh Diễm chuyên cung cấp mỹ phẩm chính hãng, an toàn, giá tốt.",

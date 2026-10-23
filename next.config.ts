@@ -3,6 +3,8 @@ import path from "path";
 
 const nextConfig: NextConfig = {
   output: "standalone",
+  // Keep share metadata in <head>, including for chat crawlers Next.js does not recognize.
+  htmlLimitedBots: /.*/,
   reactStrictMode: false,
   images: {
     domains: process.env.NEXT_PUBLIC_IMAGE_URL
