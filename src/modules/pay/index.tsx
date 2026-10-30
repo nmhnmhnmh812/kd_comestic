@@ -4,13 +4,12 @@ import { Form, message, Spin } from "antd";
 import PayInfo from "./components/PayInfo";
 import TransferInfo from "./components/TranferInfo";
 import CartInfo from "./components/CartInfo";
-import { checkOrderInfo } from "@/api/order";
+import { checkOrderInfo, OrderPreview } from "@/api/order";
 import useCart from "@/hooks/useCart";
 import useBuyNow from "@/hooks/useBuyNow";
 import usePayment from "./store";
-import { useGiftPromotions } from "@/hooks/useGiftPromotions";
 import GiftItemsDisplay from "../cart/components/GiftItemsDisplay";
-import { useMemo, useState, useCallback, useEffect } from "react";
+import { useRef, useState, useCallback, useEffect } from "react";
 import CouponModal from "../cart/components/CouponModal";
 import { useCoupon } from "@/hooks/useCoupon";
 import { convertToVnd } from "@/utils";
@@ -43,17 +42,15 @@ export default function PayScreen() {
   const activeItems = isBuyNow ? buyNowAsCartItem : cartItems;
   const activeTotalAmount = isBuyNow ? buyNowTotalAmount : cartTotalAmount;
 
-  // Calculate final total to check for gifts
-  const finalTotal = useMemo(() => {
-    return Math.max(0, (activeTotalAmount || 0) - discountAmount);
-  }, [activeTotalAmount, discountAmount]);
-
-  // Gift promotions
-  const { giftItems } = useGiftPromotions(
-    activeItems || [],
-    finalTotal,
-    (activeItems?.length || 0) > 0,
-  );
+  const [preview, setPreview] = useState<OrderPreview | null>(null);
+  const previewRequest = useRef(0);
+  const giftItems = (preview?.giftItems || []).map((item) => ({
+    id: item.giftPromotionItemId,
+    product: item.product,
+    variant: item.variant,
+    giftQuantity: item.quantity,
+    giftPromotionName: item.giftPromotionName,
+  }));
 
   // Initialize local coupon state from store if available
   useState(() => {
@@ -70,6 +67,7 @@ export default function PayScreen() {
 
   const getShipFee = useCallback(
     async (province: string) => {
+      const requestId = ++previewRequest.current;
       const orderItems =
         activeItems?.map((item) => ({
           productId: item?.product?.id || undefined,
@@ -82,11 +80,21 @@ export default function PayScreen() {
           province,
           couponCode: couponCode || undefined,
         });
-        const { shipAmount, totalAmountFinal, totalProductAmount } =
-          response.data.result;
-        updateAmount({ shipAmount, totalAmountFinal, totalProductAmount });
+        const nextPreview: OrderPreview = response.data.result;
+        if (requestId !== previewRequest.current) return null;
+        setPreview(nextPreview);
+        updateAmount({
+          shipAmount: nextPreview.shipAmount,
+          totalAmountFinal: nextPreview.totalAmountFinal,
+          totalProductAmount: nextPreview.totalProductAmount,
+        });
+        return nextPreview;
       } catch (error: any) {
-        message.error(error.error);
+        if (requestId === previewRequest.current) {
+          setPreview(null);
+          message.error(error.error);
+        }
+        return null;
       }
     },
     [activeItems, form, updateAmount, couponCode],
@@ -94,6 +102,8 @@ export default function PayScreen() {
 
   // Re-calculate order info when coupon changes
   useEffect(() => {
+    setPreview(null);
+    ++previewRequest.current;
     // Identify if we have province already to trigger calc
     const province = form.getFieldValue("province");
     if (province) {
@@ -158,6 +168,7 @@ export default function PayScreen() {
       </Form>
       <CartInfo
         form={form}
+        preview={preview}
         getShipFee={getShipFee}
         cartItems={activeItems}
         totalAmount={activeTotalAmount}

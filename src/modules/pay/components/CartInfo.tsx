@@ -7,7 +7,7 @@ import { convertToVnd } from "@/utils";
 import { getOriginalPrice } from "@/utils/cartUtils";
 import { useState } from "react";
 import usePayment from "../store";
-import { createOrder } from "@/api/order";
+import { createOrder, OrderPreview } from "@/api/order";
 import QRmodal from "./QRmodal";
 
 const ERROR_STATUS = [
@@ -19,13 +19,15 @@ const ERROR_STATUS = [
 export default function CartInfo({
   form,
   getShipFee,
+  preview,
   cartItems,
   totalAmount,
   isBuyNow,
   clearBuyNow,
 }: {
   form: FormInstance;
-  getShipFee: (address: string) => void;
+  getShipFee: (address: string) => Promise<OrderPreview | null>;
+  preview: OrderPreview | null;
   cartItems: CartItem[] | null | undefined;
   totalAmount: number;
   isBuyNow: boolean;
@@ -41,11 +43,21 @@ export default function CartInfo({
   const amount = usePayment((state) => state.amount);
   const couponCode = usePayment((state) => state.couponCode);
   const discountAmount = usePayment((state) => state.discountAmount);
+  const displayedTotalAmount = preview?.totalProductAmount ?? totalAmount;
 
   const handlePay = async () => {
     setLoading(true);
     try {
       const values = await form.validateFields();
+      const latest = await getShipFee(values.province);
+      if (!latest) return;
+      if (!preview || latest.giftSelectionToken !== preview.giftSelectionToken
+          || latest.totalAmountFinal !== preview.totalAmountFinal
+          || latest.totalProductAmount !== preview.totalProductAmount
+          || latest.shipAmount !== preview.shipAmount) {
+        message.warning("Quà tặng hoặc giá trị đơn đã thay đổi. Vui lòng kiểm tra và bấm đặt hàng lại để xác nhận.");
+        return;
+      }
       const params = {
         ...values,
         orderItems: cartItems?.map((item) => ({
@@ -53,11 +65,15 @@ export default function CartInfo({
           variantId: item?.variant?.id || undefined,
           quantity: item?.quantity,
         })),
-        ...amount,
+        totalProductAmount: latest.totalProductAmount,
+        shipAmount: latest.shipAmount,
+        totalAmountFinal: latest.totalAmountFinal,
+        giftSelectionToken: latest.giftSelectionToken,
         couponCode: couponCode || undefined, // Add coupon code to API params
       };
       const response = await createOrder(params);
       const result = response?.data?.result;
+      if (!result?.id) throw new Error("Không thể tạo đơn hàng");
 
       // Clear buy-now item after successful order creation
       if (isBuyNow) {
@@ -84,11 +100,16 @@ export default function CartInfo({
         transferCode,
         orderId: result?.id,
       });
-    } catch {
-      message.error("Có lỗi xảy ra khi kiểm tra thông tin đơn hàng.");
+    } catch (error: any) {
+      if (error?.code === 9037 || error?.code === 9038) {
+        await getShipFee(form.getFieldValue("province"));
+        message.warning(error.error);
+      } else if (!error?.errorFields) {
+        message.error(error?.error || "Có lỗi xảy ra khi kiểm tra thông tin đơn hàng.");
+      }
+    } finally {
       setLoading(false);
     }
-    setLoading(false);
   };
 
   return (
@@ -112,7 +133,7 @@ export default function CartInfo({
             },
             0,
           );
-          const productDiscount = totalOriginalAmount - totalAmount;
+          const productDiscount = totalOriginalAmount - displayedTotalAmount;
           const totalSavings = productDiscount + discountAmount;
 
           return (
@@ -143,7 +164,7 @@ export default function CartInfo({
                   <div className="flex justify-between items-center text-sm">
                     <span className="text-gray-500">Tổng tiền hàng</span>
                     <span className="font-medium text-gray-900">
-                      {convertToVnd(totalAmount)}
+                      {convertToVnd(displayedTotalAmount)}
                     </span>
                   </div>
                   <div className="flex justify-between items-center text-sm">
@@ -190,7 +211,7 @@ export default function CartInfo({
                 <div className="text-right flex flex-col items-end">
                   <span className="text-2xl font-bold text-red-600 leading-none">
                     {convertToVnd(
-                      Math.max(
+                      preview?.totalAmountFinal ?? Math.max(
                         0,
                         totalAmount + amount.shipAmount - discountAmount,
                       ),
@@ -211,6 +232,7 @@ export default function CartInfo({
         size="large"
         className="!bg-red-600 hover:!bg-red-700 !h-12 !rounded-lg !text-sm !font-bold !uppercase !tracking-wider w-full shadow-lg shadow-red-200"
         style={{ border: "none" }}
+        disabled={!preview}
         loading={loading}
         onClick={handlePay}
       >

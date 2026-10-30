@@ -1,7 +1,7 @@
 import { BUY_NOW_KEY } from "@/constants";
 import { BuyNowItem, CartItem } from "@/types";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { getProductById } from "@/api/product";
 
 export default function useBuyNow() {
@@ -67,7 +67,7 @@ export default function useBuyNow() {
   };
 
   // Convert buy-now item to cart item format for compatibility with existing components
-  const buyNowAsCartItem: CartItem[] | null = buyNowItem
+  const buyNowAsCartItem: CartItem[] | null = useMemo(() => buyNowItem
     ? [
         {
           id: `buy-now-${buyNowItem.product.id}`,
@@ -76,12 +76,12 @@ export default function useBuyNow() {
           quantity: buyNowItem.quantity,
         },
       ]
-    : null;
+    : null, [buyNowItem]);
 
   // Calculate total amount for buy-now item
-  // Use variant price if variant exists, otherwise use product's finalPrice
+  // Use the selected variant's final price, otherwise the product's final price.
   const buyNowTotalAmount = buyNowItem
-    ? (buyNowItem.variant?.price ?? buyNowItem.product.finalPrice) * buyNowItem.quantity
+    ? (buyNowItem.variant?.finalPrice ?? buyNowItem.product.finalPrice) * buyNowItem.quantity
     : 0;
 
   // Only return isBuyNow as true if we actually have a buyNowItem loaded

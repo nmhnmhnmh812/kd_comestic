@@ -1,4 +1,5 @@
 import baseAxios from ".";
+import { Product, Variant } from "@/types";
 
 export const ENDPOINTS = {
   CHECK_ORDER_INFO: "/orders/check-order-info",
@@ -7,10 +8,24 @@ export const ENDPOINTS = {
   GET_USER_ORDERS: "/orders/get-user-orders",
 };
 
+export type OrderPreview = {
+  shipAmount: number;
+  totalAmountFinal: number;
+  totalProductAmount: number;
+  giftSelectionToken: string;
+  giftItems: {
+    giftPromotionItemId: number;
+    product: Product;
+    variant?: Variant;
+    quantity: number;
+    giftPromotionName: string;
+  }[];
+};
+
 type CheckOrderInfoParams = {
   orderItems: {
     productId: number;
-    variantId: number;
+    variantId?: number;
     quantity: number;
   }[];
   province: string;
@@ -22,18 +37,20 @@ export async function checkOrderInfo(params: CheckOrderInfoParams) {
 }
 
 type CreateOrderParams = {
-  userId: number;
+  userId?: number;
   userName: string;
   address: string;
   phoneNumber: string;
   note: string;
-  orderItems: [
-    {
+  province: string;
+  district: string;
+  ward: string;
+  giftSelectionToken: string;
+  orderItems: {
       productId: number;
-      variantId: number;
+      variantId?: number;
       quantity: number;
-    },
-  ];
+  }[];
   totalProductAmount: number;
   shipAmount: number;
   totalAmountFinal: number;

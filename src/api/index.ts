@@ -40,6 +40,8 @@ baseAxios.interceptors.response.use(
 
     return Promise.reject({
       error: error.response?.data?.message || "Lỗi hệ thống",
+      code: error.response?.data?.code,
+      status: error.response?.status,
     });
   }
 );
