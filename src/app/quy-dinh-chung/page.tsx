@@ -2,6 +2,8 @@ import { Metadata } from "next";
 import GeneralRegulationsScreen from "@/modules/general-regulations";
 import { getStoreLocations } from "@/api/storeLocation";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Quy định chung - Mỹ phẩm Khánh Diễm",
   description:

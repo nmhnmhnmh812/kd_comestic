@@ -68,33 +68,39 @@ export default function ProductImage({
 
   return (
     <Image.PreviewGroup>
-      <div className="flex w-full min-w-0 md:w-1/2 aspect-square bg-white rounded-lg flex-col md:flex-row gap-1 md:gap-2 overflow-hidden">
-        <div className="relative flex-1 min-w-0 min-h-0 rounded-lg bg-white flex items-center justify-center overflow-hidden aspect-square md:aspect-auto">
+      <div className="grid w-full min-w-0 md:w-1/2 aspect-square grid-cols-1 grid-rows-[minmax(0,1fr)_auto] md:grid-cols-[minmax(0,1fr)_5rem] md:grid-rows-1 gap-1 md:gap-2 bg-white rounded-lg overflow-hidden">
+        <div className="relative w-full h-full min-w-0 min-h-0 rounded-lg bg-white flex items-center justify-center overflow-hidden">
           <Image
             src={mainImage}
             alt={product.name}
-            className="!w-full !h-full object-contain"
+            width="100%"
+            height="100%"
+            className="!block !w-full !h-full !object-contain"
             preview={{
               mask: "Xem ảnh",
             }}
-            rootClassName="!w-full !h-full flex items-center justify-center"
+            rootClassName="!block !w-full !h-full"
+            style={{ width: "100%", height: "100%", objectFit: "contain" }}
           />
         </div>
 
-        <div className="flex flex-row md:flex-col gap-1 md:gap-2 justify-start">
+        <div className="flex min-w-0 flex-row md:flex-col gap-1 md:gap-2 justify-start overflow-hidden">
           {thumbnailImages.map((image) => {
             const actualIndex = imagesSrc.indexOf(image);
             return (
               <div
                 key={image}
-                className="cursor-pointer w-16 md:w-20 aspect-square rounded-lg transition-all overflow-hidden border-2 border-transparent hover:border-gray-300"
+                className="relative cursor-pointer w-16 h-16 md:w-20 md:h-20 flex-none aspect-square rounded-lg transition-all overflow-hidden border-2 border-transparent hover:border-gray-300"
                 onClick={() => setSelectedImageIndex(actualIndex)}
               >
                 <Image
                   src={image}
                   alt={product.name}
-                className="!w-full !h-full object-contain"
-                rootClassName="!w-full !h-full flex items-center justify-center"
+                  width="100%"
+                  height="100%"
+                  className="!block !w-full !h-full !object-contain"
+                  rootClassName="!block !w-full !h-full"
+                  style={{ width: "100%", height: "100%", objectFit: "contain" }}
                   preview={false}
                 />
               </div>
