@@ -33,6 +33,7 @@ export default function PayScreen() {
 
   const {
     activeCoupons,
+    loadingCoupons,
     handleApplyCoupon: applyCouponValidation,
     appliedCoupon,
     setAppliedCoupon,
@@ -111,6 +112,28 @@ export default function PayScreen() {
     }
   }, [couponCode, getShipFee, form]);
 
+  useEffect(() => {
+    if (!couponCode || loadingCoupons) return;
+
+    const selectedCoupon = activeCoupons.find((coupon) => coupon.code === couponCode)
+      || (appliedCoupon?.code === couponCode ? appliedCoupon : null);
+    if (selectedCoupon && activeTotalAmount >= selectedCoupon.minOrderAmount) return;
+
+    setAppliedCoupon(null);
+    setCouponDiscount(0);
+    setCoupon("", 0);
+    message.info("Đã gỡ voucher vì đơn hàng không còn đủ điều kiện.");
+  }, [
+    activeCoupons,
+    activeTotalAmount,
+    appliedCoupon,
+    couponCode,
+    loadingCoupons,
+    setAppliedCoupon,
+    setCoupon,
+    setCouponDiscount,
+  ]);
+
   // Show loading while fetching buy-now product data
   if (buyNowLoading) {
     return (
@@ -180,6 +203,12 @@ export default function PayScreen() {
       <CouponModal
         visible={couponModalVisible}
         onClose={() => setCouponModalVisible(false)}
+        onRemove={() => {
+          setAppliedCoupon(null);
+          setCouponDiscount(0);
+          setCoupon("", 0);
+          message.info("Đã xóa mã giảm giá");
+        }}
         activeCoupons={activeCoupons}
         currentTotal={activeTotalAmount || 0}
         onApply={(coupon) => {

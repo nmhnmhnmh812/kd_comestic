@@ -18,8 +18,13 @@ export default function CartScreen() {
   const { cartId, cartItems, isFetching, refetch, totalAmount } = useCart();
 
   // Coupon management
-  const { appliedCoupon, couponDiscount, handleApplyCoupon, activeCoupons } =
-    useCoupon();
+  const {
+    appliedCoupon,
+    couponDiscount,
+    handleApplyCoupon,
+    handleRemoveCoupon,
+    activeCoupons,
+  } = useCoupon();
 
   const [couponModalVisible, setCouponModalVisible] = useState(false);
   const setCoupon = usePayment((state) => state.setCoupon);
@@ -139,6 +144,7 @@ export default function CartScreen() {
       <CouponModal
         visible={couponModalVisible}
         onClose={() => setCouponModalVisible(false)}
+        onRemove={handleRemoveCoupon}
         activeCoupons={activeCoupons}
         currentTotal={totalAmount || 0}
         onApply={(coupon) => {

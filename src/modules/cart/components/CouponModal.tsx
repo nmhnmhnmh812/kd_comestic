@@ -10,6 +10,7 @@ interface CouponModalProps {
   visible: boolean;
   onClose: () => void;
   onApply: (coupon: Coupon) => void;
+  onRemove?: () => void;
   currentTotal: number;
   activeCoupons: Coupon[];
   appliedCoupon: Coupon | null;
@@ -19,6 +20,7 @@ export default function CouponModal({
   visible,
   onClose,
   onApply,
+  onRemove,
   currentTotal,
   activeCoupons,
   appliedCoupon,
@@ -69,9 +71,15 @@ export default function CouponModal({
 
   const handleOk = () => {
     const coupon = activeCoupons.find((c) => c.id === selectedCouponId);
-    if (coupon) {
+    if (coupon && currentTotal >= coupon.minOrderAmount) {
       onApply(coupon);
     }
+    onClose();
+  };
+
+  const handleRemove = () => {
+    setSelectedCouponId(null);
+    onRemove?.();
     onClose();
   };
 
@@ -259,7 +267,18 @@ export default function CouponModal({
       </div>
 
       {/* Footer Fixed */}
-      <div className="absolute bottom-0 left-0 right-0 p-4 bg-white border-t flex justify-end gap-3 z-20 rounded-b-lg shadow-[0_-5px_15px_rgba(0,0,0,0.05)]">
+      <div className="absolute bottom-0 left-0 right-0 p-4 bg-white border-t flex justify-between gap-3 z-20 rounded-b-lg shadow-[0_-5px_15px_rgba(0,0,0,0.05)]">
+        {appliedCoupon && (
+          <Button
+            size="large"
+            danger
+            onClick={handleRemove}
+            className="font-medium"
+          >
+            BỎ VOUCHER
+          </Button>
+        )}
+        <div className="flex justify-end gap-3 ml-auto">
         <Button
           size="large"
           onClick={onClose}
@@ -275,6 +294,7 @@ export default function CouponModal({
         >
           ĐỒNG Ý
         </Button>
+        </div>
       </div>
     </Modal>
   );
