@@ -119,7 +119,7 @@ export default async function ProductDetailScreen({
   return (
     <ProductScreen
       product={product}
-      variants={variants?.length ? variants : [{ ...product, id: undefined }]}
+      variants={variants ?? []}
       initialVariantId={variantId ? parseInt(variantId, 10) : undefined}
     />
   );

@@ -68,16 +68,16 @@ export default function ProductImage({
 
   return (
     <Image.PreviewGroup>
-      <div className="flex w-full md:w-1/2 aspect-square bg-white rounded-lg flex-col md:flex-row gap-1 md:gap-2">
-        <div className="flex-1 rounded-lg flex items-center justify-center overflow-hidden aspect-square md:aspect-auto">
+      <div className="flex w-full min-w-0 md:w-1/2 aspect-square bg-white rounded-lg flex-col md:flex-row gap-1 md:gap-2 overflow-hidden">
+        <div className="relative flex-1 min-w-0 min-h-0 rounded-lg bg-white flex items-center justify-center overflow-hidden aspect-square md:aspect-auto">
           <Image
             src={mainImage}
             alt={product.name}
-            className="w-full h-full object-cover"
+            className="!w-full !h-full object-contain"
             preview={{
               mask: "Xem ảnh",
             }}
-            rootClassName="w-full h-full"
+            rootClassName="!w-full !h-full flex items-center justify-center"
           />
         </div>
 
@@ -93,11 +93,9 @@ export default function ProductImage({
                 <Image
                   src={image}
                   alt={product.name}
-                  className="w-full h-full object-cover"
-                  rootClassName="w-full h-full"
-                  preview={{
-                    mask: "Xem",
-                  }}
+                className="!w-full !h-full object-contain"
+                rootClassName="!w-full !h-full flex items-center justify-center"
+                  preview={false}
                 />
               </div>
             );

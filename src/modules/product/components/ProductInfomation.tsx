@@ -35,6 +35,8 @@ export default function ProductInformation({
 }) {
   const [quantity, setQuantity] = React.useState(1);
   const currentVariant = useProductDetail((state) => state.currentVariant);
+  const selectedVariant =
+    variants.find((variant) => variant.id === currentVariant?.id) ?? null;
   const router = useRouter();
 
   const { data: activePromotions } = useQuery({
@@ -56,7 +58,7 @@ export default function ProductInformation({
     );
   }, [activePromotions, product.id]);
 
-  const currentProduct = currentVariant || product;
+  const currentProduct = selectedVariant || product;
 
   const displayPrice = isProductType(currentProduct)
     ? currentProduct.finalPrice
@@ -70,7 +72,7 @@ export default function ProductInformation({
     currentProduct.discount,
   );
 
-  const hasRealVariants = variants.length > 0 && variants[0]?.id !== product.id;
+  const hasRealVariants = variants.length > 0;
 
   const { mutate, isPending } = useMutation({
     mutationFn: addItemToCart,
@@ -86,14 +88,14 @@ export default function ProductInformation({
   });
 
   const addToCart = () => {
-    if (hasRealVariants && !currentVariant) {
+    if (hasRealVariants && !selectedVariant) {
       message.warning("Vui lòng chọn phân loại sản phẩm");
       return;
     }
 
     const cartId = localStorage.getItem("cart_id");
     const productId = product.id;
-    const variantId = currentVariant?.id;
+    const variantId = selectedVariant?.id;
     const params = {
       cartId,
       productId,
@@ -104,13 +106,13 @@ export default function ProductInformation({
   };
 
   const buyNow = () => {
-    if (hasRealVariants && !currentVariant) {
+    if (hasRealVariants && !selectedVariant) {
       message.warning("Vui lòng chọn phân loại sản phẩm");
       return;
     }
     const buyNowItem = {
       product,
-      variant: currentVariant,
+      variant: selectedVariant,
       quantity,
     };
     localStorage.setItem(BUY_NOW_KEY, JSON.stringify(buyNowItem));
@@ -118,8 +120,8 @@ export default function ProductInformation({
     // Build URL with query parameters for persistence
     const params = new URLSearchParams();
     params.set("productId", product.id.toString());
-    if (currentVariant) {
-      params.set("variantId", currentVariant.id.toString());
+    if (selectedVariant) {
+      params.set("variantId", selectedVariant.id.toString());
     }
     params.set("quantity", quantity.toString());
     params.set("buyNow", "true");
@@ -258,14 +260,16 @@ export default function ProductInformation({
         </div>
       )}
 
-      <div className="flex flex-col gap-2 md:gap-3 mt-2">
-        <p className="text-sm md:text-base">Phân loại:</p>
-        <ProductVarients
-          product={product}
-          variants={variants}
-          initialVariantId={initialVariantId}
-        />
-      </div>
+      {hasRealVariants && (
+        <div className="flex flex-col gap-2 md:gap-3 mt-2">
+          <p className="text-sm md:text-base">Phân loại:</p>
+          <ProductVarients
+            product={product}
+            variants={variants}
+            initialVariantId={initialVariantId}
+          />
+        </div>
+      )}
       <div className="flex gap-2 md:gap-3 items-center">
         <span className="text-sm md:text-base">Số lượng: </span>
         <QuantityInput value={quantity} onChange={setQuantity} />
