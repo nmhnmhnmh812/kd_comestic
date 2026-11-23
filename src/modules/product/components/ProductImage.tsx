@@ -68,7 +68,7 @@ export default function ProductImage({
 
   return (
     <Image.PreviewGroup>
-      <div className="grid w-full min-w-0 md:w-1/2 aspect-square grid-cols-1 grid-rows-[minmax(0,1fr)_auto] md:grid-cols-[minmax(0,1fr)_5rem] md:grid-rows-1 gap-1 md:gap-2 bg-white rounded-lg overflow-hidden">
+      <div className="grid w-full min-w-0 md:w-1/2 md:max-w-[520px] md:flex-none aspect-square grid-cols-1 grid-rows-[minmax(0,1fr)_auto] md:grid-cols-[minmax(0,1fr)_5rem] md:grid-rows-1 gap-1 md:gap-2 bg-white rounded-lg overflow-hidden">
         <div className="relative w-full h-full min-w-0 min-h-0 rounded-lg bg-white flex items-center justify-center overflow-hidden">
           <Image
             src={mainImage}

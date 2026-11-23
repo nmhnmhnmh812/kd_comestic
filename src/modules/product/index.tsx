@@ -75,7 +75,7 @@ export default function ProductScreen({
         className="text-xs md:text-sm"
       />
       <div className="flex flex-col lg:flex-row gap-3 md:gap-5">
-        <div className="flex flex-col gap-3 md:gap-5 flex-1">
+        <div className="flex min-w-0 flex-col gap-3 md:gap-5 flex-1">
           <ProductDetail
             product={product}
             variants={variants}
