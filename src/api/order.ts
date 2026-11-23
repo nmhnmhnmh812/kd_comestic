@@ -55,10 +55,29 @@ type CreateOrderParams = {
   shipAmount: number;
   totalAmountFinal: number;
   paymentMethod: string;
+  checkoutToken?: string;
   couponCode?: string;
 };
 export async function createOrder(params: CreateOrderParams) {
   return await baseAxios.post(ENDPOINTS.CREATE_ORDER, params);
+}
+
+export async function cancelPendingOrder(orderId: string, checkoutToken: string) {
+  return baseAxios.post(`${ENDPOINTS.ORDERS}/${orderId}/cancel-pending`, null, {
+    headers: { "X-Order-Token": checkoutToken },
+  });
+}
+
+export async function switchPendingOrderToCod(orderId: string, checkoutToken: string) {
+  return baseAxios.post(`${ENDPOINTS.ORDERS}/${orderId}/switch-to-cod`, null, {
+    headers: { "X-Order-Token": checkoutToken },
+  });
+}
+
+export async function getPendingCheckout(orderId: string, checkoutToken: string) {
+  return baseAxios.get(`${ENDPOINTS.ORDERS}/${orderId}/pending-checkout`, {
+    headers: { "X-Order-Token": checkoutToken },
+  });
 }
 
 export const getOrderDetail = async (orderId: string) => {

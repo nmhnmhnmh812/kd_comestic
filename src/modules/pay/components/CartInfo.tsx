@@ -5,9 +5,9 @@ import { Button, Divider, FormInstance, message } from "antd";
 import PayItems from "./PayItems";
 import { convertToVnd } from "@/utils";
 import { getOriginalPrice } from "@/utils/cartUtils";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import usePayment from "../store";
-import { createOrder, OrderPreview } from "@/api/order";
+import { cancelPendingOrder, createOrder, getPendingCheckout, OrderPreview, switchPendingOrderToCod } from "@/api/order";
 import QRmodal from "./QRmodal";
 
 const ERROR_STATUS = [
@@ -34,16 +34,71 @@ export default function CartInfo({
   clearBuyNow: () => void;
 }) {
   const [loading, setLoading] = useState(false);
+  const [resuming, setResuming] = useState(false);
   const [modal, setModal] = useState({
     visible: false,
     qrUrl: "",
     transferCode: "",
     orderId: "",
+    expiresAt: "",
   });
+  const checkoutTokenRef = useRef<string | null>(null);
   const amount = usePayment((state) => state.amount);
   const couponCode = usePayment((state) => state.couponCode);
   const discountAmount = usePayment((state) => state.discountAmount);
   const displayedTotalAmount = preview?.totalProductAmount ?? totalAmount;
+
+  const getCheckoutToken = () => {
+    if (checkoutTokenRef.current) return checkoutTokenRef.current;
+    const saved = sessionStorage.getItem("kd_checkout_token");
+    checkoutTokenRef.current = saved || crypto.randomUUID();
+    sessionStorage.setItem("kd_checkout_token", checkoutTokenRef.current);
+    return checkoutTokenRef.current;
+  };
+
+  const clearCheckoutToken = () => {
+    checkoutTokenRef.current = null;
+    sessionStorage.removeItem("kd_checkout_token");
+    sessionStorage.removeItem("kd_pending_order");
+  };
+
+  const closeModal = () => setModal({ visible: false, qrUrl: "", transferCode: "", orderId: "", expiresAt: "" });
+
+  const showPendingOrder = (order: any) => setModal({
+    visible: true,
+    qrUrl: order.qrCodeUrl || "",
+    transferCode: order.payment?.transferCode || "",
+    orderId: String(order.id),
+    expiresAt: order.payment?.expiredAt || "",
+  });
+
+  useEffect(() => {
+    const saved = sessionStorage.getItem("kd_pending_order");
+    if (!saved) return;
+    let active = true;
+    const resume = async () => {
+      setResuming(true);
+      try {
+        const { orderId, token } = JSON.parse(saved);
+        if (!orderId || !token) throw new Error("Invalid pending order");
+        checkoutTokenRef.current = token;
+        const response = await getPendingCheckout(String(orderId), token);
+        if (!active) return;
+        const order = response?.data?.result;
+        if (order?.status === "PENDING_PAYMENT") {
+          showPendingOrder(order);
+        } else {
+          clearCheckoutToken();
+        }
+      } catch {
+        if (active) clearCheckoutToken();
+      } finally {
+        if (active) setResuming(false);
+      }
+    };
+    void resume();
+    return () => { active = false; };
+  }, []);
 
   const handlePay = async () => {
     setLoading(true);
@@ -70,18 +125,21 @@ export default function CartInfo({
         totalAmountFinal: latest.totalAmountFinal,
         giftSelectionToken: latest.giftSelectionToken,
         couponCode: couponCode || undefined, // Add coupon code to API params
+        checkoutToken: getCheckoutToken(),
       };
       const response = await createOrder(params);
       const result = response?.data?.result;
       if (!result?.id) throw new Error("Không thể tạo đơn hàng");
 
-      // Clear buy-now item after successful order creation
-      if (isBuyNow) {
-        clearBuyNow();
+      if (result.status === "CANCELED" || result.status === "EXPIRED") {
+        clearCheckoutToken();
+        message.warning("Đơn trước đã hủy hoặc hết hạn. Vui lòng bấm đặt hàng lại.");
+        return;
       }
-
-      if (values.paymentMethod === "COD") {
-        window.location.href = `/pay-success/${response?.data?.result?.id}`;
+      if (result.status === "WAITING_CONFIRMATION") {
+        clearCheckoutToken();
+        if (isBuyNow) clearBuyNow();
+        window.location.href = `/pay-success/${result.id}`;
         return;
       }
       if (ERROR_STATUS.includes(result.status)) {
@@ -92,14 +150,11 @@ export default function CartInfo({
         setLoading(false);
         return;
       }
-      const qrUrl = result?.qrCodeUrl;
-      const transferCode = result?.payment?.transferCode;
-      setModal({
-        visible: true,
-        qrUrl,
-        transferCode,
-        orderId: result?.id,
-      });
+      sessionStorage.setItem("kd_pending_order", JSON.stringify({
+        orderId: result.id,
+        token: getCheckoutToken(),
+      }));
+      showPendingOrder(result);
     } catch (error: any) {
       if (error?.code === 9037 || error?.code === 9038) {
         await getShipFee(form.getFieldValue("province"));
@@ -232,29 +287,49 @@ export default function CartInfo({
         size="large"
         className="!bg-red-600 hover:!bg-red-700 !h-12 !rounded-lg !text-sm !font-bold !uppercase !tracking-wider w-full shadow-lg shadow-red-200"
         style={{ border: "none" }}
-        disabled={!preview}
-        loading={loading}
+        disabled={!preview || modal.visible || resuming}
+        loading={loading || resuming}
         onClick={handlePay}
       >
         ĐẶT HÀNG NGAY
       </Button>
 
       <QRmodal
-        onClose={() => {
-          if (isBuyNow) {
-            clearBuyNow();
-          }
-          setModal({
-            visible: false,
-            qrUrl: "",
-            transferCode: "",
-            orderId: "",
-          });
-        }}
         visible={modal.visible}
         qrCodeUrl={modal.qrUrl}
         transferCode={modal.transferCode}
         orderId={modal.orderId}
+        expiresAt={modal.expiresAt}
+        onPaid={() => {
+          clearCheckoutToken();
+          if (isBuyNow) clearBuyNow();
+          closeModal();
+          window.location.href = `/pay-success/${modal.orderId}`;
+        }}
+        onTerminal={() => {
+          clearCheckoutToken();
+          closeModal();
+        }}
+        onCancelOrder={async () => {
+          await cancelPendingOrder(modal.orderId, getCheckoutToken());
+          clearCheckoutToken();
+          closeModal();
+          message.success("Đã hủy đơn và hoàn lại hàng đã giữ.");
+        }}
+        onSwitchToCod={async () => {
+          const response = await switchPendingOrderToCod(modal.orderId, getCheckoutToken());
+          const order = response?.data?.result;
+          if (order?.status !== "WAITING_CONFIRMATION") {
+            clearCheckoutToken();
+            closeModal();
+            message.warning("Đơn đã hết hạn. Vui lòng đặt lại.");
+            return;
+          }
+          clearCheckoutToken();
+          if (isBuyNow) clearBuyNow();
+          closeModal();
+          window.location.href = `/pay-success/${modal.orderId}`;
+        }}
       />
     </div>
   );

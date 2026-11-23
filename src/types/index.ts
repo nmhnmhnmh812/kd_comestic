@@ -239,7 +239,7 @@ export interface UserOrderPayment {
   transactionId: number;
   paymentMethod: "BANK_TRANSFER" | "COD";
   totalAmount: number;
-  paymentStatus: "NOT_YET" | "PAID" | "FAILED";
+  paymentStatus: "NOT_YET" | "COMPLETED" | "FAILED" | "CANCELED" | "EXPIRED";
   createdAt: string;
   updatedAt: string;
   status: string;
@@ -348,11 +348,13 @@ export interface UserOrder {
   id: number;
   payment: UserOrderPayment;
   status:
+    | "PENDING_PAYMENT"
     | "WAITING_CONFIRMATION"
     | "CONFIRMED"
     | "SHIPPING"
     | "DELIVERED"
-    | "CANCELLED";
+    | "CANCELED"
+    | "EXPIRED";
   totalProductAmount: number;
   shipAmount: number;
   totalAmountFinal: number;

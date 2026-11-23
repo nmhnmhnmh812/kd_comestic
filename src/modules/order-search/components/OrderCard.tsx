@@ -11,6 +11,7 @@ interface OrderCardProps {
 
 const getStatusTag = (status: string) => {
   const statusMap: Record<string, { color: string; text: string }> = {
+    PENDING_PAYMENT: { color: "gold", text: "Chờ chuyển khoản" },
     WAITING_CONFIRMATION: { color: "orange", text: "Chờ xác nhận" },
     CONFIRMED: { color: "blue", text: "Đã xác nhận" },
     SHIPPING: { color: "cyan", text: "Đang giao" },
@@ -18,6 +19,7 @@ const getStatusTag = (status: string) => {
     FINISHED: { color: "green", text: "Hoàn thành" },
     RETURNED: { color: "volcano", text: "Đã trả hàng" },
     CANCELED: { color: "red", text: "Đã hủy" },
+    EXPIRED: { color: "default", text: "Hết hạn thanh toán" },
   };
   const statusInfo = statusMap[status] || { color: "default", text: status };
   return <Tag color={statusInfo.color}>{statusInfo.text}</Tag>;
@@ -28,6 +30,8 @@ const getPaymentStatusTag = (status: string) => {
     NOT_YET: { color: "orange", text: "Chưa thanh toán" },
     COMPLETED: { color: "green", text: "Đã thanh toán" },
     FAILED: { color: "red", text: "Thanh toán thất bại" },
+    CANCELED: { color: "default", text: "Đã hủy" },
+    EXPIRED: { color: "default", text: "Hết hạn" },
   };
   const statusInfo = statusMap[status] || { color: "default", text: status };
   return <Tag color={statusInfo.color}>{statusInfo.text}</Tag>;
