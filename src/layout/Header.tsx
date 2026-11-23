@@ -31,6 +31,7 @@ const { Panel } = Collapse;
 
 export default function Header() {
   const [keyword, setKeyword] = useState("");
+  const [inputValue, setInputValue] = useState("");
   const [showDropdown, setShowDropdown] = useState(false);
   const [drawerVisible, setDrawerVisible] = useState(false);
   const router = useRouter();
@@ -115,8 +116,9 @@ export default function Header() {
   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   const handleSearch = () => {
-    if (keyword.trim()) {
-      router.push(`/search?keyword=${encodeURIComponent(keyword.trim())}`);
+    const searchTerm = inputValue.trim();
+    if (searchTerm) {
+      router.push(`/danh-muc?keyword=${encodeURIComponent(searchTerm)}`);
       setShowDropdown(false);
     }
   };
@@ -157,6 +159,7 @@ export default function Header() {
           <Input
             ref={inputRef}
             placeholder="Tìm sản phẩm..."
+            value={inputValue}
             className="text-sm md:text-base"
             suffix={
               <SearchOutlined
@@ -164,9 +167,12 @@ export default function Header() {
                 style={{ cursor: "pointer" }}
               />
             }
-            onChange={(e) => debouncedSetKeyword(e.target.value)}
+            onChange={(e) => {
+              setInputValue(e.target.value);
+              debouncedSetKeyword(e.target.value);
+            }}
             onPressEnter={handleSearch}
-            onFocus={() => setShowDropdown(!!keyword.trim())}
+            onFocus={() => setShowDropdown(!!inputValue.trim())}
             onBlur={() => setTimeout(() => setShowDropdown(false), 200)}
           />
           {showDropdown && (

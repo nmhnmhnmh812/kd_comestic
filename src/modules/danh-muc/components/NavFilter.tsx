@@ -22,7 +22,11 @@ export default function NavFilter({ path }: { path: string[] }) {
   const currentPath = `/danh-muc/${path?.join("/") || ""}`;
 
   useEffect(() => {
-    if (!path || path.length === 0) return;
+    if (!path || path.length === 0) {
+      localStorage.removeItem("categoryTitle");
+      updateTitle({ title: "", id: 0, subCategoryId: 0 });
+      return;
+    }
     const [category, subCategory] = path;
     const result = {
       title: "",

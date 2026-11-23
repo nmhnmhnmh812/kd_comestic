@@ -7,21 +7,29 @@ import { ISlug, ResponseApi } from "@/types";
 import useProductList from "../store";
 import { useQuery } from "@tanstack/react-query";
 import { ENDPOINTS, getProducts } from "@/api/product";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 
 export default function ProductContainer({ slug }: { slug?: ISlug }) {
   const category = useProductList((state) => state.category);
   const filter = useProductList((state) => state.filter);
+  const searchParams = useSearchParams();
+  const keyword = searchParams.get("keyword")?.trim() || "";
   const [pagination, setPagination] = useState({ page: 0, size: 20 });
+
+  useEffect(() => {
+    setPagination((current) => ({ ...current, page: 0 }));
+  }, [keyword]);
 
   const { data, isFetching } = useQuery<
     { content: any[]; totalElements: number } | undefined
   >({
-    queryKey: [ENDPOINTS.SEARCH, category.id, pagination, filter],
+    queryKey: [ENDPOINTS.SEARCH, keyword, category.id, category.subCategoryId, pagination, filter],
     queryFn: async () => {
       const { error, data }: ResponseApi = await getProducts({
-        categoryId: category.id || undefined,
-        subCategoryId: category.subCategoryId || undefined,
+        keyword: keyword || undefined,
+        categoryId: keyword ? undefined : category.id || undefined,
+        subCategoryId: keyword ? undefined : category.subCategoryId || undefined,
         ...pagination,
         ...filter,
       });
@@ -47,7 +55,9 @@ export default function ProductContainer({ slug }: { slug?: ISlug }) {
   return (
     <div className="w-full">
       <h1 className="text-base md:text-xl font-bold uppercase p-3 md:p-5">
-        {category.title || "Danh mục"} ({totalItems} kết quả)
+        {keyword
+          ? `Kết quả tìm kiếm cho “${keyword}”`
+          : category.title || "Danh mục"} ({totalItems} kết quả)
       </h1>
       <ProductFilter />
       {!isFetching ? (
